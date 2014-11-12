@@ -3,7 +3,7 @@
 	  xmlns:th="http://www.thymeleaf.org"
 	  xmlns:tiles="http://www.thymeleaf.org"
 	  xmlns:sec="http://www.thymeleaf.org"
-	  lang="en">
+	  lang="en" style="min-height:100% !important;">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 <title>Main Container of iTalk2learn</title>
@@ -28,8 +28,8 @@
     <script type="text/javascript" src="#" th:src="@{/resources/spring/Spring-Dojo.js}"></script>
 </head>
 
-<div class="background" style="margin-left: auto;margin-right: auto; height: 1200px; max-width:1120px;">
-<body class="back" style="margin-top:0px;">
+<body class="back" style="margin-top:0px; height:inherit; margin-bottom:0px;">
+<div class="background" style="margin-left: auto;margin-right: auto; height:100%; max-width:1120px;">
  <table align="center">
         <tr>
             <td>
@@ -44,7 +44,7 @@
 	<table align="center">
          <tr align="center">
             <td align="center">
-            <div id="wrapper_dark_gray" style="height: 995px; padding-top:20px;">
+            <div id="wrapper_dark_gray" style="padding-bottom:30px; min-height: 995px; padding-top:20px;">
             <div style="display:inline; width:180px; ;float: left;">
                	<a href="#" th:href="@{/monitorWOZ}" class="it2lbutton">Go to Woz </a>
 			</div>
@@ -54,13 +54,13 @@
 			<div sec:authorize="hasRole('ROLE_USER')" th:if="${#authentication}" style="display:inline; width:180px;float: right;">
 								<a href="#" th:href="@{/auth/logout}" style="color:#e74c3c; font-weight:bold;">Logout</a>
 			</div>
-			<div id="wrapper_light_gray" style="height: 780px; margin-top: 30px;">
+			<div id="wrapper_light_gray" style="padding-bottom:30px; min-height: 780px; margin-top: 30px;">
 
 
 
 			<table>
 			  <tr>
-			    <th colspan="3"> <span style="font-size:24px; color: #0076a3; " >TODO:Exercise Title</span> </th>
+			    <th colspan="3"> <span style="font-size:24px; color: #0076a3; " > TODO: Exercise Title</span> </th>
 			  </tr>
 			  <tr>
 			    <td> <div style="display=inline;">
@@ -450,6 +450,7 @@ function myTimer() {
 	</div>-->
 	<div id="player"></div>
 	<audio controls="controls" id="speechProductionPlayer" hidden="true"></audio>
+	</div>
 </body>
-</div>
+
 </html>
