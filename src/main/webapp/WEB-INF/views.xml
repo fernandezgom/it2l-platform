@@ -17,19 +17,32 @@
 		<put-attribute name="body" value="/AudioRecorderFlash.html :: content" type="thymeleaf"/>
 	</definition>
 	
-	<definition name="monitorWOZ" extends="standardWOZ">
+	<!--<definition name="monitorWOZ" extends="standardWOZ">
 		<put-attribute name="body" value="/monitorWOZ.html :: content" type="thymeleaf"/>
-	</definition>
+	</definition>-->
 	
-	<definition name="login" extends="standardLayout2">
+	<!--<definition name="login" extends="standardTL">
 		<put-attribute name="body" value="/login.html :: content" type="thymeleaf"/>
 	</definition>
+	
+	<definition name="exercise" extends="standardTL">
+		<put-attribute name="body" value="/MainContainer.html :: content" type="thymeleaf"/>
+	</definition>
+	
+	<definition name="monitorWOZ" extends="standardTL">
+			<put-attribute name="body" value="/monitorWOZ.html :: content" type="thymeleaf"/>
+	</definition>-->
+	
+	<definition name="login" template="/loginP.html" templateType="thymeleaf"/>
+	<definition name="exercise" template="/MainContainerP.html" templateType="thymeleaf"/>
+	<definition name="monitorWOZ" template="/monitorWozP.html" templateType="thymeleaf"/>
+	
 	
 	<definition name="woztest" extends="standardLayout">
 		<put-attribute name="body" value="/woztest.html :: content" type="thymeleaf"/>
 	</definition>
 	
-	<definition name="exercise" template="/MainContainer.html" templateType="thymeleaf"/>
+	
 	
 	<definition name="soundexercise" template="/MainContainerS.html" templateType="thymeleaf"/>
 	
