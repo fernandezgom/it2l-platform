@@ -6,7 +6,7 @@
 	  lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
-	<!--<link rel="stylesheet" type="text/css" media="screen, projection" href="/italk2learn/styles/it2lmainstyles.css" />-->
+	<!--<link rel="stylesheet" type="text/css" media="screen, projection" href="../styles/it2lmainstyles.css" />-->
 	<link rel="stylesheet" type="text/css" media="screen, projection" href="/italk2learn/styles/it2lmainstyles.css" />
 	<link rel="stylesheet" type="text/css" media="screen, projection" href="/italk2learn/styles/languageswitcher.css" />
 	<script type="text/javascript" src="/italk2learn/js/history/history.js"></script>
@@ -45,22 +45,22 @@
 	<table align="center">
          <tr align="center">
             <td align="center">
-  <!--dark gray--><div id="wrapper_dark_gray" style="height: 945px; padding-top:20px;">
+  <!--dark gray--><div id="wrapper_dark_gray" style="height: 945px; width: 1080px; padding-top:20px;">
 				<div style="width: 100%">
-					<div style="display:inline;float: left; width: 180px;">
+					 <div style="display:inline; margin-left: 10px; float: left; width:180px;">
 						<a href="#" th:href="@{/exercise}" class="it2lbutton" style="padding-left: 7px; padding-right: 7px;"> <img style="vertical-align:middle" th:src="@{/resources/images/bt_arrow_left.png}" src="../images/bt_arrow_left.png"></img>  Back to Exercise </a>
 					</div>
-					   <div style="display:inline; width:650px;">
+					   <div style="display:inline; width:76%;">
 						<span style="display:inline; font-weight: bold;"> Welcome Student </span> <div id="user" style="font-weight: bold; display:inline;"> Name </div>
 					</div>
 					<!--<div sec:authorize="hasRole('ROLE_USER')" th:if="${#authentication}"  style="display: inline; float : right; width:180px; font-weight:bold;">
 						<a href="#" th:href="@{/auth/logout}" style="color:#e74c3c; font-weight:bold;">Logout</a>
 					</div>-->
-					<div style="display: inline; float : right; width:180px; font-weight:bold;">
+					<div sec:authorize="hasRole('ROLE_USER')" th:if="${#authentication}" style="display:inline; float: right; width:12%">
 						<a href="#" th:href="@{/auth/logout}" style="color:#e74c3c; font-weight:bold; font-size:13px;">Logout</a>
 					</div>
 				</div>
-<!--light gray--><div id="wrapper_light_gray" style="height: 780px; margin-top: 30px;">
+<!--light gray--><div id="wrapper_light_gray" style="height: 780px; width: 1060px; margin-top: 30px;">
 						<div style="height: 80px;padding-top: 20px;"><span style="color: #0076a3; font-weight: bold; font-size:23px;"> Wizard of Oz Tool </span></div>
 						<table style="width: 800px; height: 600px;">
 							<tr align="left">
