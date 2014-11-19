@@ -6,7 +6,10 @@
 				-moz-border-radius: 20px;
 				border-radius: 20px;
 				color:#e74c3c;
-				width: 1080px;
+				/*width: 1080px;*/
+				width: inherit;
+				margin-left: 5px;
+				margin-right: 5px;
 			}
 			
 			#wrapper_light_gray
@@ -16,8 +19,11 @@
 				-moz-border-radius: 20px;
 				border-radius: 20px;
 				color: black;
-				width: 1060px;
+				/*width: 1060px;*/
+				width: inherit;
 				margin-top: 30px;
+				margin-left: 10px;
+				margin-right: 10px;
 
 			}
 			.back{
@@ -29,7 +35,11 @@
 			    }
 			    
 			 .background
-			    {	width: 1100px;
+			    {	
+			    	width: intrinsic;           
+				width: -moz-max-content;   
+ 				width: -webkit-max-content; 
+			    	/*width: -moz-fit-content;*/
 			    	background-color: #fff;
 			    	height:1200px;
 			    }
@@ -136,13 +146,12 @@
 			
 			.it2lbutton  {
 				display: block;
-				float: right;
 			  	background-color: #f05a49;
 			  	border-color: #f05a49;
 			  	color: #ffffff;
 			  	text-decoration: none;
 			  	line-height: 45px;
-			  	padding: 0 25px;
+			  	padding: 0 8px;
 			  	padding-top: 2px;
 				padding-bottom: 2px;
 			  	border-radius: 30px;
@@ -204,6 +213,11 @@
 			    	color: rgba(222, 222, 222, 0.7f);
 			    	cursor: default;
 			}
+			
+
+
+			
+			
 			
 			
 			form {
