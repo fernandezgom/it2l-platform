@@ -27,8 +27,8 @@
     <script type="text/javascript" src="#" th:src="@{/resources/spring/Spring-Dojo.js}"></script>
 </head>
 
-<div class="background" style="margin-left: auto;margin-right: auto; height: 1200px; max-width:1120px;">
-<body class="back" style="margin-top:0px;">
+<body class="back" style="margin-top:0px; height:inherit; margin-bottom:0px;">
+<div class="background" style="margin-left: auto;margin-right: auto; height:initial;">
  	<table align="center">
         <tr>
             <td>
@@ -48,7 +48,7 @@
   <!--dark gray--><div id="wrapper_dark_gray" style="height: 945px; padding-top:20px;">
 				<div style="width: 100%">
 					<div style="display:inline;float: left; width: 180px;">
-						<a href="#" th:href="@{/exercise}" class="it2lbutton" style="padding-left: 7px; padding-right: 7px;"> Back to Exercise </a>
+						<a href="#" th:href="@{/exercise}" class="it2lbutton" style="padding-left: 7px; padding-right: 7px;"> <img style="vertical-align:middle" th:src="@{/resources/images/bt_arrow_left.png}" src="../images/bt_arrow_left.png"></img>  Back to Exercise </a>
 					</div>
 					   <div style="display:inline; width:650px;">
 						<span style="display:inline; font-weight: bold;"> Welcome Student </span> <div id="user" style="font-weight: bold; display:inline;"> Name </div>
@@ -57,7 +57,7 @@
 						<a href="#" th:href="@{/auth/logout}" style="color:#e74c3c; font-weight:bold;">Logout</a>
 					</div>-->
 					<div style="display: inline; float : right; width:180px; font-weight:bold;">
-						<a href="#" th:href="@{/auth/logout}" style="color:#e74c3c; font-weight:bold;">Logout</a>
+						<a href="#" th:href="@{/auth/logout}" style="color:#e74c3c; font-weight:bold; font-size:13px;">Logout</a>
 					</div>
 				</div>
 <!--light gray--><div id="wrapper_light_gray" style="height: 780px; margin-top: 30px;">
@@ -247,6 +247,6 @@ function myTimer() {
 	</div>-->
 	<div id="player"></div>
 	<audio controls="controls" id="speechProductionPlayer" hidden="true"></audio>
+	</div>
 </body>
-</div>
 </html>

@@ -1,4 +1,4 @@
-html, body { height: 100%; }
+
 			#wrapper_dark_gray
 			{	
 				background-color: #c8c8c8;
@@ -136,13 +136,12 @@ html, body { height: 100%; }
 			
 			.it2lbutton  {
 				display: block;
-				float: right;
 			  	background-color: #f05a49;
 			  	border-color: #f05a49;
 			  	color: #ffffff;
 			  	text-decoration: none;
 			  	line-height: 45px;
-			  	padding: 0 25px;
+			  	padding: 0 15px;
 			  	padding-top: 2px;
 				padding-bottom: 2px;
 			  	border-radius: 30px;
@@ -204,6 +203,11 @@ html, body { height: 100%; }
 			    	color: rgba(222, 222, 222, 0.7f);
 			    	cursor: default;
 			}
+			
+
+
+			
+			
 			
 			
 			form {
