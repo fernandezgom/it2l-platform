@@ -53,7 +53,7 @@ public class MonitorWOZController {
     
     @ModelAttribute("allExercises")
     public List<ExerciseVO> populateExercises() {
-    	logger.info("JLF --- MonitorWOZ.populateExercises");
+    	logger.info("JLF --- MonitorWOZ populateExercises --- Getting all exercises from the database");
     	try {
 	    	user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 	    	ExerciseSequenceRequestVO request= new ExerciseSequenceRequestVO();
@@ -68,11 +68,11 @@ public class MonitorWOZController {
     
     
     /**
-	 * JLF: Mock to get WOZ students
+	 * JLF: Gett all students that they have woz account
 	 */
     @ModelAttribute("allStudents")
     public List<UserDetailsVO> populateStudents() {
-    	logger.info("JLF --- MonitorWOZ.populateStudents");
+    	logger.info("JLF --- MonitorWOZ populateStudents --- getting all students that they have woz account");
     	List<UserDetailsVO> res= new ArrayList<UserDetailsVO>();
     	UserDetailsVO var= new UserDetailsVO();
     	var.setUser("student1");
@@ -106,12 +106,13 @@ public class MonitorWOZController {
 	 */
 	@RequestMapping(value = "",method = RequestMethod.GET)
 	public String monitorWOZInit(Model model) {
-		logger.info("JLF --- MonitorWOZ.init");
+		logger.info("JLF --- MonitorWOZ init --- Initiliasing the main view from the Wizard of Oz");
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			model.addAttribute("messageInfo", new ExerciseVO());
 			return "monitorWOZ";
 		} catch (Exception e){
+			logger.info("Returning to loginpage due previous errors");
 			logger.error(e.toString());
 			return "redirect:/login";
 		}
@@ -147,7 +148,8 @@ public class MonitorWOZController {
 	 */
 	@RequestMapping(value = "/insertSequenceByUser", method = RequestMethod.POST)
     public @ResponseBody String insertSequenceByUser(@RequestBody WozVO messageForm, HttpServletRequest req){
-		logger.info("JLF --- insertNextExercise()");
+		logger.info("JLF --- MonitorWOZ insertSequenceByUser() --- Inserting a sequence of exercises for that user");
+		logger.info("user= "+ messageForm.getUser()+" ,sequence="+ messageForm.getSequence());
 		ExerciseSequenceRequestVO request= new ExerciseSequenceRequestVO();
 		ModelAndView modelAndView=new ModelAndView();
 		modelAndView.setViewName("monitorWOZ");

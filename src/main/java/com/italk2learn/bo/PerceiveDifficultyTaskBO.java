@@ -20,17 +20,19 @@ import com.italk2learn.vo.PTDResponseVO;
 @Transactional(rollbackFor = { ITalk2LearnException.class, ITalk2LearnException.class })
 public class PerceiveDifficultyTaskBO implements IPerceiveDifficultyTaskBO  {
 	
-	private static final Logger logger = LoggerFactory
-			.getLogger(PerceiveDifficultyTaskBO.class);
+	private static final Logger logger = LoggerFactory.getLogger(PerceiveDifficultyTaskBO.class);
 	
 	/*@Autowired*/
 	public PerceiveDifficultyTaskBO() {
 		
 	}
 	
-
+	/**
+	 * Calls perceive difficulty task module
+	 * 
+	 */
 	public PTDResponseVO callPTD(PTDRequestVO request) throws ITalk2LearnException{
-		logger.info("callPTD()--- ");
+		logger.info("JLF ---  PerceiveDifficultyTaskBO callPTD() --- Calling perceive difficulty task module");
 		PTDResponseVO res= new PTDResponseVO();
         String wavname;
         List<byte[]> exampleChunks = new ArrayList<byte[]>();
@@ -54,6 +56,7 @@ public class PerceiveDifficultyTaskBO implements IPerceiveDifficultyTaskBO  {
         // get ptd for the whole wav file (in "wavname"),
         // input has to be the output of createWavFile()
         res.setPTD(ptdAmpl.getPTD(wavname));
+        logger.info("user="+ request.getHeaderVO().getLoginUser()+" ,PTD="+res.getPTD());
 		return res;
 	}
 }

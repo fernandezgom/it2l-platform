@@ -20,8 +20,7 @@ public class SessionCounterListener implements HttpSessionListener {
  
 	  private static int totalActiveSessions;
 	  
-	  private static final Logger logger = LoggerFactory
-				.getLogger(SessionCounterListener.class);
+	  private static final Logger logger = LoggerFactory.getLogger(SessionCounterListener.class);
 	  
 	  private LdapUserDetailsImpl user;
 	 
@@ -33,7 +32,7 @@ public class SessionCounterListener implements HttpSessionListener {
 	  public void sessionCreated(HttpSessionEvent arg0) {
 		  try {
 			  	totalActiveSessions++;
-				logger.info("sessionCreated - add one session into counter: "+totalActiveSessions);
+				logger.info("JLF sessionCreated - add one session into counter: "+totalActiveSessions);
 				System.out.println("sessionCreated - add one session into counter");
 		  } catch (Exception e){
 				logger.error(e.toString());
@@ -46,7 +45,7 @@ public class SessionCounterListener implements HttpSessionListener {
 				totalActiveSessions--;
 				if (SecurityContextHolder.getContext().getAuthentication()!=null)
 					user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-				//logger.info("sessionDestroyed - deduct one session from counter: "+totalActiveSessions+"\n User: "+user.getUsername());
+				logger.info("JLF sessionDestroyed - deduct one session from counter: "+totalActiveSessions);
 				System.out.println("sessionDestroyed - deduct one session from counter");
 				closeASRListener(arg0);
 		  } catch (Exception e){
@@ -55,7 +54,7 @@ public class SessionCounterListener implements HttpSessionListener {
 	  }
 	  
 	  private void closeASRListener(HttpSessionEvent sessionEvent){
-		  
+		  logger.info("JLF SessionCounterListener closeASRListener --- Close the Speech recognition engine due the session with the user is finished");
 		  HttpSession session = sessionEvent.getSession();
 		  ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
 		  ISpeechRecognitionBO closeListener = (ISpeechRecognitionBO) ctx.getBean("speechRecognitionBO");

@@ -79,7 +79,7 @@
 			$("#help").hide();
 			$("#connectedON").hide();
 			$("#connectedOFF").hide();
-			soundButtonEnable(false);
+			soundButtonEnable(true);
 			//$("#initContainer").click(function() {
 			$.ajax({
 				type: 'GET',

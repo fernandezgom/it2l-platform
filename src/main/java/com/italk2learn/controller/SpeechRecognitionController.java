@@ -58,12 +58,12 @@ public class SpeechRecognitionController{
     }
 	
 	/**
-	 * Main method to get a transcription of Sail Software
+	 * Main method to send audio to the speech recognisers, this methos is used each 5 seconds once the speech audio component is on
 	 */
 	@RequestMapping(value = "/sendData",method = RequestMethod.POST)
 	@ResponseBody
-	public void getSpeechRecognition(@RequestBody byte[] body) {
-		logger.info("JLF --- Speech Recognition Main Controller");
+	public void sendData(@RequestBody byte[] body) {
+		logger.info("JLF --- SpeechRecognitionController sendData --- Sending data to the speech recogniser");
 		request= new SpeechRecognitionRequestVO();
 		request.setHeaderVO(new HeaderVO());
 		request.getHeaderVO().setLoginUser(getUsername());
@@ -83,15 +83,15 @@ public class SpeechRecognitionController{
 	@RequestMapping(value = "/initEngine",method = RequestMethod.GET)
 	@ResponseBody
 	public Boolean initASREngine(@RequestParam(value = "user") String user, HttpServletRequest req) {
-		logger.info("JLF --- Speech Recognition Main Controller");
+		logger.info("JLF --- SpeechRecognitionController initEngine --- Initialising speech recognition engine, user="+user);
 		request= new SpeechRecognitionRequestVO();
 		request.setHeaderVO(new HeaderVO());
 		this.setUsername(user);
 		request.getHeaderVO().setLoginUser(user);
 		try {
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().initASREngine(request));
-			//Send first chunk always
-			getSpeechRecognition(new byte[0]);
+			//JLF: Sending first chunk always, otherwise SAIL software crashes
+			sendData(new byte[0]);
 			return response.isOpen();
 		} catch (Exception e){
 			logger.error(e.toString());
@@ -105,7 +105,7 @@ public class SpeechRecognitionController{
 	@RequestMapping(value = "/closeEngine",method = RequestMethod.POST)
 	@ResponseBody
 	public String closeASREngine(@RequestBody byte[] body) {
-		logger.info("JLF --- Speech Recognition Main Controller");
+		logger.info("JLF --- SpeechRecognitionController closeEngine --- Closing speech recognition engine");
 		request= new SpeechRecognitionRequestVO();
 		if (body==null)
 			body=new byte[0];
@@ -131,7 +131,7 @@ public class SpeechRecognitionController{
 	@RequestMapping(value = "/callPTD",method = RequestMethod.POST)
 	@ResponseBody
 	public int callPTD(@RequestBody byte[] body) {
-		logger.info("JLF --- Get PTD from Audio based difficulty classifier");
+		logger.info("JLF --- SpeechRecognitionController callPTD --- Get Perceive difficulty task from Audio based difficulty classifier");
 		PTDRequestVO req= new PTDRequestVO();
 		PTDResponseVO res= new PTDResponseVO();
 		try {
@@ -149,6 +149,7 @@ public class SpeechRecognitionController{
 	}
 	
 	private void concatenateAudioStream(byte[] body){
+		logger.info("JLF Concatenating each audio chunk which it comes each 5 seconds");
 		//JLF:Copying byte array 
 		byte[] destination = new byte[body.length + getAudio().length];
 		// copy audio into start of destination (from pos 0, copy audio.length bytes)

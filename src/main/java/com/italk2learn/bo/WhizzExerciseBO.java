@@ -1,5 +1,7 @@
 package com.italk2learn.bo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,8 @@ import com.italk2learn.vo.WhizzResponseVO;
 @Transactional(rollbackFor = { ITalk2LearnException.class, ITalk2LearnException.class })
 public class WhizzExerciseBO implements IWhizzExerciseBO{
 	
+	private static final Logger logger = LoggerFactory.getLogger(WhizzExerciseBO.class);
+	
 	private IWhizzExerciseDAO exerciseWhizzDAO;
 	
 	@Autowired
@@ -21,27 +25,24 @@ public class WhizzExerciseBO implements IWhizzExerciseBO{
 		this.setExerciseWhizzDAO(exerciseDAO);
 	}
 	
-	
 	public WhizzResponseVO storeWhizzInfo(WhizzRequestVO request) throws ITalk2LearnException{
+		logger.info("JLF WhizzExerciseBO storeWhizzInfo() --- Storing Whizz data on the database");
 		WhizzResponseVO response= new WhizzResponseVO();
 		try {
 			response.setResponse(getExerciseWhizzDAO().storeDataWhizz(request.getIdUser(), request.getIdExercise(), request.getWhizz()));
 		}
 		catch (Exception e){
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		return response;
 	}
-
 
 	public IWhizzExerciseDAO getExerciseWhizzDAO() {
 		return exerciseWhizzDAO;
 	}
 
-
 	public void setExerciseWhizzDAO(IWhizzExerciseDAO exerciseWhizzDAO) {
 		this.exerciseWhizzDAO = exerciseWhizzDAO;
 	}
-
 
 }

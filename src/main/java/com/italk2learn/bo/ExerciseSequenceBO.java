@@ -24,8 +24,7 @@ import com.italk2learn.vo.WhizzRequestVO;
 public class ExerciseSequenceBO implements IExerciseSequenceBO  {
 	
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ExerciseSequenceBO.class);
+	private static final Logger logger = LoggerFactory.getLogger(ExerciseSequenceBO.class);
 	
 	public IExerciseDAO exerciseDAO;
 	
@@ -46,9 +45,11 @@ public class ExerciseSequenceBO implements IExerciseSequenceBO  {
 			response.setResponse(ExerciseAssembler.toExerciseVOs(getExerciseDAO().getAllExercises()));
 		} catch (ITalk2LearnException e) {
 			// TODO Auto-generated catch block
+			logger.error(e.toString());
 			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+			logger.error(e.toString());
 			e.printStackTrace();
 		}
     	return response;

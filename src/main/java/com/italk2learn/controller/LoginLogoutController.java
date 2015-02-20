@@ -4,6 +4,8 @@
 package com.italk2learn.controller;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/login")
 public class LoginLogoutController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(LoginLogoutController.class);
         
 
 	/**
@@ -25,8 +29,8 @@ public class LoginLogoutController {
 	 * @return the name of the page
 	 */
 	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ModelAndView getLoginPage(@RequestParam(value="error", required=false) boolean error, 
-			ModelMap model) {
+	public ModelAndView getLoginPage(@RequestParam(value="error", required=false) boolean error,ModelMap model) {
+		logger.info("JLF --- LoginLogoutController getLoginPage --- Getting the loginpage");
 		ModelAndView mod=new ModelAndView();
 		mod.setViewName("login");
 		String err="You have entered invalid credentials or your user is already logged in the platform!";
@@ -48,7 +52,7 @@ public class LoginLogoutController {
 	 */
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
  	public String getDeniedPage() {
-		
+		logger.info("JLF --- LoginLogoutController getDeniedPage --- Getting the denied page for users, which did not provide credentials");
 		// This will resolve to /WEB-INF/jsp/deniedpage.jsp
 		return "logoutSuccess";
 	}

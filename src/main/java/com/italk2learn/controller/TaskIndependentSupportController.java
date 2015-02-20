@@ -37,9 +37,7 @@ public class TaskIndependentSupportController {
 	
 	private ITaskIndependentSupportBO tisService;
 	
-	private static final Logger logger = LoggerFactory
-			.getLogger(TaskIndependentSupportController.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(TaskIndependentSupportController.class);
 
 	@Autowired
     public TaskIndependentSupportController(ITaskIndependentSupportBO tisService) {
@@ -48,7 +46,7 @@ public class TaskIndependentSupportController {
 	
 	
 	/**
-	 * Receives 
+	 * Test task independent support receiving the id from the file. 
 	 * 
 	 * @input Number of file is requested to send to the engine. 
 	 * 
@@ -57,7 +55,7 @@ public class TaskIndependentSupportController {
 	@RequestMapping(value = "/testTIS",method = RequestMethod.GET)
 	@ResponseBody
 	public TaskIndependentSupportResponseVO testTaskIndependentSupport(@RequestParam(value = "option") String op) {
-		logger.info("JLF --- testTaskIndependentSupport()");
+		logger.info("JLF --- TaskIndependentSupportController testTaskIndependentSupport()");
 		TaskIndependentSupportRequestVO request= new TaskIndependentSupportRequestVO();
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -79,7 +77,8 @@ public class TaskIndependentSupportController {
 	@ResponseBody
 	public void callTIDfromTDS(@RequestBody TaskIndependentSupportRequestVO tisRequest){
 		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		logger.info("JLF --- callTIDfromTDS log"+"User: "+user.getUsername());
+		logger.info("JLF --- TaskIndependentSupportController callTIDfromTDS --- Calling TIS from TDS "+"User: "+user.getUsername());
+		logger.info("feedbackTest="+ tisRequest.getFeedbackText()+" ,currentFeedbackType="+tisRequest.getCurrentFeedbackType()+ " ,previousFeedbackType="+ tisRequest.getPreviousFeedbackType()+" ,followed"+tisRequest.getFollowed());
 		TaskIndependentSupportRequestVO request= new TaskIndependentSupportRequestVO();
         try {
         	request.setHeaderVO(new HeaderVO());
@@ -96,12 +95,12 @@ public class TaskIndependentSupportController {
 	
 	/**
 	 * Get the task independent support emotions
-	 * 
+	 *
 	 */
 	@RequestMapping(value = "/getTIEmotions",method = RequestMethod.GET)
 	@ResponseBody
 	public FractionsLabResponseVO getTIEmotions(@Valid @ModelAttribute("emotions") FractionsLabRequestVO emotions) {
-		logger.info("JLF --- Initialises FractionLab ");
+		logger.info("JLF --- TaskIndependentSupportController  getTIEmotions()");
 		FractionsLabResponseVO response= new FractionsLabResponseVO();
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -119,7 +118,7 @@ public class TaskIndependentSupportController {
 	@RequestMapping(value = "/getTIFeedback",method = RequestMethod.GET)
 	@ResponseBody
 	public FractionsLabResponseVO getTIFeedback(@Valid @ModelAttribute("feeback") FractionsLabRequestVO feedback) {
-		logger.info("JLF --- Initialises FractionLab ");
+		logger.info("JLF --- TaskIndependentSupportController getTIFeedback()");
 		FractionsLabResponseVO response= new FractionsLabResponseVO();
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();

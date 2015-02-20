@@ -1,5 +1,7 @@
 package com.italk2learn.bo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,8 @@ import com.italk2learn.vo.FractionsLabResponseVO;
 @Transactional(rollbackFor = { ITalk2LearnException.class, ITalk2LearnException.class })
 public class FractionsLabBO implements IFractionsLabBO{
 	
+	private static final Logger logger = LoggerFactory.getLogger(FractionsLabBO.class);
+	
 	private IFractionsLabDAO fractionsLabDAO;
 	
 	@Autowired
@@ -21,27 +25,23 @@ public class FractionsLabBO implements IFractionsLabBO{
 		this.setFractionsLabDAO(fl);
 	}
 	
-	
 	public FractionsLabResponseVO saveEventFL(FractionsLabRequestVO request) throws ITalk2LearnException{
 		FractionsLabResponseVO response= new FractionsLabResponseVO();
 		try {
 			response.setResponse(getFractionsLabDAO().saveEvent(request.getEvent(),request.getIdUser(),request.getIdExercise()));
 		}
 		catch (Exception e){
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		return response;
 	}
-
 
 	public IFractionsLabDAO getFractionsLabDAO() {
 		return fractionsLabDAO;
 	}
 
-
 	public void setFractionsLabDAO(IFractionsLabDAO fractionsLabDAO) {
 		this.fractionsLabDAO = fractionsLabDAO;
 	}
-
 
 }

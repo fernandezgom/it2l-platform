@@ -1,12 +1,5 @@
 package com.italk2learn.controller;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -35,8 +28,7 @@ public class CTATLoggerController {
 	
 	private LdapUserDetailsImpl user;
 	
-	private static final Logger logger = LoggerFactory
-			.getLogger(CTATLoggerController.class);
+	private static final Logger logger = LoggerFactory.getLogger(CTATLoggerController.class);
 
 	private boolean assesment=false;
 	private boolean result=false;
@@ -56,7 +48,7 @@ public class CTATLoggerController {
 	 */
 	@RequestMapping(value = "/",method = RequestMethod.POST,  headers = "Accept=application/xml, application/json")
 	public void setLogCTAT(@RequestBody String body, HttpServletRequest req) {
-		logger.info("JLF --- CTAT setLogCTAT log");
+		logger.info("JLF --- CTATLoggerController setLogCTAT --- storing CTAT log on the database, log= "+body);
 		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		CTATRequestVO request=new CTATRequestVO();
         try {
@@ -82,7 +74,7 @@ public class CTATLoggerController {
 	@RequestMapping(value = "/getResult",method = RequestMethod.GET)
 	@ResponseBody
 	public boolean getResult(Model model) {
-		logger.info("JLF --- CTATLoggerController.getResult");
+		logger.info("JLF --- CTATLoggerController getResult --- get assessment from the exercise, reult= "+assesment);
 		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return assesment;
 	}

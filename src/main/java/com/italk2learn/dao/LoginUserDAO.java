@@ -1,22 +1,17 @@
 package com.italk2learn.dao;
 
-import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 import org.springframework.stereotype.Repository;
 
 import com.hibernate.dto.User;
-import com.hibernate.dto.Userdetails;
 import com.italk2learn.dao.inter.ILoginUserDAO;
+import com.italk2learn.exception.ITalk2LearnException;
 import com.italk2learn.vo.HeaderVO;
-import com.italk2learn.vo.UserDetailsVO;
 
 /**
  * 
@@ -26,8 +21,6 @@ import com.italk2learn.vo.UserDetailsVO;
 @Repository
 public class LoginUserDAO extends HibernateDaoSupport implements ILoginUserDAO {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(LoginUserDAO.class);
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -36,20 +29,15 @@ public class LoginUserDAO extends HibernateDaoSupport implements ILoginUserDAO {
 		return this.getSessionFactory().getCurrentSession();
 	}
 	
-	/**
-	 * @return list Consulta que comprueba si el usuario está bloqueado en BBDD
-	 *         o no para expulsarle de la aplicación.
-	 */
-	public boolean getLoginUserInfo(HeaderVO header) throws Exception {
+	public boolean getLoginUserInfo(HeaderVO header) throws ITalk2LearnException {
 		try {
 			return (getIdUserInfo(header.getLoginUser())!=null);
 		} catch (Exception e){
-			System.out.println(e);
+			throw new ITalk2LearnException(e);
 		}
-		return false;
 	}
 	
-	public User getIdUserInfo(String loginUser) throws Exception {
+	public User getIdUserInfo(String loginUser) throws ITalk2LearnException {
 		try {
 			final Criteria criteria = getITalk2LearnSession().createCriteria(User.class);
 			criteria.setMaxResults(1);
@@ -57,35 +45,8 @@ public class LoginUserDAO extends HibernateDaoSupport implements ILoginUserDAO {
 			criteria.setResultTransformer(Criteria.ROOT_ENTITY);
 			return (User)criteria.uniqueResult();
 		} catch (Exception e){
-			System.out.println(e);
+			throw new ITalk2LearnException(e);
 		}
-		return null;
 	}
 
-	public void setUserData(UserDetailsVO messageForm) throws Exception {
-		try {
-			Session pr=getITalk2LearnSession();
-			final Userdetails ud = new Userdetails();
-			ud.setUser(messageForm.getName());
-			ud.setName(messageForm.getName());
-			ud.setEmail(messageForm.getEmail());
-			ud.setWebsite(messageForm.getWebsite());
-			ud.setPhone(messageForm.getPhone());
-			pr.saveOrUpdate(ud);
-		} catch (Exception e){
-			System.out.println(e);
-		}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Userdetails> getUserData() throws Exception {
-		try {
-			Session pr=getITalk2LearnSession();
-			final Criteria criteria = pr.createCriteria(Userdetails.class);
-			return (List<Userdetails>) criteria.list();
-		} catch (Exception e){
-			System.out.println(e);
-		}
-		return null;
-	}
 }

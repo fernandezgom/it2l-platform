@@ -1,5 +1,7 @@
 package com.italk2learn.bo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,8 @@ import com.italk2learn.vo.CTATResponseVO;
 @Transactional(rollbackFor = { ITalk2LearnException.class, ITalk2LearnException.class })
 public class CTATExerciseBO implements ICTATExerciseBO{
 	
+	private static final Logger logger = LoggerFactory.getLogger(CTATExerciseBO.class);
+	
 	private ICTATExerciseDAO exerciseCTATDAO;
 	
 	@Autowired
@@ -23,23 +27,21 @@ public class CTATExerciseBO implements ICTATExerciseBO{
 	
 	
 	public CTATResponseVO storageLog(CTATRequestVO request) throws ITalk2LearnException{
+		logger.info("JLF CTATExerciseBO storageLog --- Storing log on the database");
 		try {
-			
 			CTATResponseVO response= new CTATResponseVO();
 			response.setResponse(getExerciseCTATDAO().storageLog(request.getIdUser(), request.getIdExercise(),request.getLog()));
 			return response;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		return null;
 	}
 
-
 	public ICTATExerciseDAO getExerciseCTATDAO() {
 		return exerciseCTATDAO;
 	}
-
 
 	public void setExerciseCTATDAO(ICTATExerciseDAO exerciseDAO) {
 		this.exerciseCTATDAO = exerciseDAO;

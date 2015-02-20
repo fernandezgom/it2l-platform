@@ -40,8 +40,7 @@ public class MainContainerController {
        
 	private LdapUserDetailsImpl user;
 	
-	private static final Logger logger = LoggerFactory
-			.getLogger(MainContainerController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MainContainerController.class);
 	
 	/*Services*/
 	private IExerciseSequenceBO exerciseSequenceService;
@@ -84,11 +83,12 @@ public class MainContainerController {
 	 */
 	@RequestMapping(value = "",method = RequestMethod.GET)
 	public String initMainContainer(Model model) {
-		logger.info("JLF --- Main Container Init");
+		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			return "exercise";
 		} catch (Exception e){
+			logger.info("Returning to loginpage due previous errors");
 			logger.error(e.toString());
 			return "redirect:/login";
 		}
@@ -96,7 +96,8 @@ public class MainContainerController {
 	
 	@RequestMapping(value="/invalidate", method=RequestMethod.GET)
 	public void invalidate(HttpSession session, Model model) {
-		  session.invalidate();
+		logger.info("JLF --- MainContainerController invalidate --- Invalidating session required by the user");
+		session.invalidate();
 	}
 	
 	/**
@@ -107,7 +108,7 @@ public class MainContainerController {
 	@RequestMapping(value = "/init",method = RequestMethod.GET)
 	@ResponseBody
 	public FractionsLabResponseVO initFractionsLab() {
-		logger.info("JLF --- Initialises FractionLab ");
+		logger.info("JLF --- MainContainerController Initialises FractionLab ");
 		FractionsLabResponseVO response= new FractionsLabResponseVO();
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -123,7 +124,7 @@ public class MainContainerController {
 	 */
 	@RequestMapping(value = "/getSpecificExercise", method = RequestMethod.POST)
     public ModelAndView getSpecificExercise(@RequestBody ExerciseVO exercise, HttpServletRequest req){
-		logger.info("JLF --- getSpecificExercise()");
+		logger.info("JLF --- MainContainerController getSpecificExercise() --- Getting an specific exercise of contents table");
 		ModelAndView modelAndView = new ModelAndView();
 		ExerciseSequenceRequestVO request= new ExerciseSequenceRequestVO();
 		try{
@@ -136,6 +137,7 @@ public class MainContainerController {
 			return modelAndView;
 		}
 		catch (Exception e){
+			logger.error(e.toString());
 			return new ModelAndView();
 		}
 		

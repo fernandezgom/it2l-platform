@@ -32,8 +32,7 @@ import com.italk2learn.vo.TaskIndependentSupportResponseVO;
 @Transactional(rollbackFor = { ITalk2LearnException.class, ITalk2LearnException.class })
 public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	
-	private static final Logger logger = LoggerFactory
-			.getLogger(TaskIndependentSupportBO.class);
+	private static final Logger logger = LoggerFactory.getLogger(TaskIndependentSupportBO.class);
 	
 	private static final int ARRAY_SIZE = 500000;
 	private static final int NUM_SECONDS = 5 * 1000;
@@ -62,7 +61,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			return response;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		return null;
 	}
@@ -74,13 +73,16 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			return response;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		return null;
 	}
 	
+	/**
+	 * Method to calling Task Independent Support from Task Dependent Support, it receives some parameters from TDS
+	 */
 	public TaskIndependentSupportResponseVO callTISfromTID(TaskIndependentSupportRequestVO request) throws ITalk2LearnException{
-		logger.info("callTISfromTID()---");
+		logger.info("JLF TaskIndependentSupportBO callTISfromTID() --- Calling Task Independent Support from Task Dependent Support");
 		TISWrapper res= new TISWrapper();
 		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
 		try {
@@ -88,15 +90,17 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			return response;
 		}
 		catch (Exception e){
-			System.out.println(e);
+			logger.error(e.toString());
 		}
 		return null;
 	}
 	
+	
+	//JLF Method to test Task Independent Support. Just for demo purposes, no longer required
 	public TaskIndependentSupportResponseVO sendRealSpeechToSupport(TaskIndependentSupportRequestVO req) throws Exception{
 		TaskIndependentSupportResponseVO resultado=new TaskIndependentSupportResponseVO();
 		final int dataSize = (int) (Runtime.getRuntime().maxMemory());
-		System.out.println("Max amount of memory is: "+dataSize);
+		logger.info("Max amount of memory is: "+dataSize);
 		request.setHeaderVO(new HeaderVO());
 		request.getHeaderVO().setLoginUser("student1");
 		request.setInstance(12);
@@ -119,7 +123,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		}
 		long l=f.length();
 		long numChunks=l/ARRAY_SIZE;
-		System.out.println("the file is " + l + " bytes long");
+		logger.info("the file is " + l + " bytes long");
 		FileInputStream finp = null;
 		byte[] b=new byte[(int)l];
 		try {
@@ -128,6 +132,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			i=finp.read(b);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
+			logger.error(e1.toString());
 			e1.printStackTrace();
 		}
 		if (!oneChunk) {
@@ -136,12 +141,12 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			for (int i=0;i<numChunks;i++){
 				byte[] aux=Arrays.copyOfRange(b, initialChunk, finalChunk);
 				audioChunks.add(aux);
-				System.out.println("Chunk "+i+" starts at "+initialChunk+" bytes and finish at "+finalChunk+" bytes");
+				logger.info("Chunk "+i+" starts at "+initialChunk+" bytes and finish at "+finalChunk+" bytes");
 				initialChunk=finalChunk+1;
 				finalChunk=finalChunk+((int)l/(int)numChunks);
 			}
 			if (initialChunk<l){
-				System.out.println("Last chunk starts at "+initialChunk+" bytes and finish at "+l+" bytes");
+				logger.info("Last chunk starts at "+initialChunk+" bytes and finish at "+l+" bytes");
 				audioChunks.add(Arrays.copyOfRange(b, initialChunk, (int)l-1));
 			}
 		}
@@ -161,7 +166,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 				if (!oneChunk)
 					timer.scheduleAtFixedRate(new SpeechTask(), NUM_SECONDS,NUM_SECONDS);
 				else {
-					System.out.println("Sent in one chunk");
+					logger.info("Sent in one chunk");
 					request.setData(b);
 		    		liveResponse=restTemplate.postForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/sendData", request, SpeechRecognitionResponseVO.class);
 		    		String response=restTemplate.getForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/closeEngine?instance={instance}",String.class, "12");
@@ -180,7 +185,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 				}
 			}
 			while (loop){ }
-			System.out.println("All jobs finished");
+			logger.info("All jobs finished");
 			resultado.setPopUpWindow(res.getPopUpWindow());
 			resultado.setMessage(res.getMessage());
 			return resultado;
@@ -195,17 +200,16 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		    public void run() {
 		    	if (counter<audioChunks.size()) {
 		    		int aux=counter+1;
-		    		System.out.println("Sending chunk: " + aux);
-		    		System.out.println("the chunk is " + audioChunks.get(counter).length + " bytes long");
+		    		logger.info("Sending chunk: " + aux);
+		    		logger.info("the chunk is " + audioChunks.get(counter).length + " bytes long");
 		    		request.setData(audioChunks.get(counter));
 		    		liveResponse=restTemplate.postForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/sendData", request, SpeechRecognitionResponseVO.class);
-		    		//an.sendSpeechOutputToSupport(liveResponse.getResponse());
 		    		counter++;
 			    }
 		    	else {
 		    		String response=restTemplate.getForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/closeEngine?instance={instance}",String.class, "12");
 		    		if (response!=null){
-		    			System.out.println("Output: "+response);
+		    			logger.info("Output: "+response);
 		    			Assert.assertTrue(true);
 		    		}
 		    		loop=false;
