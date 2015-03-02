@@ -94,6 +94,26 @@ public class TaskIndependentSupportController {
 	}
 	
 	/**
+	 * JLF: Controller to call TIS from TDS
+	 */
+	@RequestMapping(value = "/setFractionsLabinUse", method = RequestMethod.POST)
+	@ResponseBody
+	public void setFractionsLabinUse(@RequestBody TaskIndependentSupportRequestVO tisRequest){
+		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		logger.info("JLF --- TaskIndependentSupportController setFractionsLabinUse ---  "+"User: "+user.getUsername());
+		logger.info("setFractionsLabinUse="+ tisRequest.isFlEnable());
+		TaskIndependentSupportRequestVO request= new TaskIndependentSupportRequestVO();
+        try {
+        	request.setHeaderVO(new HeaderVO());
+			request.getHeaderVO().setLoginUser(user.getUsername());
+			request.setFlEnable(tisRequest.isFlEnable());
+			getTisService().callTISfromTID(request);
+        } catch (Exception ex) {
+        	logger.error(ex.toString());
+        }
+	}
+	
+	/**
 	 * Get the task independent support emotions
 	 *
 	 */

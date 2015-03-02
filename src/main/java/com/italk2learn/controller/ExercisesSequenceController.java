@@ -116,13 +116,13 @@ public class ExercisesSequenceController implements Serializable{
 	 */
 	@RequestMapping(value = "/getCondition",method = RequestMethod.GET, produces="text/plain")
 	@ResponseBody
-	public Integer getCondition(Model model) {
+	public String getCondition(Model model) {
 		logger.info("JLF --- ExercisesSequence.getCondition --- get user condition from the database");
 		ExerciseSequenceRequestVO request= new ExerciseSequenceRequestVO();
 		request.setHeaderVO(new HeaderVO());
 		request.getHeaderVO().setLoginUser(user.getUsername());
 		try{
-			return getLoginUserService().getCondition(request.getHeaderVO());
+			return getLoginUserService().getCondition(request.getHeaderVO()).toString();
 		}
 		catch (Exception e){
 			logger.error(e.toString());
@@ -244,7 +244,7 @@ public class ExercisesSequenceController implements Serializable{
 		} else if (user.startsWith("testrft")){ //Random fractions tutor
 			return randomWithRange(13,28);
 		} else if (user.startsWith("testrflai")){ //Ramdon fractions lab with AI
-			return randomWithRange(94,95);
+			return randomWithRange(94,99);
 		} else if (user.startsWith("testrfl")){ //Ramdon fractions lab
 				return randomWithRange(56,60);
 		} else{ //Normal ramdon

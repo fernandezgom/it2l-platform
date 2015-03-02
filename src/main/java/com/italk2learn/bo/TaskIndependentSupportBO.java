@@ -95,6 +95,23 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		return null;
 	}
 	
+	/**
+	 * Method to set if Fractions Lab is currently in use by the user at the platform
+	 */
+	public TaskIndependentSupportResponseVO setFractionsLabinUse(TaskIndependentSupportRequestVO request) throws ITalk2LearnException{
+		logger.info("JLF TaskIndependentSupportBO setFractionsLabinUse() --- Setting fractionLab in use");
+		TISWrapper res= new TISWrapper();
+		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
+		try {
+			//res.doSomething(request.isFlEnable());
+			return response;
+		}
+		catch (Exception e){
+			logger.error(e.toString());
+		}
+		return null;
+	}
+	
 	
 	//JLF Method to test Task Independent Support. Just for demo purposes, no longer required
 	public TaskIndependentSupportResponseVO sendRealSpeechToSupport(TaskIndependentSupportRequestVO req) throws Exception{

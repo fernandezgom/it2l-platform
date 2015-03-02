@@ -80,6 +80,7 @@
 			$("#connectedON").hide();
 			$("#connectedOFF").hide();
 			soundButtonEnable(true);
+			getCondition();
 			//$("#initContainer").click(function() {
 			$.ajax({
 				type: 'GET',
@@ -231,6 +232,25 @@
 //		           alert('Done!');
 //		        }
 		    });
+		}
+		
+		function getCondition(){
+			$.ajax({
+		        type: 'GET',
+		        url: "sequence/getCondition",
+		        data: {
+		            
+		            },
+		        success: function(data, textStatus, jqXHR){
+		        	$('#condition').html(data);
+		        },
+		        error : function(jqXHR, status, error) {
+		           alert('Sorry!, no condition retrieved');
+		        },
+		        complete : function(jqXHR, status) {
+		        }
+		    });
+			
 		}
 
 		function textToSpeech(message) {

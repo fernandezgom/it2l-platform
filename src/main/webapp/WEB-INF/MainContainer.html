@@ -65,6 +65,7 @@
 					<div style=" width: 12%; display: inline; float: left; margin-left: 25px;" sec:authorize="hasRole('ROLE_USER')">&nbsp;</div>
 		            <div style="display:inline; width:76%;">
 		            	<span style="display:inline; font-weight: bold;" th:text="#{welcome}"> Welcome </span> <div id="user" style="font-weight: bold; display:inline;"> Name </div>
+		            	<span style="display:inline; font-weight: bold;" th:text="#{condition}"> Condition </span><div id="condition" style="font-weight: bold; display:inline;"> Condition </div>
 					</div>
 					<div sec:authorize="hasRole('ROLE_USER')" th:if="${#authentication}" style="display:inline; margin-right: 25px; float: right; width:12%">
 						<a href="#" th:href="@{/auth/logout}" style=" float: right; color:#e74c3c; font-weight:bold; font-size:13px;">Logout</a>
