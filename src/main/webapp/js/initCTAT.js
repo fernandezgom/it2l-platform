@@ -1,4 +1,5 @@
 // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+			setFractionsLabinUse(false);
             arrowButtonEnable(false);
 			var swfVersionStr = "11.1.0";
             // To use express install, set to playerProductInstall.swf, otherwise the empty string. 

@@ -188,16 +188,37 @@
 		        complete : function(jqXHR, status) {
 		        }
 		    });
-		    $.ajax({
+		    //JLF: Commented by the moment
+//		    $.ajax({
+//				type: 'POST',
+//		        contentType : 'application/json; charset=utf-8',
+//		        dataType : 'json',
+//		        url: "speechRecognition/callPTD",
+//		        success: function(data){
+//		        	//alert('PTD successfully called');
+//		        },
+//		        error : function(jqXHR, status, error) {
+//
+//		        },
+//		    });
+		}
+		
+		function setFractionsLabinUse(val)
+		{
+			var evt = {
+			       	 "flEnable": val
+			        };
+			$.ajax({
 				type: 'POST',
 		        contentType : 'application/json; charset=utf-8',
 		        dataType : 'json',
-		        url: "speechRecognition/callPTD",
+		        url: "tis/setFractionsLabinUse",
+		        data: JSON.stringify(evt),
 		        success: function(data){
-		        	//alert('PTD successfully called');
+		        	//alert('sendMessageToTIS successfully called!');
 		        },
 		        error : function(jqXHR, status, error) {
-
+		        	//window.location.href = "/italk2learn/login";
 		        },
 		    });
 		}

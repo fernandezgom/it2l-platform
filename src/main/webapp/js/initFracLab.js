@@ -57,6 +57,7 @@
 						}
 					});
 					var body=$('#task').text();
+					setFractionsLabinUse(true);
 					if (body.localeCompare("Make a fraction that equals 3/4 and has 12 as denominator.")==0){
 						arrowButtonEnable(false);
 						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=http://it2l.dcs.bbk.ac.uk/italk2learn/tip/EQUIValence1.tip"+"&idtask=EQUIValence1"+userName);
@@ -130,25 +131,6 @@
 				    });
 				}
 				
-				function setFractionsLabinUse(data)
-				{
-					var evt = {
-					       	 "flEnable": data.toLowerCase()
-					        };
-					$.ajax({
-						type: 'POST',
-				        contentType : 'application/json; charset=utf-8',
-				        dataType : 'json',
-				        url: "tis/setFractionsLabinUse",
-				        data: JSON.stringify(evt),
-				        success: function(data){
-				        	alert('sendMessageToTIS successfully called!');
-				        },
-				        error : function(jqXHR, status, error) {
-				        	//window.location.href = "/italk2learn/login";
-				        },
-				    });
-				}
 				
 				function saveEvent(event){
 					//alert(event);
@@ -170,12 +152,13 @@
 				    });
 				}
 				
-				function sendMessageToTIS(feedbackText, currentFeedbackType, previousFeedbackType, followed){
+				function sendMessageToTIS(feedbackText, currentFeedbackType, level, followed, viewed){
 					var evt = {
 					       	 "feedbackText": feedbackText,
 					       	 "currentFeedbackType": currentFeedbackType,
-					       	 "previousFeedbackType": previousFeedbackType,
-					       	 "followed": followed.toLowerCase()
+					       	 "level": level,
+					       	 "followed": followed.toLowerCase(),
+					       	 "viewed": viewed.toLowerCase()
 					        };
 					$.ajax({
 						type: 'POST',
@@ -184,7 +167,7 @@
 				        url: "tis/callTIS",
 				        data: JSON.stringify(evt),
 				        success: function(data){
-				        	alert('sendMessageToTIS successfully called!');
+				        	//alert('sendMessageToTIS successfully called!');
 				        },
 				        error : function(jqXHR, status, error) {
 				        	//window.location.href = "/italk2learn/login";
@@ -305,7 +288,7 @@
 				}
 				
 				function enableTIS(enable){
-					if (enable==true){
+					if (enable==false){
 						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*switchTISOFF*\"}}";
 	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
 					}

@@ -78,15 +78,16 @@ public class TaskIndependentSupportController {
 	public void callTIDfromTDS(@RequestBody TaskIndependentSupportRequestVO tisRequest){
 		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		logger.info("JLF --- TaskIndependentSupportController callTIDfromTDS --- Calling TIS from TDS "+"User: "+user.getUsername());
-		logger.info("feedbackTest="+ tisRequest.getFeedbackText()+" ,currentFeedbackType="+tisRequest.getCurrentFeedbackType()+ " ,previousFeedbackType="+ tisRequest.getPreviousFeedbackType()+" ,followed"+tisRequest.getFollowed());
+		logger.info("feedbackTest="+ tisRequest.getFeedbackText()+" ,currentFeedbackType="+tisRequest.getCurrentFeedbackType()+ " ,level="+ tisRequest.getLevel()+" ,followed"+tisRequest.getFollowed());
 		TaskIndependentSupportRequestVO request= new TaskIndependentSupportRequestVO();
         try {
         	request.setHeaderVO(new HeaderVO());
 			request.getHeaderVO().setLoginUser(user.getUsername());
 			request.setCurrentFeedbackType(tisRequest.getCurrentFeedbackType());
 			request.setFeedbackText(tisRequest.getFeedbackText());
-			request.setPreviousFeedbackType(tisRequest.getPreviousFeedbackType());
+			request.setLevel(tisRequest.getLevel());
 			request.setFollowed(tisRequest.getFollowed());
+			request.setViewed(tisRequest.isViewed());
 			getTisService().callTISfromTID(request);
         } catch (Exception ex) {
         	logger.error(ex.toString());
@@ -107,7 +108,7 @@ public class TaskIndependentSupportController {
         	request.setHeaderVO(new HeaderVO());
 			request.getHeaderVO().setLoginUser(user.getUsername());
 			request.setFlEnable(tisRequest.isFlEnable());
-			getTisService().callTISfromTID(request);
+			getTisService().setFractionsLabinUse(request);
         } catch (Exception ex) {
         	logger.error(ex.toString());
         }

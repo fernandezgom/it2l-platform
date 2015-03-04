@@ -15,13 +15,19 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.italk2learn.bo.inter.ILoginUserService;
+import com.italk2learn.bo.inter.ISpeechRecognitionBO;
 import com.italk2learn.bo.inter.ITaskIndependentSupportBO;
 import com.italk2learn.exception.ITalk2LearnException;
 import com.italk2learn.tis.TISWrapper;
+import com.italk2learn.tis.inter.ITISWrapper;
+import com.italk2learn.vo.AudioRequestVO;
 import com.italk2learn.vo.HeaderVO;
 import com.italk2learn.vo.SpeechRecognitionRequestVO;
 import com.italk2learn.vo.SpeechRecognitionResponseVO;
@@ -33,6 +39,12 @@ import com.italk2learn.vo.TaskIndependentSupportResponseVO;
 public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	
 	private static final Logger logger = LoggerFactory.getLogger(TaskIndependentSupportBO.class);
+	
+	
+	/*Services*/
+	private ISpeechRecognitionBO speechRecognitionService;
+	private ITISWrapper TISWrapperService;
+	private ILoginUserService loginUserService;
 	
 	private static final int ARRAY_SIZE = 500000;
 	private static final int NUM_SECONDS = 5 * 1000;
@@ -49,11 +61,21 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	@Autowired
 	private RestTemplate restTemplate;
 
-	/*@Autowired*/
-	public TaskIndependentSupportBO() {
-		
+	@Autowired
+	public TaskIndependentSupportBO(ITISWrapper tisWrapper, ISpeechRecognitionBO speechRecognition, ILoginUserService loginUserService) {
+		this.TISWrapperService=tisWrapper;
+		this.speechRecognitionService=speechRecognition;
+		this.setLoginUserService(loginUserService);
 	}
 	
+	public ITISWrapper getTISWrapperService() {
+		return TISWrapperService;
+	}
+
+	public void setTISWrapperService(ITISWrapper tISWrapperService) {
+		TISWrapperService = tISWrapperService;
+	}
+
 	public TaskIndependentSupportResponseVO sendNextWords(TaskIndependentSupportRequestVO request) throws ITalk2LearnException{
 		logger.info("sendNextWords()--- ");
 		try {
@@ -83,10 +105,22 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	 */
 	public TaskIndependentSupportResponseVO callTISfromTID(TaskIndependentSupportRequestVO request) throws ITalk2LearnException{
 		logger.info("JLF TaskIndependentSupportBO callTISfromTID() --- Calling Task Independent Support from Task Dependent Support");
-		TISWrapper res= new TISWrapper();
 		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
+		LdapUserDetailsImpl user=(LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		AudioRequestVO reqad=new AudioRequestVO();
+		SpeechRecognitionRequestVO reqsr=new SpeechRecognitionRequestVO();
+		byte[] audioSt;
 		try {
-			res.sendTDStoTIS(request.getFeedbackText(), request.getCurrentFeedbackType(), request.getPreviousFeedbackType(), request.getFollowed());
+			reqad.setHeaderVO(new HeaderVO());
+			reqad.getHeaderVO().setLoginUser(user.getUsername());
+			reqsr.setHeaderVO(new HeaderVO());
+			reqsr.getHeaderVO().setLoginUser(user.getUsername());
+			reqsr.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(reqsr.getHeaderVO()));
+			audioSt=getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio();
+			getTISWrapperService().setAudio(audioSt);
+			reqsr.setFinalByteArray(audioSt);
+			getSpeechRecognitionService().saveByteArray(reqsr);
+			getTISWrapperService().sendTDStoTIS(request.getFeedbackText(), request.getCurrentFeedbackType(), request.getLevel(), request.getFollowed(), request.isViewed());
 			return response;
 		}
 		catch (Exception e){
@@ -100,10 +134,9 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	 */
 	public TaskIndependentSupportResponseVO setFractionsLabinUse(TaskIndependentSupportRequestVO request) throws ITalk2LearnException{
 		logger.info("JLF TaskIndependentSupportBO setFractionsLabinUse() --- Setting fractionLab in use");
-		TISWrapper res= new TISWrapper();
 		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
 		try {
-			//res.doSomething(request.isFlEnable());
+			getTISWrapperService().setFractionsLabinUse(request.isFlEnable());
 			return response;
 		}
 		catch (Exception e){
@@ -213,7 +246,23 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		return null;
 	}
 	
-	  class SpeechTask extends TimerTask {
+	public ISpeechRecognitionBO getSpeechRecognitionService() {
+		return speechRecognitionService;
+	}
+
+	public void setSpeechRecognitionService(ISpeechRecognitionBO speechRecognitionService) {
+		this.speechRecognitionService = speechRecognitionService;
+	}
+
+	public ILoginUserService getLoginUserService() {
+		return loginUserService;
+	}
+
+	public void setLoginUserService(ILoginUserService loginUserService) {
+		this.loginUserService = loginUserService;
+	}
+
+	class SpeechTask extends TimerTask {
 		    public void run() {
 		    	if (counter<audioChunks.size()) {
 		    		int aux=counter+1;

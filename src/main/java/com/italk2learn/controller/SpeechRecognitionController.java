@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.italk2learn.bo.inter.ILoginUserService;
 import com.italk2learn.bo.inter.IPerceiveDifficultyTaskBO;
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
+import com.italk2learn.exception.ITalk2LearnException;
+import com.italk2learn.vo.AudioRequestVO;
+import com.italk2learn.vo.AudioResponseVO;
 import com.italk2learn.vo.HeaderVO;
 import com.italk2learn.vo.PTDRequestVO;
 import com.italk2learn.vo.PTDResponseVO;
@@ -31,8 +34,7 @@ import com.italk2learn.vo.SpeechRecognitionResponseVO;
 public class SpeechRecognitionController{
 	
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SpeechRecognitionController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SpeechRecognitionController.class);
 	
 	//Request petition
 	private SpeechRecognitionRequestVO request;
@@ -42,9 +44,6 @@ public class SpeechRecognitionController{
 	
 	private String username;
 	
-	private byte[] audio=new byte[0];
-	
-	
 	/*Services*/
 	private ISpeechRecognitionBO speechRecognitionService;
 	private IPerceiveDifficultyTaskBO perceiveDifficultyTaskService;
@@ -52,24 +51,28 @@ public class SpeechRecognitionController{
 
     @Autowired
     public SpeechRecognitionController(ISpeechRecognitionBO speechRecognition,IPerceiveDifficultyTaskBO perceiveDifficultyTask, ILoginUserService loginUserService) {
-    	this.setSpeechRecognitionService(speechRecognition);
+    	this.speechRecognitionService=speechRecognition;
     	this.perceiveDifficultyTaskService=perceiveDifficultyTask;
     	this.loginUserService=loginUserService;
     }
 	
 	/**
-	 * Main method to send audio to the speech recognisers, this methos is used each 5 seconds once the speech audio component is on
+	 * Main method to send audio to the speech recogniser, this method is used each 5 seconds once the speech audio component is on
 	 */
 	@RequestMapping(value = "/sendData",method = RequestMethod.POST)
 	@ResponseBody
 	public void sendData(@RequestBody byte[] body) {
 		logger.info("JLF --- SpeechRecognitionController sendData --- Sending data to the speech recogniser");
 		request= new SpeechRecognitionRequestVO();
+		AudioRequestVO reqad=new AudioRequestVO();
 		request.setHeaderVO(new HeaderVO());
-		request.getHeaderVO().setLoginUser(getUsername());
-		request.setData(body);
-		concatenateAudioStream(body);
+		reqad.setHeaderVO(new HeaderVO());
 		try {
+			request.getHeaderVO().setLoginUser(getUsername());
+			reqad.getHeaderVO().setLoginUser(getUsername());
+			request.setData(body);
+			reqad.setAudio(body);
+			getSpeechRecognitionService().concatenateAudioStream(reqad);
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().sendNewAudioChunk(request));
 		} catch (Exception e){
 			logger.error(e.toString());
@@ -91,7 +94,9 @@ public class SpeechRecognitionController{
 		try {
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().initASREngine(request));
 			//JLF: Sending first chunk always, otherwise SAIL software crashes
-			sendData(new byte[0]);
+			if (response.isOpen()){
+				sendData(new byte[0]);
+			}
 			return response.isOpen();
 		} catch (Exception e){
 			logger.error(e.toString());
@@ -107,15 +112,19 @@ public class SpeechRecognitionController{
 	public String closeASREngine(@RequestBody byte[] body) {
 		logger.info("JLF --- SpeechRecognitionController closeEngine --- Closing speech recognition engine");
 		request= new SpeechRecognitionRequestVO();
+		AudioRequestVO reqad=new AudioRequestVO();
 		if (body==null)
 			body=new byte[0];
 		try {
 			request.setHeaderVO(new HeaderVO());
+			reqad.setHeaderVO(new HeaderVO());
 			request.getHeaderVO().setLoginUser(getUsername());
+			reqad.getHeaderVO().setLoginUser(getUsername());
 			request.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
 			request.setData(body);
-			concatenateAudioStream(body);
-			request.setFinalByteArray(getAudio());
+			reqad.setAudio(body);
+			getSpeechRecognitionService().concatenateAudioStream(reqad);
+			request.setFinalByteArray(getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio());
 			getSpeechRecognitionService().saveByteArray(request);
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().closeASREngine(request));
 			return response.getResponse();
@@ -134,32 +143,22 @@ public class SpeechRecognitionController{
 		logger.info("JLF --- SpeechRecognitionController callPTD --- Get Perceive difficulty task from Audio based difficulty classifier");
 		PTDRequestVO req= new PTDRequestVO();
 		PTDResponseVO res= new PTDResponseVO();
+		AudioRequestVO reqad=new AudioRequestVO();
 		try {
 			req.setHeaderVO(new HeaderVO());
 			req.getHeaderVO().setLoginUser(getUsername());
+			reqad.setHeaderVO(new HeaderVO());
+			reqad.getHeaderVO().setLoginUser(getUsername());
 			req.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
-			req.setAudioByteArray(getAudio());
+			req.setAudioByteArray(getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio());
 			res=getPerceiveDifficultyTaskService().callPTD(req);
-			System.out.println("Emotion: "+res.getPTD());
+			logger.info("Emotion: "+res.getPTD());
 			return res.getPTD();
 		} catch (Exception e){
 			logger.error(e.toString());
 		}
 		return res.getPTD();
 	}
-	
-	private void concatenateAudioStream(byte[] body){
-		logger.info("JLF Concatenating each audio chunk which it comes each 5 seconds");
-		//JLF:Copying byte array 
-		byte[] destination = new byte[body.length + getAudio().length];
-		// copy audio into start of destination (from pos 0, copy audio.length bytes)
-		System.arraycopy(getAudio(), 0, destination, 0, getAudio().length);
-		// copy body into end of destination (from pos audio.length, copy body.length bytes)
-		System.arraycopy(body, 0, destination, getAudio().length, body.length);
-    	//setAudio(Arrays.copyOfRange(destination, 0, destination.length));
-		this.audio=destination.clone();
-	}
-	
 	
 	public ILoginUserService getLoginUserService() {
 		return loginUserService;
@@ -183,14 +182,6 @@ public class SpeechRecognitionController{
 
 	public void setUsername(String username) {
 		this.username = username;
-	}
-
-	public byte[] getAudio() {
-		return audio;
-	}
-
-	public void setAudio(byte[] audio) {
-		this.audio = audio;
 	}
 
 	public IPerceiveDifficultyTaskBO getPerceiveDifficultyTaskService() {
