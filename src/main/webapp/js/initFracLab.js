@@ -167,7 +167,17 @@
 				        url: "tis/callTIS",
 				        data: JSON.stringify(evt),
 				        success: function(data){
-				        	//alert('sendMessageToTIS successfully called!');
+				        	if (data.popUpWindow ==true) {
+								if (data.message.length>0) {
+									textToSpeech(data.message);
+									SendHighMessage(data.message);
+								}
+							}
+							else {
+								if (data.message.length>0) {
+									sendMessageToLightBulb(data.message);
+								}
+							}
 				        },
 				        error : function(jqXHR, status, error) {
 				        	//window.location.href = "/italk2learn/login";

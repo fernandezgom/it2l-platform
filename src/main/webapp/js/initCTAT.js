@@ -82,3 +82,8 @@
 			{
 				setTimeout(function(){alert(message)},5000);
 			}
+			
+			function sendMessageToLightBulb(message)
+			{
+				setTimeout(function(){alert(message)},1000);			
+			}

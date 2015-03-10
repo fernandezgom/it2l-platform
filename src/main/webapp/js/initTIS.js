@@ -26,7 +26,9 @@ function submitEmotion(option){
 				}
 			}
 			else {
-				EnableHelpButton(data.message);
+				if (data.message.length>0) {
+					sendMessageToLightBulb(data.message);
+				}
 			}
 		},
 		error: function (jqXHR, status, error) {

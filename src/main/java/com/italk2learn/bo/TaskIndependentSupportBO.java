@@ -121,6 +121,28 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			reqsr.setFinalByteArray(audioSt);
 			getSpeechRecognitionService().saveByteArray(reqsr);
 			getTISWrapperService().sendTDStoTIS(request.getFeedbackText(), request.getCurrentFeedbackType(), request.getLevel(), request.getFollowed(), request.isViewed());
+			//JLF: Getting the result
+			response.setPopUpWindow(getTISWrapperService().getPopUpWindow());
+			response.setMessage(getTISWrapperService().getMessage());
+			return response;
+		}
+		catch (Exception e){
+			logger.error(e.toString());
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * Method to check if something change at TISWrapper
+	 */
+	public TaskIndependentSupportResponseVO checkTISWrapper(TaskIndependentSupportRequestVO request) throws ITalk2LearnException{
+		logger.info("JLF TaskIndependentSupportBO callTISfromTID() --- Checking if something change at TISWrapper");
+		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
+		try {
+			//JLF: Getting the result
+			response.setPopUpWindow(getTISWrapperService().getPopUpWindow());
+			response.setMessage(getTISWrapperService().getMessage());
 			return response;
 		}
 		catch (Exception e){
@@ -208,7 +230,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		vars.put("model", "base");
 		try {
 			//Call initEngineService of an available instance
-			TISWrapper res= new TISWrapper();
+			//TISWrapper res= new TISWrapper();
 			Boolean isOpen=this.restTemplate.getForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/initEngine?user={user}&instance={instance}&server={server}&language={language}&model={model}",Boolean.class, vars);
 			if (isOpen){
 				Timer timer = new Timer();
@@ -228,7 +250,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		    				words.add(aux);
 		    			}
 		    			req.setWords(words);
-		    			res.sendSpeechOutputToSupport(req);
+		    			getTISWrapperService().sendSpeechOutputToSupport(req);
 		    			System.out.println("Output: "+response);
 		    			loop=false;
 		    		}
@@ -236,8 +258,8 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			}
 			while (loop){ }
 			logger.info("All jobs finished");
-			resultado.setPopUpWindow(res.getPopUpWindow());
-			resultado.setMessage(res.getMessage());
+			resultado.setPopUpWindow(getTISWrapperService().getPopUpWindow());
+			resultado.setMessage(getTISWrapperService().getMessage());
 			return resultado;
 		} catch (Exception e) {
 			e.printStackTrace();

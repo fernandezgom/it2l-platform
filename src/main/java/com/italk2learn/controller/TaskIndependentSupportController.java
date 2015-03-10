@@ -75,7 +75,7 @@ public class TaskIndependentSupportController {
 	 */
 	@RequestMapping(value = "/callTIS", method = RequestMethod.POST)
 	@ResponseBody
-	public void callTIDfromTDS(@RequestBody TaskIndependentSupportRequestVO tisRequest){
+	public TaskIndependentSupportResponseVO callTIDfromTDS(@RequestBody TaskIndependentSupportRequestVO tisRequest){
 		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		logger.info("JLF --- TaskIndependentSupportController callTIDfromTDS --- Calling TIS from TDS "+"User: "+user.getUsername());
 		logger.info("feedbackTest="+ tisRequest.getFeedbackText()+" ,currentFeedbackType="+tisRequest.getCurrentFeedbackType()+ " ,level="+ tisRequest.getLevel()+" ,followed"+tisRequest.getFollowed());
@@ -88,10 +88,12 @@ public class TaskIndependentSupportController {
 			request.setLevel(tisRequest.getLevel());
 			request.setFollowed(tisRequest.getFollowed());
 			request.setViewed(tisRequest.isViewed());
-			getTisService().callTISfromTID(request);
+			TaskIndependentSupportResponseVO res=getTisService().callTISfromTID(request);
+			return res;
         } catch (Exception ex) {
         	logger.error(ex.toString());
         }
+        return null;
 	}
 	
 	/**
@@ -130,6 +132,28 @@ public class TaskIndependentSupportController {
 			logger.error(e.toString());
 		}
 		return response;
+	}
+	
+	
+	/**
+	 * Checking TIS Wrapper to see if something has changed
+	 *
+	 */
+	@RequestMapping(value = "/checkTISWrapper",method = RequestMethod.GET)
+	@ResponseBody
+	public TaskIndependentSupportResponseVO checkTISWrapper() {
+		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		logger.info("JLF --- TaskIndependentSupportController checkTISWrapper --- Check if something changed in TISWrapper "+"User: "+user.getUsername());
+		TaskIndependentSupportRequestVO request= new TaskIndependentSupportRequestVO();
+        try {
+        	request.setHeaderVO(new HeaderVO());
+			request.getHeaderVO().setLoginUser(user.getUsername());
+			TaskIndependentSupportResponseVO res=getTisService().checkTISWrapper(request);
+			return res;
+        } catch (Exception ex) {
+        	logger.error(ex.toString());
+        }
+        return null;
 	}
 	
 	/**

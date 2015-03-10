@@ -13,17 +13,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.italk2learn.bo.TaskIndependentSupportBO;
 import com.italk2learn.bo.inter.ILoginUserService;
 import com.italk2learn.bo.inter.IPerceiveDifficultyTaskBO;
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
-import com.italk2learn.exception.ITalk2LearnException;
+import com.italk2learn.tis.inter.ITISWrapper;
 import com.italk2learn.vo.AudioRequestVO;
-import com.italk2learn.vo.AudioResponseVO;
 import com.italk2learn.vo.HeaderVO;
 import com.italk2learn.vo.PTDRequestVO;
 import com.italk2learn.vo.PTDResponseVO;
 import com.italk2learn.vo.SpeechRecognitionRequestVO;
 import com.italk2learn.vo.SpeechRecognitionResponseVO;
+import com.italk2learn.vo.TaskIndependentSupportRequestVO;
 
 /**
  * JLF: Handles requests for the application speech recognition.
@@ -48,12 +49,14 @@ public class SpeechRecognitionController{
 	private ISpeechRecognitionBO speechRecognitionService;
 	private IPerceiveDifficultyTaskBO perceiveDifficultyTaskService;
 	private ILoginUserService loginUserService;
+	private ITISWrapper TISWrapperService;
 
     @Autowired
-    public SpeechRecognitionController(ISpeechRecognitionBO speechRecognition,IPerceiveDifficultyTaskBO perceiveDifficultyTask, ILoginUserService loginUserService) {
+    public SpeechRecognitionController(ISpeechRecognitionBO speechRecognition,IPerceiveDifficultyTaskBO perceiveDifficultyTask, ILoginUserService loginUserService, ITISWrapper tisWrapper) {
     	this.speechRecognitionService=speechRecognition;
     	this.perceiveDifficultyTaskService=perceiveDifficultyTask;
     	this.loginUserService=loginUserService;
+    	this.setTISWrapperService(tisWrapper);
     }
 	
 	/**
@@ -74,6 +77,9 @@ public class SpeechRecognitionController{
 			reqad.setAudio(body);
 			getSpeechRecognitionService().concatenateAudioStream(reqad);
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().sendNewAudioChunk(request));
+			TaskIndependentSupportRequestVO tisObject= new TaskIndependentSupportRequestVO();
+			tisObject.setWords(response.getLiveResponse());
+			getTISWrapperService().sendSpeechOutputToSupport(tisObject);
 		} catch (Exception e){
 			logger.error(e.toString());
 		}
@@ -191,6 +197,14 @@ public class SpeechRecognitionController{
 	public void setPerceiveDifficultyTaskService(
 			IPerceiveDifficultyTaskBO perceiveDifficultyTaskService) {
 		this.perceiveDifficultyTaskService = perceiveDifficultyTaskService;
+	}
+
+	public ITISWrapper getTISWrapperService() {
+		return TISWrapperService;
+	}
+
+	public void setTISWrapperService(ITISWrapper tISWrapperService) {
+		TISWrapperService = tISWrapperService;
 	}
 
 }

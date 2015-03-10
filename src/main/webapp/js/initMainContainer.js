@@ -1,6 +1,7 @@
 		var userName;
 		var sEnabled=false;
 		var aEnabled=true;
+		setInterval(function(){checkTDSWrapper()},3000);
 
 		window.onbeforeunload = function(){
 			  $.ajax({
@@ -222,6 +223,31 @@
 		        },
 		    });
 		}
+		
+		function checkTDSWrapper(){
+			$.ajax({
+				type: 'GET',
+		        url: "tis/checkTISWrapper",
+		        success: function(data){
+		        	if (data.popUpWindow ==true) {
+						if (data.message.length>0) {
+							textToSpeech(data.message);
+							SendHighMessage(data.message);
+						}
+					}
+					else {
+						if (data.message.length>0) {
+							sendMessageToLightBulb(data.message);
+						}
+					}
+		        },
+		        error : function(jqXHR, status, error) {
+		        	//window.location.href = "/italk2learn/login";
+		        },
+		    });
+			
+		}
+
 
 
 		function submitExercise(){
