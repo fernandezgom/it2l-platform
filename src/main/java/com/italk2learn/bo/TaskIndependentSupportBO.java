@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,6 +53,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	private SpeechRecognitionRequestVO request= new SpeechRecognitionRequestVO();
 	private SpeechRecognitionResponseVO liveResponse=new SpeechRecognitionResponseVO();
 	private List<byte[]> audioChunks=new ArrayList<byte[]>();
+	private String SERVER;
 	
 	private int counter=0;
 	private boolean oneChunk=true;
@@ -167,9 +169,29 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		return null;
 	}
 	
+	/**
+	 * Call this method when an exercise is started in the platform
+	 */
+	public TaskIndependentSupportResponseVO startNewExercise(TaskIndependentSupportRequestVO request) throws ITalk2LearnException{
+		logger.info("JLF TaskIndependentSupportBO startNewExercise() --- Start a new exercise on TIS");
+		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
+		try {
+			getTISWrapperService().startNewExercise();
+			return response;
+		}
+		catch (Exception e){
+			logger.error(e.toString());
+		}
+		return null;
+	}
+	
 	
 	//JLF Method to test Task Independent Support. Just for demo purposes, no longer required
 	public TaskIndependentSupportResponseVO sendRealSpeechToSupport(TaskIndependentSupportRequestVO req) throws Exception{
+		//JLF: Check default user directory
+		//System.getProperty("user.dir")
+		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
+		SERVER=rb.getString("speech.server");
 		TaskIndependentSupportResponseVO resultado=new TaskIndependentSupportResponseVO();
 		final int dataSize = (int) (Runtime.getRuntime().maxMemory());
 		logger.info("Max amount of memory is: "+dataSize);
@@ -231,7 +253,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		try {
 			//Call initEngineService of an available instance
 			//TISWrapper res= new TISWrapper();
-			Boolean isOpen=this.restTemplate.getForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/initEngine?user={user}&instance={instance}&server={server}&language={language}&model={model}",Boolean.class, vars);
+			Boolean isOpen=this.restTemplate.getForObject(SERVER+"8092/italk2learnsm/speechRecognition/initEngine?user={user}&instance={instance}&server={server}&language={language}&model={model}",Boolean.class, vars);
 			if (isOpen){
 				Timer timer = new Timer();
 				//JLF:Send chunk each NUM_SECONDS
@@ -240,8 +262,8 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 				else {
 					logger.info("Sent in one chunk");
 					request.setData(b);
-		    		liveResponse=restTemplate.postForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/sendData", request, SpeechRecognitionResponseVO.class);
-		    		String response=restTemplate.getForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/closeEngine?instance={instance}",String.class, "12");
+		    		liveResponse=restTemplate.postForObject(SERVER+"8092/italk2learnsm/speechRecognition/sendData", request, SpeechRecognitionResponseVO.class);
+		    		String response=restTemplate.getForObject(SERVER+"8092/italk2learnsm/speechRecognition/closeEngine?instance={instance}",String.class, "12");
 		    		if (response!=null){
 		    			List<String> words= new ArrayList<String>();
 		    			String[] auxWords=response.split(" ");	
@@ -291,11 +313,11 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		    		logger.info("Sending chunk: " + aux);
 		    		logger.info("the chunk is " + audioChunks.get(counter).length + " bytes long");
 		    		request.setData(audioChunks.get(counter));
-		    		liveResponse=restTemplate.postForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/sendData", request, SpeechRecognitionResponseVO.class);
+		    		liveResponse=restTemplate.postForObject(SERVER+"8092/italk2learnsm/speechRecognition/sendData", request, SpeechRecognitionResponseVO.class);
 		    		counter++;
 			    }
 		    	else {
-		    		String response=restTemplate.getForObject("http://193.61.29.166:8092/italk2learnsm/speechRecognition/closeEngine?instance={instance}",String.class, "12");
+		    		String response=restTemplate.getForObject(SERVER+"8092/italk2learnsm/speechRecognition/closeEngine?instance={instance}",String.class, "12");
 		    		if (response!=null){
 		    			logger.info("Output: "+response);
 		    			Assert.assertTrue(true);

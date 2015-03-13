@@ -1,4 +1,5 @@
 		var userName;
+		var chTIS=false;
 		var sEnabled=false;
 		var aEnabled=true;
 		setInterval(function(){checkTDSWrapper()},3000);
@@ -121,6 +122,7 @@
 		            
 		            },
 		        success: function(data, textStatus, jqXHR) {
+		        	startNewExercise();
 		        	$("#next").show();
 		        	document.getElementById("mainContainer").innerHTML=jqXHR.responseText;
 		            var reponse = jQuery(jqXHR.responseText);
@@ -174,6 +176,7 @@
 		            
 		            },
 		        success: function(data, textStatus, jqXHR){
+		        	startNewExercise();
 		        	$("#next").show();
 		        	document.getElementById("mainContainer").innerHTML=jqXHR.responseText;
 		            var reponse = jQuery(jqXHR.responseText);
@@ -225,30 +228,46 @@
 		}
 		
 		function checkTDSWrapper(){
-			$.ajax({
-				type: 'GET',
-		        url: "tis/checkTISWrapper",
-		        success: function(data){
-		        	if (data.popUpWindow ==true) {
-						if (data.message.length>0) {
-							textToSpeech(data.message);
-							SendHighMessage(data.message);
+			if (chTIS==true) {
+				$.ajax({
+					type: 'GET',
+			        url: "tis/checkTISWrapper",
+			        success: function(data){
+			        	if (data.popUpWindow ==true) {
+							if (data.message.length>0) {
+								textToSpeech(data.message);
+								SendHighMessage(data.message);
+							}
 						}
-					}
-					else {
-						if (data.message.length>0) {
-							sendMessageToLightBulb(data.message);
+						else {
+							if (data.message.length>0) {
+								sendMessageToLightBulb(data.message);
+							}
 						}
-					}
-		        },
-		        error : function(jqXHR, status, error) {
-		        	//window.location.href = "/italk2learn/login";
-		        },
-		    });
+			        },
+			        error : function(jqXHR, status, error) {
+			        	//window.location.href = "/italk2learn/login";
+			        },
+			    });
+			}
 			
 		}
-
-
+		
+		function startNewExercise(){
+			$.ajax({
+				type: 'GET',
+			    url: "tis/startNewExercise",
+			    success: function(data){
+			    },
+			    error : function(jqXHR, status, error) {
+			    	//window.location.href = "/italk2learn/login";
+			    },
+			});
+		}
+		
+		function checkTIS(enable){
+			chTIS=enable;
+		}
 
 		function submitExercise(){
 			$('#exercisePrompt').html("");

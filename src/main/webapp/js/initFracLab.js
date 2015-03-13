@@ -298,6 +298,7 @@
 				}
 				
 				function enableTIS(enable){
+					checkTIS(enable);
 					if (enable==false){
 						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*switchTISOFF*\"}}";
 	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);

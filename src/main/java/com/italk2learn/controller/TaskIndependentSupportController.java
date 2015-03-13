@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,7 @@ import com.italk2learn.vo.TaskIndependentSupportResponseVO;
  * Handles and retrieves the login or denied page depending on the URI template
  */
 @Controller
+@Scope("session")
 @RequestMapping("/tis")
 public class TaskIndependentSupportController {
        
@@ -149,6 +151,27 @@ public class TaskIndependentSupportController {
         	request.setHeaderVO(new HeaderVO());
 			request.getHeaderVO().setLoginUser(user.getUsername());
 			TaskIndependentSupportResponseVO res=getTisService().checkTISWrapper(request);
+			return res;
+        } catch (Exception ex) {
+        	logger.error(ex.toString());
+        }
+        return null;
+	}
+	
+	/**
+	 * Checking TIS Wrapper to see if something has changed
+	 *
+	 */
+	@RequestMapping(value = "/startNewExercise",method = RequestMethod.GET)
+	@ResponseBody
+	public TaskIndependentSupportResponseVO startNewExercise() {
+		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		logger.info("JLF --- TaskIndependentSupportController startNewExercise --- Call when start a new exercise "+"User: "+user.getUsername());
+		TaskIndependentSupportRequestVO request= new TaskIndependentSupportRequestVO();
+        try {
+        	request.setHeaderVO(new HeaderVO());
+			request.getHeaderVO().setLoginUser(user.getUsername());
+			TaskIndependentSupportResponseVO res=getTisService().startNewExercise(request);
 			return res;
         } catch (Exception ex) {
         	logger.error(ex.toString());
