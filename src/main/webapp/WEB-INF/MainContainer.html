@@ -21,7 +21,7 @@
     <script type="text/javascript" src="/js/jsapi.js" th:src="@{/resources/js/jsapi.js}"></script>
 	<script type="text/javascript" src='sequence/js/monitorWOZClient.js'></script>
 	<script type="text/javascript" src="/js/initMainContainer.js" th:src="@{/resources/js/initMainContainer.js}"></script>
-	<script type="text/javascript" src="/js/initTIS.js" th:src="@{/resources/js/initTIS.js}"></script>
+<!-- 	<script type="text/javascript" src="/js/initTIS.js" th:src="@{/resources/js/initTIS.js}"></script> -->
 
     <script type="text/javascript" src="#" th:src="@{/resources/dojo/dojo.js}"></script>
     <script type="text/javascript" src="#" th:src="@{/resources/spring/Spring.js}"></script>
@@ -222,53 +222,53 @@
 		</p>
 	</div>
 	<div id="player"></div>
-	<div id="testTIS">
-		<table>
-			<tr>
-				<th colspan="4"> <span align="center">Task-Independent-Support Test </span> </th>
-			</tr>
-			<tr>
-				<td>
-					<input type="submit" id="butTIS1" value="emotion 1"/>
-				</td>
-				<td>
-					<input type="submit" id="butTIS2" value="no maths"/>
-				</td>
-				<td>
-					<input type="submit" id="butTIS3" value="maths vocab"/>
-				</td>
-				<td>
-					<input type="submit" id="butTIS4" value="emotion 2"/>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<audio controls="controls">
-					  <source src="complicated-example-mono.wav" type="audio/wav"/>
-						Your browser does not support the audio element.
-					</audio>
-				</td>
-				<td>
-					<audio controls="controls">
-					  <source src="no-maths-vocab-example-01-mono.wav" type="audio/wav"/>
-						Your browser does not support the audio element.
-					</audio>
-				</td>
-				<td>
-					<audio controls="controls">
-					  <source src="maths-example-mono.wav" type="audio/wav"/>
-						Your browser does not support the audio element.
-					</audio>
-				</td>
-				<td>
-					<audio controls="controls">
-					  <source src="hard-example-mono.wav" type="audio/wav"/>
-						Your browser does not support the audio element.
-					</audio>
-				</td>
-			</tr>
-		</table>
-	</div>
+<!-- 	<div id="testTIS"> -->
+<!-- 		<table> -->
+<!-- 			<tr> -->
+<!-- 				<th colspan="4"> <span align="center">Task-Independent-Support Test </span> </th> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td> -->
+<!-- 					<input type="submit" id="butTIS1" value="emotion 1"/> -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<input type="submit" id="butTIS2" value="no maths"/> -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<input type="submit" id="butTIS3" value="maths vocab"/> -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<input type="submit" id="butTIS4" value="emotion 2"/> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 			<tr> -->
+<!-- 				<td> -->
+<!-- 					<audio controls="controls"> -->
+<!-- 					  <source src="complicated-example-mono.wav" type="audio/wav"/> -->
+<!-- 						Your browser does not support the audio element. -->
+<!-- 					</audio> -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<audio controls="controls"> -->
+<!-- 					  <source src="no-maths-vocab-example-01-mono.wav" type="audio/wav"/> -->
+<!-- 						Your browser does not support the audio element. -->
+<!-- 					</audio> -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<audio controls="controls"> -->
+<!-- 					  <source src="maths-example-mono.wav" type="audio/wav"/> -->
+<!-- 						Your browser does not support the audio element. -->
+<!-- 					</audio> -->
+<!-- 				</td> -->
+<!-- 				<td> -->
+<!-- 					<audio controls="controls"> -->
+<!-- 					  <source src="hard-example-mono.wav" type="audio/wav"/> -->
+<!-- 						Your browser does not support the audio element. -->
+<!-- 					</audio> -->
+<!-- 				</td> -->
+<!-- 			</tr> -->
+<!-- 		</table> -->
+<!-- 	</div> -->
 	<audio controls="controls" id="speechProductionPlayer" hidden="true"></audio>
 
 </div>

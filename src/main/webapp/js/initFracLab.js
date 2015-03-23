@@ -94,6 +94,14 @@
 						arrowButtonEnable(false);
 						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=http://it2l.dcs.bbk.ac.uk/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task3aPlus.1.setA.area"+userName);
 					}
+					else if (body.localeCompare("Make a fraction that is equivalent to 3/4, using liquid measures. Check they are equivalent.")==0){
+						arrowButtonEnable(false);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=http://it2l.dcs.bbk.ac.uk/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task2.4.setB.liqu"+userName);
+					}
+					else if (body.localeCompare("Make a fraction that is equivalent to 1/2, using area. Check they are equivalent.")==0){
+						arrowButtonEnable(false);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=http://it2l.dcs.bbk.ac.uk/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task2.4.setA.area"+userName);
+					}
 					else {
 						arrowButtonEnable(true);
 						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=http://it2l.dcs.bbk.ac.uk/italk2learn/tip/Default.tip");
@@ -178,6 +186,26 @@
 									sendMessageToLightBulb(data.message);
 								}
 							}
+				        },
+				        error : function(jqXHR, status, error) {
+				        	//window.location.href = "/italk2learn/login";
+				        },
+				    });
+					
+				}
+				
+				function sendFeedbackTypeToSNA(feedbackType){
+					var evt = {
+					       	 "feedbackType": feedbackType
+					        };
+					$.ajax({
+						type: 'POST',
+				        contentType : 'application/json; charset=utf-8',
+				        dataType : 'json',
+				        url: "sna/sendFeedbackTypeToSNA",
+				        data: JSON.stringify(evt),
+				        success: function(data){
+
 				        },
 				        error : function(jqXHR, status, error) {
 				        	//window.location.href = "/italk2learn/login";

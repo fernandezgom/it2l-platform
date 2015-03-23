@@ -27,12 +27,17 @@ import MFSeq.Sequencer;
 import com.italk2learn.bo.inter.IExerciseSequenceBO;
 import com.italk2learn.bo.inter.IFractionsLabBO;
 import com.italk2learn.bo.inter.ILoginUserService;
+import com.italk2learn.bo.inter.ISpeechRecognitionBO;
 import com.italk2learn.bo.inter.IWhizzExerciseBO;
+import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
+import com.italk2learn.util.ExercisesConverter;
+import com.italk2learn.vo.AudioRequestVO;
 import com.italk2learn.vo.ExerciseSequenceRequestVO;
 import com.italk2learn.vo.ExerciseSequenceResponseVO;
 import com.italk2learn.vo.ExerciseVO;
 import com.italk2learn.vo.FractionsLabRequestVO;
 import com.italk2learn.vo.HeaderVO;
+import com.italk2learn.vo.SpeechRecognitionRequestVO;
 import com.italk2learn.vo.WhizzExerciseVO;
 import com.italk2learn.vo.WhizzRequestVO;
 
@@ -64,14 +69,18 @@ public class ExercisesSequenceController implements Serializable{
 	private ILoginUserService loginUserService;
 	private IWhizzExerciseBO whizzExerciseBO;
 	private IFractionsLabBO fractionsLabBO;
+	private IStudentNeedsAnalysis snaService;
+	private ISpeechRecognitionBO speechRecognitionService;
 
 
     @Autowired
-    public ExercisesSequenceController(IExerciseSequenceBO exerciseSequence, ILoginUserService loginUserService, IWhizzExerciseBO whizzExerciseBO, IFractionsLabBO fractionsLabBO) {
+    public ExercisesSequenceController(IExerciseSequenceBO exerciseSequence, ILoginUserService loginUserService, IWhizzExerciseBO whizzExerciseBO, IFractionsLabBO fractionsLabBO, IStudentNeedsAnalysis snaService, ISpeechRecognitionBO speechRecognition) {
     	this.exerciseSequenceService = exerciseSequence;
     	this.loginUserService=loginUserService;
     	this.setWhizzExerciseBO(whizzExerciseBO);
     	this.setFractionsLabBO(fractionsLabBO);
+    	this.setSnaService(snaService);
+    	this.setSpeechRecognitionService(speechRecognition);
     }
 	
 	/**
@@ -155,8 +164,8 @@ public class ExercisesSequenceController implements Serializable{
 				switch (getLoginUserService().getCondition(request.getHeaderVO())) {
 					case 1:	return getStateMachineSequencerExercise(request);
 					case 2:	return getStateMachineSequencerExercise(request);
-					case 3:	return getStateMachineSequencerExercise(request);
-					case 4:	return getVygotskyPolicySequencerExercise(request);
+					case 3:	return getVygotskyPolicySequencerExercise(request);
+					case 4:	return getStudentNeedsAnalysisExercise(request);
 					default: return getStateMachineSequencerExercise(request);
 				}
 			}
@@ -227,7 +236,36 @@ public class ExercisesSequenceController implements Serializable{
 			modelAndView.setViewName("redirect:/login");
 			return new ModelAndView();
 		}
-		
+	}
+	
+	/**
+	 * Get the exercise from student needs analysis
+	 */
+	private ModelAndView getStudentNeedsAnalysisExercise(ExerciseSequenceRequestVO request){
+		logger.info("JLF --- getStudentNeedsAnalysisExercise() --- Get the exercise from student needs analysis "+"User= "+this.getUsername());
+		ModelAndView modelAndView = new ModelAndView();
+		ExercisesConverter ec= new ExercisesConverter();
+		AudioRequestVO reqad=new AudioRequestVO();
+		SpeechRecognitionRequestVO reqsr=new SpeechRecognitionRequestVO();
+		byte[] audioSt;
+		try {
+			reqad.setHeaderVO(new HeaderVO());
+			reqad.getHeaderVO().setLoginUser(user.getUsername());
+			reqsr.setHeaderVO(new HeaderVO());
+			reqsr.getHeaderVO().setLoginUser(user.getUsername());
+			reqsr.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(reqsr.getHeaderVO()));
+			audioSt=getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio();
+			getSnaService().setAudio(audioSt);
+			String response=getSnaService().getNextTask();
+			modelAndView.setViewName("fractionsLabViews/"+ ec.getExercise().get(response));
+			return modelAndView;
+		}
+		catch (Exception e){
+			logger.info("Returning to login due previous errors");
+			logger.error(e.toString());
+			modelAndView.setViewName("redirect:/login");
+			return new ModelAndView();
+		}
 	}
 	
 	/**
@@ -397,6 +435,22 @@ public class ExercisesSequenceController implements Serializable{
 
 	public void setFractionsLabBO(IFractionsLabBO fractionsLabBO) {
 		this.fractionsLabBO = fractionsLabBO;
+	}
+
+	public IStudentNeedsAnalysis getSnaService() {
+		return snaService;
+	}
+
+	public void setSnaService(IStudentNeedsAnalysis snaService) {
+		this.snaService = snaService;
+	}
+
+	public ISpeechRecognitionBO getSpeechRecognitionService() {
+		return speechRecognitionService;
+	}
+
+	public void setSpeechRecognitionService(ISpeechRecognitionBO speechRecognitionService) {
+		this.speechRecognitionService = speechRecognitionService;
 	}
 
 }
