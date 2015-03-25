@@ -22,7 +22,7 @@ public interface IExerciseDAO {
 	
 	public void insertCurrentExercise(int idUser, int idView) throws ITalk2LearnException;
 	
-	public void insertCurrentVPSExercise(int idUser, String idSequencerView) throws ITalk2LearnException;
+	public void insertCurrentVPSExercise(int idUser, String idSequencerView, int idExercise) throws ITalk2LearnException;
 	
 	public void insertLastScore(int idUser, int lastScore) throws ITalk2LearnException;
 	
@@ -31,5 +31,7 @@ public interface IExerciseDAO {
 	public Exercises getIDSequencer(int idExercise) throws ITalk2LearnException;
 	
 	public List<Exercises> getAllExercises() throws ITalk2LearnException;
+	
+	public Exercises getIDExerciseFromSequencer(String nameExercise) throws Exception;
 
 }

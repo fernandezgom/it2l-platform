@@ -66,6 +66,20 @@ public class ExerciseDAO extends HibernateDaoSupport implements IExerciseDAO {
 	}
 	
 	/**
+	 * @return Get a specific exercise of a given idExercise
+	 */
+	public Exercises getIDExerciseFromSequencer(String nameExercise) throws Exception {
+		try {
+			final Criteria criteria = getITalk2LearnSession().createCriteria(Exercises.class);
+			criteria.add(Restrictions.eq("exercise", nameExercise));
+			return (Exercises) criteria.uniqueResult();
+		} catch (Exception e){
+			e.printStackTrace();
+			throw new ITalk2LearnException(e);
+		}
+	}
+	
+	/**
 	 * @return list Get a exercise to create a sequence
 	 */
 	public ExerciseVO getNextExercise(int idUser, int idExercise) throws Exception {
@@ -204,11 +218,12 @@ public class ExerciseDAO extends HibernateDaoSupport implements IExerciseDAO {
 		}
 	}
 	
-	public void insertCurrentVPSExercise(int idUser, String idSequencerView) throws ITalk2LearnException {
+	public void insertCurrentVPSExercise(int idUser, String idSequencerView, int idExercise) throws ITalk2LearnException {
 		final Session session = this.getITalk2LearnSession();
 		try{
 			User us=(User) session.load(User.class, idUser);
 			us.setIdSequencerView(idSequencerView);
+			us.setIdView(idExercise);
 			session.saveOrUpdate(us);
 		}catch (Exception e){
 			e.printStackTrace();

@@ -61,6 +61,8 @@ public class ExercisesSequenceController implements Serializable{
 	
 	private String username;
 	
+	private String currentExerciseName;
+	
 	private ExerciseSequenceRequestVO request;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExercisesSequenceController.class);
@@ -93,8 +95,9 @@ public class ExercisesSequenceController implements Serializable{
 	 * Initial method to get first exercise of sequence
 	 */
 	@RequestMapping(value = "/",method = RequestMethod.GET)
-	public String initSequence(Model model) {
+	public ModelAndView initSequence(Model model) {
 		logger.info("JLF --- ExerciseSequence Main Controller");
+		ModelAndView modelAndView = new ModelAndView();
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			setUsername(user.getUsername());
@@ -104,15 +107,26 @@ public class ExercisesSequenceController implements Serializable{
 			request.setIdExercise(getLoginUserService().getIdExersiceUser(request.getHeaderVO()));
 			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
 			response=((ExerciseSequenceResponseVO) getExerciseSequenceService().getFirstExercise(request));
+			this.currentExerciseName=response.getExercise().getExercise();
+			switch (getLoginUserService().getCondition(request.getHeaderVO())) {
+				case 1:	modelAndView.setViewName(response.getExercise().getView()+"/"+ response.getExercise().getExercise());
+						break;
+				case 2:	modelAndView.setViewName(response.getExercise().getView()+"/"+ response.getExercise().getExercise());
+						break;
+				case 3:	modelAndView=getVygotskyPolicySequencerExerciseWhizz(request);
+						break;
+				case 4:	modelAndView=getVygotskyPolicySequencerExerciseCTAT(request);
+						break;
+				default: modelAndView.setViewName(response.getExercise().getView()+"/"+ response.getExercise().getExercise());
+						break;
+			}
+			return modelAndView;
 		} catch (Exception e){
+			logger.info("Returning to login due previous errors");
 			logger.error(e.toString());
-			return "redirect:/login";
+			modelAndView.setViewName("redirect:/login");
+			return new ModelAndView();
 		}
-		ExerciseVO ex=new ExerciseVO();
-		ex.setIdExercise(0);
-		model.addAttribute("messageInfo", ex);
-		model.addAttribute(response);
-		return  response.getExercise().getView()+"/"+ response.getExercise().getExercise();
 	}
 	
 	/**
@@ -163,13 +177,14 @@ public class ExercisesSequenceController implements Serializable{
 				request.setIdExercise(getRandomExercise(user.getUsername()));
 				ExerciseVO response=getExerciseSequenceService().getSpecificExercise(request).getExercise();
 				request.setIdExercise(response.getIdExercise());
+				this.currentExerciseName=response.getExercise();
 				modelAndView.setViewName(response.getView()+"/"+ response.getExercise());
 				return modelAndView;
 			}
 			else {
 				switch (getLoginUserService().getCondition(request.getHeaderVO())) {
 					case 1:	return getStateMachineSequencerExercise(request);
-					case 2:	return getStateMachineSequencerExercise(request);
+					case 2:	return getStateMachineSequencerExercise(request);//JLF: No speech
 					case 3:	return getVygotskyPolicySequencerExerciseWhizz(request);
 					case 4:	return getVygotskyPolicySequencerExerciseCTAT(request);
 					case 5:	return getStudentNeedsAnalysisExercise(request);
@@ -230,6 +245,9 @@ public class ExercisesSequenceController implements Serializable{
 				return getStateMachineSequencerExercise(request);
 			}
 			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
+			//JLF: Getting exercise to store as well as the idSequencer
+			request.setNameExercise(ID);
+			request.setIdExercise(getExerciseSequenceService().getSpecificExercise(request).getExercise().getIdExercise());
 			request.setIdVPSExercise(ID);
 			getExerciseSequenceService().insertCurrentVPSExercise(request);
 			ExerciseVO response=getExerciseSequenceService().getWholeViewFromIDSequencer(request).getExercise();
@@ -258,15 +276,20 @@ public class ExercisesSequenceController implements Serializable{
 		String whizzLessonSuggestion = "GB0900CAx0200";
 		CTATRequestVO rqctat=new CTATRequestVO();
 		try {
+			rqctat.setHeaderVO(new HeaderVO());
+			rqctat.getHeaderVO().setLoginUser(user.getUsername());
 			prevLessonId = getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
 			studentId = getLoginUserService().getIdUserInfo(request.getHeaderVO());
-			ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs());
+			ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs(), getCurrentExerciseName());
 			prevStudentScore=Math.round(cs.getScore());;
 			String ID= FTSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion);
 			if (ID==null || ID.equals("")){
 				return getStateMachineSequencerExercise(request);
 			}
 			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
+			//JLF: Getting exercise to store as well as the idSequencer
+			request.setNameExercise(ID);
+			request.setIdExercise(getExerciseSequenceService().getSpecificExercise(request).getExercise().getIdExercise());
 			request.setIdVPSExercise(ID);
 			getExerciseSequenceService().insertCurrentVPSExercise(request);
 			ExerciseVO response=getExerciseSequenceService().getWholeViewFromIDSequencer(request).getExercise();
@@ -505,6 +528,14 @@ public class ExercisesSequenceController implements Serializable{
 
 	public void setCtatExerciseBO(ICTATExerciseBO ctatExerciseBO) {
 		this.ctatExerciseBO = ctatExerciseBO;
+	}
+
+	public String getCurrentExerciseName() {
+		return currentExerciseName;
+	}
+
+	public void setCurrentExerciseName(String currentExerciseName) {
+		this.currentExerciseName = currentExerciseName;
 	}
 
 }

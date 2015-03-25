@@ -79,6 +79,18 @@ public class ExerciseSequenceBO implements IExerciseSequenceBO  {
 		return null;
 	}
 	
+	public ExerciseSequenceResponseVO getIdExerciseFromSequence(ExerciseSequenceRequestVO request) throws ITalk2LearnException{
+		try {
+			ExerciseSequenceResponseVO response= new ExerciseSequenceResponseVO();
+			response.setExercise(ExerciseAssembler.toExerciseVOs(getExerciseDAO().getIDExerciseFromSequencer(request.getNameExercise())));
+			return response;
+		}
+		catch (Exception e){
+			logger.error(e.toString());
+		}
+		return null;
+	}
+	
 	public ExerciseSequenceResponseVO getNextExercise(ExerciseSequenceRequestVO request) throws ITalk2LearnException{
 		try {
 			ExerciseSequenceResponseVO response= new ExerciseSequenceResponseVO();
@@ -167,7 +179,7 @@ public class ExerciseSequenceBO implements IExerciseSequenceBO  {
 	public ExerciseSequenceResponseVO insertCurrentVPSExercise(ExerciseSequenceRequestVO request) throws ITalk2LearnException{
 		try {
 			ExerciseSequenceResponseVO response= new ExerciseSequenceResponseVO();
-			getExerciseDAO().insertCurrentVPSExercise(request.getIdUser(), request.getIdVPSExercise());
+			getExerciseDAO().insertCurrentVPSExercise(request.getIdUser(), request.getIdVPSExercise(), request.getIdExercise());
 			return response;
 		}
 		catch (Exception e){

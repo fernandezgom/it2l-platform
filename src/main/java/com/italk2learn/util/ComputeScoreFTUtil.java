@@ -20,9 +20,14 @@ public class ComputeScoreFTUtil {
 	private int numWrong;
 	private int numHint;
 	
-	public ComputeScoreFTUtil(List<String> logs){
+	public ComputeScoreFTUtil(List<String> logs, String taskName){
 		super();
-		computeScoreV1(logs);
+		String res=Character.toString(taskName.charAt(4));
+		//JLF: string name taskx where x >= 5 has the second version whereas the other ones has v1. This is the id mapping of the string names and the iTalk2LEarn platform IDs:
+		if (Integer.parseInt(res)>=5)
+			computeScoreV2(logs);
+		else 
+			computeScoreV1(logs);
 	}
 
 	private void computeScoreV1(List<String> logs) {

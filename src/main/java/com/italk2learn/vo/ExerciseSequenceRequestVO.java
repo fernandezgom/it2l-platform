@@ -14,8 +14,15 @@ public class ExerciseSequenceRequestVO extends RequestVO {
 	private String feedback;
 	private String user;
 	private String[] sequence;
+	private String nameExercise;
 	
 	
+	public String getNameExercise() {
+		return nameExercise;
+	}
+	public void setNameExercise(String nameExercise) {
+		this.nameExercise = nameExercise;
+	}
 	public int getIdUser() {
 		return idUser;
 	}
