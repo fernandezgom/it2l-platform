@@ -309,9 +309,17 @@
 		            },
 		        success: function(data, textStatus, jqXHR){
 		        	$('#condition').html(data);
+		        	if (data==2){
+		        		soundButtonEnable(false);
+		        		$("#sButton").hide();
+		        		$("#speechComponent").hide();
+		        	} else if (data==3){
+		        		alert("no fractions lab exercise");
+		        	}
 		        },
 		        error : function(jqXHR, status, error) {
-		           alert('Sorry!, no condition retrieved');
+		           alert('Sorry!, no condition retrieved, reloading webpage');
+		           window.location.href = "/italk2learn/exercise";
 		        },
 		        complete : function(jqXHR, status) {
 		        }

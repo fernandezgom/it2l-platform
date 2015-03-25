@@ -22,16 +22,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import MFSeq.Sequencer;
+import MFSeq.FTSequencer;
+import MFSeq.WhizzSequencer;
 
+import com.italk2learn.bo.inter.ICTATExerciseBO;
 import com.italk2learn.bo.inter.IExerciseSequenceBO;
 import com.italk2learn.bo.inter.IFractionsLabBO;
 import com.italk2learn.bo.inter.ILoginUserService;
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
 import com.italk2learn.bo.inter.IWhizzExerciseBO;
 import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
+import com.italk2learn.util.ComputeScoreFTUtil;
 import com.italk2learn.util.ExercisesConverter;
 import com.italk2learn.vo.AudioRequestVO;
+import com.italk2learn.vo.CTATRequestVO;
 import com.italk2learn.vo.ExerciseSequenceRequestVO;
 import com.italk2learn.vo.ExerciseSequenceResponseVO;
 import com.italk2learn.vo.ExerciseVO;
@@ -71,16 +75,18 @@ public class ExercisesSequenceController implements Serializable{
 	private IFractionsLabBO fractionsLabBO;
 	private IStudentNeedsAnalysis snaService;
 	private ISpeechRecognitionBO speechRecognitionService;
+	private ICTATExerciseBO ctatExerciseBO;
 
 
     @Autowired
-    public ExercisesSequenceController(IExerciseSequenceBO exerciseSequence, ILoginUserService loginUserService, IWhizzExerciseBO whizzExerciseBO, IFractionsLabBO fractionsLabBO, IStudentNeedsAnalysis snaService, ISpeechRecognitionBO speechRecognition) {
+    public ExercisesSequenceController(IExerciseSequenceBO exerciseSequence, ILoginUserService loginUserService, IWhizzExerciseBO whizzExerciseBO, IFractionsLabBO fractionsLabBO, IStudentNeedsAnalysis snaService, ISpeechRecognitionBO speechRecognition, ICTATExerciseBO ctatExerciseBO) {
     	this.exerciseSequenceService = exerciseSequence;
     	this.loginUserService=loginUserService;
     	this.setWhizzExerciseBO(whizzExerciseBO);
     	this.setFractionsLabBO(fractionsLabBO);
     	this.setSnaService(snaService);
     	this.setSpeechRecognitionService(speechRecognition);
+    	this.setCtatExerciseBO(ctatExerciseBO);
     }
 	
 	/**
@@ -164,8 +170,9 @@ public class ExercisesSequenceController implements Serializable{
 				switch (getLoginUserService().getCondition(request.getHeaderVO())) {
 					case 1:	return getStateMachineSequencerExercise(request);
 					case 2:	return getStateMachineSequencerExercise(request);
-					case 3:	return getVygotskyPolicySequencerExercise(request);
-					case 4:	return getStudentNeedsAnalysisExercise(request);
+					case 3:	return getVygotskyPolicySequencerExerciseWhizz(request);
+					case 4:	return getVygotskyPolicySequencerExerciseCTAT(request);
+					case 5:	return getStudentNeedsAnalysisExercise(request);
 					default: return getStateMachineSequencerExercise(request);
 				}
 			}
@@ -204,8 +211,8 @@ public class ExercisesSequenceController implements Serializable{
 	/**
 	 * Get the exercise from the Vygotsky Policy Sequencer 
 	 */
-	private ModelAndView getVygotskyPolicySequencerExercise(ExerciseSequenceRequestVO request){
-		logger.info("JLF --- getVygotskyPolicySequencerExercise() --- Get the exercise from the Vygotsky Policy Sequencer "+"User= "+this.getUsername());
+	private ModelAndView getVygotskyPolicySequencerExerciseWhizz(ExerciseSequenceRequestVO request){
+		logger.info("JLF --- getVygotskyPolicySequencerExerciseWhizz() --- Get the exercise from the Vygotsky Policy Sequencer "+"User= "+this.getUsername());
 		ModelAndView modelAndView = new ModelAndView();
 //		DBManagment manag = new DBManagment();
 		Date date= new Date();
@@ -218,10 +225,46 @@ public class ExercisesSequenceController implements Serializable{
 			prevLessonId = getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
 			studentId = getLoginUserService().getIdUserInfo(request.getHeaderVO());
 			prevStudentScore=getLoginUserService().getLastScoreSequenceUser(request.getHeaderVO());
-			String ID= Sequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion);
+			String ID= WhizzSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion);
 			if (ID==null || ID.equals("")){
-				modelAndView.setViewName("redirect:/login");
-				return new ModelAndView();
+				return getStateMachineSequencerExercise(request);
+			}
+			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
+			request.setIdVPSExercise(ID);
+			getExerciseSequenceService().insertCurrentVPSExercise(request);
+			ExerciseVO response=getExerciseSequenceService().getWholeViewFromIDSequencer(request).getExercise();
+			modelAndView.setViewName(response.getView()+"/"+ response.getExercise());
+			return modelAndView;
+		}
+		catch (Exception e){
+			logger.info("Returning to login due previous errors");
+			logger.error(e.toString());
+			modelAndView.setViewName("redirect:/login");
+			return new ModelAndView();
+		}
+	}
+	
+	/**
+	 * Get the exercise from the Vygotsky Policy Sequencer 
+	 */
+	private ModelAndView getVygotskyPolicySequencerExerciseCTAT(ExerciseSequenceRequestVO request){
+		logger.info("JLF --- getVygotskyPolicySequencerExerciseCTAT() --- Get the exercise from the Vygotsky Policy Sequencer "+"User= "+this.getUsername());
+		ModelAndView modelAndView = new ModelAndView();
+		Date date= new Date();
+		Timestamp timestamp= new Timestamp(date.getTime());
+		int studentId;
+		int prevStudentScore;
+		String prevLessonId;
+		String whizzLessonSuggestion = "GB0900CAx0200";
+		CTATRequestVO rqctat=new CTATRequestVO();
+		try {
+			prevLessonId = getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
+			studentId = getLoginUserService().getIdUserInfo(request.getHeaderVO());
+			ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs());
+			prevStudentScore=Math.round(cs.getScore());;
+			String ID= FTSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion);
+			if (ID==null || ID.equals("")){
+				return getStateMachineSequencerExercise(request);
 			}
 			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
 			request.setIdVPSExercise(ID);
@@ -257,6 +300,9 @@ public class ExercisesSequenceController implements Serializable{
 			audioSt=getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio();
 			getSnaService().setAudio(audioSt);
 			String response=getSnaService().getNextTask();
+			if (response==null || response.equals("")){
+				return getStateMachineSequencerExercise(request);
+			}
 			modelAndView.setViewName("fractionsLabViews/"+ ec.getExercise().get(response));
 			return modelAndView;
 		}
@@ -451,6 +497,14 @@ public class ExercisesSequenceController implements Serializable{
 
 	public void setSpeechRecognitionService(ISpeechRecognitionBO speechRecognitionService) {
 		this.speechRecognitionService = speechRecognitionService;
+	}
+
+	public ICTATExerciseBO getCtatExerciseBO() {
+		return ctatExerciseBO;
+	}
+
+	public void setCtatExerciseBO(ICTATExerciseBO ctatExerciseBO) {
+		this.ctatExerciseBO = ctatExerciseBO;
 	}
 
 }

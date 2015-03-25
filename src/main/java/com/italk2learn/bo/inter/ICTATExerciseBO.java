@@ -7,5 +7,7 @@ import com.italk2learn.vo.CTATResponseVO;
 public interface ICTATExerciseBO {
 	
 	public CTATResponseVO storageLog(CTATRequestVO request) throws ITalk2LearnException;
+	
+	public CTATResponseVO getExerciseLogs(CTATRequestVO request);
 
 }
