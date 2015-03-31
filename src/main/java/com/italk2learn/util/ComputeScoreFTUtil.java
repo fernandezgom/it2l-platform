@@ -14,6 +14,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.italk2learn.tis.MathsVocabDetector;
+
 public class ComputeScoreFTUtil {
 	
 	private float score;
@@ -218,6 +220,10 @@ public class ComputeScoreFTUtil {
 				this.score = 0;
 		}
 
+	}
+	
+	public int getScoreRounded(){
+		return Math.round(getScore()*100);
 	}
 	
 	public int getNumWrong() {

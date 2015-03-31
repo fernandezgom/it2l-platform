@@ -79,7 +79,7 @@ public class SpeechRecognitionController{
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().sendNewAudioChunk(request));
 			TaskIndependentSupportRequestVO tisObject= new TaskIndependentSupportRequestVO();
 			tisObject.setWords(response.getLiveResponse());
-			getTISWrapperService().sendSpeechOutputToSupport(tisObject);
+			getTISWrapperService().sendSpeechOutputToSupport(getUsername(), tisObject);
 		} catch (Exception e){
 			logger.error(e.toString());
 		}

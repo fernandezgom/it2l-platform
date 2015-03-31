@@ -9,6 +9,7 @@
     <definition name="standardLayout2" template="/layouts/standard2.html" templateType="thymeleaf"/>
     <definition name="standardFractionsLab" template="/layouts/standardFractionsLab.html" templateType="thymeleaf"/>
     <definition name="standardWhizz" template="/layouts/standardWhizz.html" templateType="thymeleaf"/>
+    <definition name="standardWhizzTest" template="/layouts/standardWhizzTest.html" templateType="thymeleaf"/>
     <definition name="standardCTAT" template="/layouts/standardCTAT.html" templateType="thymeleaf"/>
     <definition name="standardWOZ" template="/layouts/standardWOZ.html" templateType="thymeleaf"/>
     

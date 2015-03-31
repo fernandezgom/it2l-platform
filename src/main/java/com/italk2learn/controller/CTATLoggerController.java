@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ import com.italk2learn.vo.HeaderVO;
  * Handles requests for the application speech recognition.
  */
 @Controller
+@Scope("session")
 @RequestMapping("/ctatlogserver")
 public class CTATLoggerController {
 	

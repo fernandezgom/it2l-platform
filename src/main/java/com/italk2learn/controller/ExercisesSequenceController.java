@@ -3,6 +3,7 @@ package com.italk2learn.controller;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -227,6 +228,8 @@ public class ExercisesSequenceController implements Serializable{
 	 * Get the exercise from the Vygotsky Policy Sequencer 
 	 */
 	private ModelAndView getVygotskyPolicySequencerExerciseWhizz(ExerciseSequenceRequestVO request){
+		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
+		String TRIAL = rb.getString("vps.trial");
 		logger.info("JLF --- getVygotskyPolicySequencerExerciseWhizz() --- Get the exercise from the Vygotsky Policy Sequencer "+"User= "+this.getUsername());
 		ModelAndView modelAndView = new ModelAndView();
 //		DBManagment manag = new DBManagment();
@@ -240,7 +243,7 @@ public class ExercisesSequenceController implements Serializable{
 			prevLessonId = getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
 			studentId = getLoginUserService().getIdUserInfo(request.getHeaderVO());
 			prevStudentScore=getLoginUserService().getLastScoreSequenceUser(request.getHeaderVO());
-			String ID= WhizzSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion);
+			String ID= WhizzSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Boolean.parseBoolean(TRIAL));
 			if (ID==null || ID.equals("")){
 				return getStateMachineSequencerExercise(request);
 			}
@@ -281,7 +284,7 @@ public class ExercisesSequenceController implements Serializable{
 			prevLessonId = getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
 			studentId = getLoginUserService().getIdUserInfo(request.getHeaderVO());
 			ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs(), getCurrentExerciseName());
-			prevStudentScore=Math.round(cs.getScore());;
+			prevStudentScore=cs.getScoreRounded();
 			String ID= FTSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion);
 			if (ID==null || ID.equals("")){
 				return getStateMachineSequencerExercise(request);

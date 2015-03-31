@@ -122,7 +122,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			getTISWrapperService().setAudio(audioSt);
 			reqsr.setFinalByteArray(audioSt);
 			getSpeechRecognitionService().saveByteArray(reqsr);
-			getTISWrapperService().sendTDStoTIS(request.getFeedbackText(), request.getCurrentFeedbackType(), request.getLevel(), request.getFollowed(), request.isViewed());
+			getTISWrapperService().sendTDStoTIS(user.getUsername(), request.getFeedbackText(), request.getCurrentFeedbackType(), request.getLevel(), request.getFollowed(), request.isViewed());
 			//JLF: Getting the result
 			response.setPopUpWindow(getTISWrapperService().getPopUpWindow());
 			response.setMessage(getTISWrapperService().getMessage());
@@ -190,6 +190,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	public TaskIndependentSupportResponseVO sendRealSpeechToSupport(TaskIndependentSupportRequestVO req) throws Exception{
 		//JLF: Check default user directory
 		//System.getProperty("user.dir")
+		LdapUserDetailsImpl user=(LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
 		SERVER=rb.getString("speech.server");
 		TaskIndependentSupportResponseVO resultado=new TaskIndependentSupportResponseVO();
@@ -272,7 +273,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		    				words.add(aux);
 		    			}
 		    			req.setWords(words);
-		    			getTISWrapperService().sendSpeechOutputToSupport(req);
+		    			getTISWrapperService().sendSpeechOutputToSupport(user.getUsername(),req);
 		    			System.out.println("Output: "+response);
 		    			loop=false;
 		    		}

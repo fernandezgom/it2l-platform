@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class ExercisesConverter {
 	
-	private HashMap<String, String> exercise;
+	private HashMap<String, String> exercise= new HashMap<String, String>();
 	
 	public ExercisesConverter() {
 		exercise.put("task2.2","FractionsLab20");
