@@ -1,5 +1,7 @@
 package com.italk2learn.controller;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -8,6 +10,8 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +60,9 @@ public class ExercisesSequenceController implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
-	 private static String _RANDOMTEST = "testr";
+	private static String _RANDOMTEST = "testr";
+	
+	private static String _TIPPATH ="/var/lib/tomcat7/webapps/italk2learn/tip/";
 	
 	private LdapUserDetailsImpl user;
 	
@@ -451,6 +457,49 @@ public class ExercisesSequenceController implements Serializable{
 			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
             request.setEvent(flRequest.getEvent());
             getFractionsLabBO().saveEventFL(request);
+        } catch (Exception ex) {
+        	logger.error(ex.toString());
+        }
+	}
+	
+	/**
+	 * JLF: Creates a TIP file and saves into the system 
+	 */
+	@RequestMapping(value = "/createTIPFile", method = RequestMethod.POST)
+    public @ResponseBody void createTIPFile(@RequestBody FractionsLabRequestVO flRequest, HttpServletRequest req){
+		logger.info("JLF --- createTIPFile --- Creates a TIP file and saves into the system "+"User: "+this.getUsername());
+		logger.info("id_exercise="+flRequest.getIdExercise()+" ,event="+flRequest.getEvent());
+		FractionsLabRequestVO request=new FractionsLabRequestVO();
+        try {
+        	JSONObject result = new JSONObject();
+            JSONObject obj = new JSONObject();
+            JSONArray array = new JSONArray();
+            obj.put("numerator", 5);
+            obj.put("denominator", 5);
+            obj.put("partition", 5);
+            obj.put("type", "MoonSet");
+            JSONObject pos = new JSONObject();
+            pos.put("x", -4);
+            pos.put("y", 0);
+            obj.put("position", pos);
+            obj.put("color", "yellow");
+            array.add(obj);
+            result.put("initial_model", array);
+            obj.clear();
+     
+            FileWriter file = new FileWriter(_TIPPATH + flRequest.getTIPFileName()+ ".tip");
+            try {
+                file.write(result.toJSONString());
+                logger.info("Successfully Copied JSON Object to File..."+ flRequest.getTIPFileName()+ ".tip");
+                logger.debug("\nJSON Object: " + result);
+     
+            } catch (IOException e) {
+                e.printStackTrace();
+     
+            } finally {
+                file.flush();
+                file.close();
+            }
         } catch (Exception ex) {
         	logger.error(ex.toString());
         }

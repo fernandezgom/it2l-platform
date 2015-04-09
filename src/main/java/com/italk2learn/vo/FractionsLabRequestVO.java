@@ -8,6 +8,8 @@ public class FractionsLabRequestVO extends RequestVO {
 	private static final long serialVersionUID = 1L;
 	
 	private String event;
+	
+	private String TIPFileName;
 
 	public int getIdUser() {
 		return idUser;
@@ -34,6 +36,14 @@ public class FractionsLabRequestVO extends RequestVO {
 
 	public void setEvent(String event) {
 		this.event = event;
+	}
+
+	public String getTIPFileName() {
+		return TIPFileName;
+	}
+
+	public void setTIPFileName(String tIPFileName) {
+		TIPFileName = tIPFileName;
 	}
 
 

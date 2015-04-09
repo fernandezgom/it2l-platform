@@ -335,8 +335,12 @@
 			  l_lang = navigator.language;
 			else if (l_lang=="")
 			  l_lang = "en";
-			play_sound("http://translate.google.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(message)+"&tl="+l_lang+"&total=1&idx=0prev=input");
+			if (l_lang=="de_DE")
+				play_soundGerman(message);
+			else	
+				play_sound("http://translate.google.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(message)+"&tl="+l_lang+"&total=1&idx=0prev=input");
         }
+		
 
         function getLocale(){
         	var l_lang=getParameterByName("locale");
@@ -382,6 +386,14 @@
 			    }
 		    }
         }
+    	
+    	function play_soundGerman(url){
+    		var audio = new Audio();
+			audio.src = "wavFiles/"+url+".wav";
+			audio.load();                                
+			audio.play();
+    	}
+    	
     	
     	function soundButtonEnable(value){
 			if (value==true || value=="true" || value=="True"){
