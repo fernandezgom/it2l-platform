@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.ResourceBundle;
+import java.util.TimerTask;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import MFSeq.FTSequencer;
+import MFSeq.SetDB;
 import MFSeq.WhizzSequencer;
 
 import com.italk2learn.bo.inter.ICTATExerciseBO;
@@ -36,6 +38,7 @@ import com.italk2learn.bo.inter.IFractionsLabBO;
 import com.italk2learn.bo.inter.ILoginUserService;
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
 import com.italk2learn.bo.inter.IWhizzExerciseBO;
+import com.italk2learn.exception.ITalk2LearnException;
 import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
 import com.italk2learn.util.ComputeScoreFTUtil;
 import com.italk2learn.util.ExercisesConverter;
@@ -69,6 +72,8 @@ public class ExercisesSequenceController implements Serializable{
 	private String username;
 	
 	private String currentExerciseName;
+	
+	private String currentView;
 	
 	private ExerciseSequenceRequestVO request;
 	
@@ -115,6 +120,7 @@ public class ExercisesSequenceController implements Serializable{
 			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
 			response=((ExerciseSequenceResponseVO) getExerciseSequenceService().getFirstExercise(request));
 			this.currentExerciseName=response.getExercise().getExercise();
+			this.currentView=response.getExercise().getView();
 			switch (getLoginUserService().getCondition(request.getHeaderVO())) {
 				case 1:	modelAndView.setViewName(response.getExercise().getView()+"/"+ response.getExercise().getExercise());
 						break;
@@ -185,6 +191,7 @@ public class ExercisesSequenceController implements Serializable{
 				ExerciseVO response=getExerciseSequenceService().getSpecificExercise(request).getExercise();
 				request.setIdExercise(response.getIdExercise());
 				this.currentExerciseName=response.getExercise();
+				this.currentView=response.getView();
 				modelAndView.setViewName(response.getView()+"/"+ response.getExercise());
 				return modelAndView;
 			}
@@ -238,7 +245,6 @@ public class ExercisesSequenceController implements Serializable{
 		String TRIAL = rb.getString("vps.trial");
 		logger.info("JLF --- getVygotskyPolicySequencerExerciseWhizz() --- Get the exercise from the Vygotsky Policy Sequencer "+"User= "+this.getUsername());
 		ModelAndView modelAndView = new ModelAndView();
-//		DBManagment manag = new DBManagment();
 		Date date= new Date();
 		Timestamp timestamp= new Timestamp(date.getTime());
 		int studentId; //22516;
@@ -249,6 +255,7 @@ public class ExercisesSequenceController implements Serializable{
 			prevLessonId = getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
 			studentId = getLoginUserService().getIdUserInfo(request.getHeaderVO());
 			prevStudentScore=getLoginUserService().getLastScoreSequenceUser(request.getHeaderVO());
+			SetDB.SetConnectionAddress(true);
 			String ID= WhizzSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Boolean.parseBoolean(TRIAL));
 			if (ID==null || ID.equals("")){
 				return getStateMachineSequencerExercise(request);
@@ -291,6 +298,7 @@ public class ExercisesSequenceController implements Serializable{
 			studentId = getLoginUserService().getIdUserInfo(request.getHeaderVO());
 			ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs(), getCurrentExerciseName());
 			prevStudentScore=cs.getScoreRounded();
+			SetDB.SetConnectionAddress(false);
 			String ID= FTSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion);
 			if (ID==null || ID.equals("")){
 				return getStateMachineSequencerExercise(request);
@@ -320,17 +328,15 @@ public class ExercisesSequenceController implements Serializable{
 		logger.info("JLF --- getStudentNeedsAnalysisExercise() --- Get the exercise from student needs analysis "+"User= "+this.getUsername());
 		ModelAndView modelAndView = new ModelAndView();
 		ExercisesConverter ec= new ExercisesConverter();
-		AudioRequestVO reqad=new AudioRequestVO();
-		SpeechRecognitionRequestVO reqsr=new SpeechRecognitionRequestVO();
-		byte[] audioSt;
 		try {
-			reqad.setHeaderVO(new HeaderVO());
-			reqad.getHeaderVO().setLoginUser(user.getUsername());
-			reqsr.setHeaderVO(new HeaderVO());
-			reqsr.getHeaderVO().setLoginUser(user.getUsername());
-			reqsr.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(reqsr.getHeaderVO()));
-			audioSt=getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio();
-			getSnaService().setAudio(audioSt);
+			if (getCurrentView()==ExerciseVO.FRACTIONS_LAB) {
+				getSnaService().setExploratoryExercise(true);
+			} else if (getCurrentView()==ExerciseVO.WHIZZ){
+				getSnaService().setWhizzExercise(true);
+			} else if (getCurrentView()==ExerciseVO.WHIZZ){
+				getSnaService().setFractionsTutorExercise(true);
+			}
+			//getSnaService().setAudio(audioSt);
 			String response=getSnaService().getNextTask();
 			if (response==null || response.equals("")){
 				return getStateMachineSequencerExercise(request);
@@ -486,7 +492,17 @@ public class ExercisesSequenceController implements Serializable{
             array.add(obj);
             result.put("initial_model", array);
             obj.clear();
-     
+            array.clear();
+            obj.put("param", true);
+            array.add(obj);
+            result.put("initial_configuration", obj);
+            result.put("extra_information", "");
+            obj.clear();
+            obj.put("id", "");
+            obj.put("title", "");
+            obj.put("desctiption", "");
+            obj.put("showAtStartup", "true");
+            result.put("task_description", obj);
             FileWriter file = new FileWriter(_TIPPATH + flRequest.getTIPFileName()+ ".tip");
             try {
                 file.write(result.toJSONString());
@@ -590,4 +606,12 @@ public class ExercisesSequenceController implements Serializable{
 		this.currentExerciseName = currentExerciseName;
 	}
 
+	public String getCurrentView() {
+		return currentView;
+	}
+
+	public void setCurrentView(String currentView) {
+		this.currentView = currentView;
+	}
+	
 }

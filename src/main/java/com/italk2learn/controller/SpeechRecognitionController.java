@@ -1,5 +1,8 @@
 package com.italk2learn.controller;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -13,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.italk2learn.bo.TaskIndependentSupportBO;
 import com.italk2learn.bo.inter.ILoginUserService;
 import com.italk2learn.bo.inter.IPerceiveDifficultyTaskBO;
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
+import com.italk2learn.exception.ITalk2LearnException;
+import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
 import com.italk2learn.tis.inter.ITISWrapper;
 import com.italk2learn.vo.AudioRequestVO;
 import com.italk2learn.vo.HeaderVO;
@@ -45,17 +49,23 @@ public class SpeechRecognitionController{
 	
 	private String username;
 	
+	private static final int NUM_SECONDS = 10 * 60 * 1000;
+	
+	private Timer timer = new Timer();
+	
 	/*Services*/
 	private ISpeechRecognitionBO speechRecognitionService;
 	private IPerceiveDifficultyTaskBO perceiveDifficultyTaskService;
 	private ILoginUserService loginUserService;
 	private ITISWrapper TISWrapperService;
+	private IStudentNeedsAnalysis snaService;
 
-    @Autowired
-    public SpeechRecognitionController(ISpeechRecognitionBO speechRecognition,IPerceiveDifficultyTaskBO perceiveDifficultyTask, ILoginUserService loginUserService, ITISWrapper tisWrapper) {
+	@Autowired
+    public SpeechRecognitionController(ISpeechRecognitionBO speechRecognition,IPerceiveDifficultyTaskBO perceiveDifficultyTask, ILoginUserService loginUserService, ITISWrapper tisWrapper, IStudentNeedsAnalysis snaService) {
     	this.speechRecognitionService=speechRecognition;
     	this.perceiveDifficultyTaskService=perceiveDifficultyTask;
     	this.loginUserService=loginUserService;
+    	this.setSnaService(snaService);
     	this.setTISWrapperService(tisWrapper);
     }
 	
@@ -102,6 +112,11 @@ public class SpeechRecognitionController{
 			//JLF: Sending first chunk always, otherwise SAIL software crashes
 			if (response.isOpen()){
 				sendData(new byte[0]);
+				//Open a 10 minutes task to send data to sna
+				AudioRequestVO reqad=new AudioRequestVO();
+				reqad.setHeaderVO(new HeaderVO());
+				reqad.getHeaderVO().setLoginUser(user);
+				timer.scheduleAtFixedRate(new AudioSNATask(reqad), NUM_SECONDS,NUM_SECONDS);
 			}
 			return response.isOpen();
 		} catch (Exception e){
@@ -122,6 +137,7 @@ public class SpeechRecognitionController{
 		if (body==null)
 			body=new byte[0];
 		try {
+			timer.cancel();
 			request.setHeaderVO(new HeaderVO());
 			reqad.setHeaderVO(new HeaderVO());
 			request.getHeaderVO().setLoginUser(getUsername());
@@ -206,5 +222,35 @@ public class SpeechRecognitionController{
 	public void setTISWrapperService(ITISWrapper tISWrapperService) {
 		TISWrapperService = tISWrapperService;
 	}
+	
+    public IStudentNeedsAnalysis getSnaService() {
+		return snaService;
+	}
+
+	public void setSnaService(IStudentNeedsAnalysis snaService) {
+		this.snaService = snaService;
+	}
+	
+	//JLF: This class check if there is 20 minutes of audio
+			class AudioSNATask extends TimerTask {
+			    
+				private AudioRequestVO request;
+				
+				public AudioSNATask(AudioRequestVO request) {
+					super();
+					this.request = request;
+				}
+
+				public void run() {
+			    	if (true) {
+			    		try {
+			    			getSnaService().setAudio(getSpeechRecognitionService().getCurrentAudioFromExercise(request).getAudio());
+						} catch (ITalk2LearnException e) {
+							// TODO Auto-generated catch block
+							logger.error(e.toString());
+						}
+				    }
+			    }
+			}
 
 }

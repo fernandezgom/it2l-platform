@@ -300,8 +300,12 @@ class com.whizz.system.SystemManager {
 	 */
 	public function incQuestion():Void {
 		question_counter.incQuestion();
-		var event_obj:Object = {target:question_counter, type:SystemManager.QUESTION_CHANGE};
-		dispatchEvent(event_obj);
+		if (question_counter.question > 5){
+			closeContent();
+		} else {
+			var event_obj:Object = {target:question_counter, type:SystemManager.QUESTION_CHANGE};
+			dispatchEvent(event_obj);
+		}
 	}
 	/**
 	 * Get the current question number
@@ -316,7 +320,12 @@ class com.whizz.system.SystemManager {
 	 * @param	score_for_question The score this question. Usually 1, but maybe 0.5 if help is used
 	 */
 	public function setScore(number_of_questions:Number, score_for_question:Number):Void {
-		content_score.setScore(number_of_questions, score_for_question);
+		//JLF:content_score.setScore(number_of_questions, score_for_question);
+		if (number_of_questions > 5) {
+			content_score.setScore(5, score_for_question);
+		} else {
+			content_score.setScore(number_of_questions, score_for_question);
+		}
 		var event_obj:Object = {target:content_score, type:SystemManager.SCORE_CHANGE};
 		dispatchEvent(event_obj);
 	}

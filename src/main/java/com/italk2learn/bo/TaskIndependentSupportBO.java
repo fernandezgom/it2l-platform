@@ -119,9 +119,13 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			reqsr.getHeaderVO().setLoginUser(user.getUsername());
 			reqsr.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(reqsr.getHeaderVO()));
 			audioSt=getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio();
-			getTISWrapperService().setAudio(audioSt);
-			reqsr.setFinalByteArray(audioSt);
-			getSpeechRecognitionService().saveByteArray(reqsr);
+			//JLF: The audio could be null because we need to retrieve at least 2 minutes
+			if (audioSt!=null && audioSt.length>1){
+				getTISWrapperService().setAudio(audioSt);
+				//JLF: Store audio on the database
+				reqsr.setFinalByteArray(audioSt);
+				getSpeechRecognitionService().saveByteArray(reqsr);
+			}
 			getTISWrapperService().sendTDStoTIS(user.getUsername(), request.getFeedbackText(), request.getCurrentFeedbackType(), request.getLevel(), request.getFollowed(), request.isViewed());
 			//JLF: Getting the result
 			response.setPopUpWindow(getTISWrapperService().getPopUpWindow());

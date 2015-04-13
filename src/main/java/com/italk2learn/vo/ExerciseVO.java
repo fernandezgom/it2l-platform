@@ -16,6 +16,10 @@ public class ExerciseVO extends ResponseVO {
 	private String description;
 	private String idSequencer;
 	
+	public static final String FRACTIONS_LAB= "fractionsLabViews";
+	public static final String WHIZZ= "whizzViews";
+	public static final String FRACTIONS_TUTOR= "fractionsTutorViews";
+	
 	
 	public int getIdExercise() {
 		return idExercise;
