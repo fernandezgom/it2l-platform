@@ -7,10 +7,27 @@ public class ExercisesConverter {
 	private HashMap<String, String> exercise= new HashMap<String, String>();
 	
 	public ExercisesConverter() {
-		exercise.put("task2.2","FractionsLab20");
-		exercise.put("task2.1","FractionsLab10");
-		exercise.put("task2.4.setB.liqu","FractionsLab24");
-		exercise.put("task2.4.setA.area","FractionsLab25");
+		exercise.put("task2.1","Think of a fraction and show it on the screen as a number line, a rectangle, a set and a jug.");
+		exercise.put("task2.2","Make a fraction and right click it. Select 'Find equivalent' and partition the fraction into 2, 3, 4 and 5.");
+		exercise.put("task2.4.setA.area","Make a fraction that is equivalent to 1/2, using rectangles. Check it is equivalent to 1/2, by using the 'Compare' box.");
+		exercise.put("task2.4.setB.area","Make a fraction that is equivalent to 3/4, using rectangles. Check it is equivalent to 3/4, by using the 'Compare' box.");
+		exercise.put("task2.4.setC.area","Make a fraction that is equivalent to 7/3, using rectangles. Check it is equivalent to 7/3, by using the 'Compare' box.");
+		exercise.put("task2.4.setA.numb","Make a fraction that is equivalent to 1/2, using number lines. Check it is equivalent to 1/2, by using the 'Compare' box.");
+		exercise.put("task2.4.setB.numb","Make a fraction that is equivalent to 3/4, using number lines. Check it is equivalent to 3/4, by using the 'Compare' box.");
+		exercise.put("task2.4.setC.numb","Make a fraction that is equivalent to 7/3, using number lines. Check it is equivalent to 7/3, by using the 'Compare' box.");
+		exercise.put("task2.4.setA.sets","Make a fraction that is equivalent to 1/2, using sets. Check it is equivalent to 1/2, by using the 'Compare' box.");
+		exercise.put("task2.4.setB.sets","Make a fraction that is equivalent to 3/4, using sets. Check it is equivalent to 3/4, by using the 'Compare' box.");
+		exercise.put("task2.4.setC.sets","Make a fraction that is equivalent to 7/3, using number sets. Check it is equivalent to 7/3, by using the 'Compare' box.");
+		exercise.put("task2.4.setA.liqu","Make a fraction that is equivalent to 1/2, using liquid measures. Check it is equivalent to 1/2, by using the 'Compare' box.");
+		exercise.put("task2.4.setB.liqu","Make a fraction that is equivalent to 3/4, using liquid measures. Check it is equivalent to 3/4, by using the 'Compare' box.");
+		exercise.put("task2.4.setC.liqu","Make a fraction that is equivalent to 7/3, using liquid measures. Check it is equivalent to 7/3, by using the 'Compare' box.");
+		exercise.put("task2.6.setA","Michael says '3/4 = 1/12 because 3 times 4 equals 12'.  By using the 'Compare' box, show why you agree or disagree.");
+		exercise.put("task2.6.setB","Sam says '2/5 = 1/10 because 2 times 5 equals 10'.  By using the 'Compare' box, show why you agree or disagree.");
+		exercise.put("task2.6.setC","Amir says '7/3 = 1/21 because 7 times 3 equals 21'.  By using the 'Compare' box, show why you agree or disagree.");
+		exercise.put("task2.7.setA","Make a fraction that equals 1/6 and has 18 as denominator. Check it is equivalent to 1/6, by using the 'Compare' box.");
+		exercise.put("task2.7.setB","Make a fraction that equals 3/4 and has 12 as denominator. Check it is equivalent to 3/4, by using the 'Compare' box.");
+		exercise.put("task2.7.setC","Make a fraction that equals 7/3 and has 12 as denominator. Check it is equivalent to 7/3, by using the 'Compare' box.");
+		
 	}
 
 	public HashMap<String, String> getExercise() {
@@ -19,6 +36,25 @@ public class ExercisesConverter {
 
 	public void setExercise(HashMap<String, String> exercise) {
 		this.exercise = exercise;
+	}
+	
+	class TaskNames{
+		
+		private String taskName1;
+		private String taskName2;
+		
+		public String getTaskName1() {
+			return taskName1;
+		}
+		public void setTaskName1(String taskName1) {
+			this.taskName1 = taskName1;
+		}
+		public String getTaskName2() {
+			return taskName2;
+		}
+		public void setTaskName2(String taskName2) {
+			this.taskName2 = taskName2;
+		}
 	}
 
 }

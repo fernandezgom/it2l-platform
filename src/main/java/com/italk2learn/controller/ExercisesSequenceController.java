@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.ResourceBundle;
-import java.util.TimerTask;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -38,7 +37,7 @@ import com.italk2learn.bo.inter.IFractionsLabBO;
 import com.italk2learn.bo.inter.ILoginUserService;
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
 import com.italk2learn.bo.inter.IWhizzExerciseBO;
-import com.italk2learn.exception.ITalk2LearnException;
+import com.italk2learn.sna.exception.SNAException;
 import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
 import com.italk2learn.util.ComputeScoreFTUtil;
 import com.italk2learn.util.ExercisesConverter;
@@ -49,7 +48,6 @@ import com.italk2learn.vo.ExerciseSequenceResponseVO;
 import com.italk2learn.vo.ExerciseVO;
 import com.italk2learn.vo.FractionsLabRequestVO;
 import com.italk2learn.vo.HeaderVO;
-import com.italk2learn.vo.SpeechRecognitionRequestVO;
 import com.italk2learn.vo.WhizzExerciseVO;
 import com.italk2learn.vo.WhizzRequestVO;
 
@@ -65,7 +63,7 @@ public class ExercisesSequenceController implements Serializable{
 	
 	private static String _RANDOMTEST = "testr";
 	
-	private static String _TIPPATH ="/var/lib/tomcat7/webapps/italk2learn/tip/";
+	private String _TIPPATH ="/var/lib/tomcat7/webapps/italk2learn/tip/";
 	
 	private LdapUserDetailsImpl user;
 	
@@ -111,6 +109,8 @@ public class ExercisesSequenceController implements Serializable{
 		logger.info("JLF --- ExerciseSequence Main Controller");
 		ModelAndView modelAndView = new ModelAndView();
 		try {
+			ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
+			_TIPPATH=rb.getString("tippath");
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			setUsername(user.getUsername());
 			request= new ExerciseSequenceRequestVO();
@@ -326,22 +326,68 @@ public class ExercisesSequenceController implements Serializable{
 	 */
 	private ModelAndView getStudentNeedsAnalysisExercise(ExerciseSequenceRequestVO request){
 		logger.info("JLF --- getStudentNeedsAnalysisExercise() --- Get the exercise from student needs analysis "+"User= "+this.getUsername());
+		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
+		String TRIAL = rb.getString("vps.trial");
 		ModelAndView modelAndView = new ModelAndView();
 		ExercisesConverter ec= new ExercisesConverter();
+		AudioRequestVO reqad=new AudioRequestVO();
 		try {
-			if (getCurrentView()==ExerciseVO.FRACTIONS_LAB) {
+			reqad.setHeaderVO(new HeaderVO());
+			reqad.getHeaderVO().setLoginUser(user.getUsername());
+			Date date= new Date();
+			Timestamp timestamp= new Timestamp(date.getTime());
+			int studentId= getLoginUserService().getIdUserInfo(request.getHeaderVO());
+			int prevStudentScore=getLoginUserService().getLastScoreSequenceUser(request.getHeaderVO());
+			String prevLessonId=getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
+			String whizzLessonSuggestion = "GB0900CAx0200";//JLF: Hardcoded, this parameter is used in both sequencers
+			if (getCurrentView().equals(ExerciseVO.FRACTIONS_LAB)) {
 				getSnaService().setExploratoryExercise(true);
-			} else if (getCurrentView()==ExerciseVO.WHIZZ){
+			} else if (getCurrentView().equals(ExerciseVO.WHIZZ)){
+				SetDB.SetConnectionAddress(true);
+				getSnaService().setExploratoryExercise(false);
 				getSnaService().setWhizzExercise(true);
-			} else if (getCurrentView()==ExerciseVO.WHIZZ){
+			} else if (getCurrentView().equals(ExerciseVO.FRACTIONS_TUTOR)){
+				SetDB.SetConnectionAddress(false);
+				getSnaService().setExploratoryExercise(false);
 				getSnaService().setFractionsTutorExercise(true);
 			}
-			//getSnaService().setAudio(audioSt);
+			getSnaService().setAudio(getSpeechRecognitionService().getCurrentAudioFromExercise(reqad).getAudio());
+			try {
+				getSnaService().calculateNextTask(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Boolean.parseBoolean(TRIAL));
+			} catch (SNAException e) {
+				// TODO Auto-generated catch block
+				logger.error(e.getSnamessage());
+				modelAndView.addObject("error", e.getSnamessage());
+			}
 			String response=getSnaService().getNextTask();
 			if (response==null || response.equals("")){
 				return getStateMachineSequencerExercise(request);
 			}
-			modelAndView.setViewName("fractionsLabViews/"+ ec.getExercise().get(response));
+			String viewName="";			
+			if (getSnaService().getEngland()==true){
+				if (response.contains("task")==true){
+					viewName=ExerciseVO.FRACTIONS_LAB;
+					
+				} else {
+					viewName=ExerciseVO.WHIZZ;
+				}
+			} else {
+				if (response.contains("task")==true){
+					viewName=ExerciseVO.FRACTIONS_LAB;
+					
+				} else {
+					viewName=ExerciseVO.FRACTIONS_TUTOR;
+				}
+			}
+			if (viewName.equals(ExerciseVO.FRACTIONS_LAB)){
+				modelAndView.addObject("idTask", response);
+				modelAndView.addObject("taskName", ec.getExercise().get(response));
+				//modelAndView.addObject("taskName2", ec.getExercise().get(response));
+				modelAndView.setViewName("fractionsLabViews/FractionsLabSNA");
+			} else{
+				modelAndView.addObject("taskName", response);
+				modelAndView.setViewName(viewName+"/WhizzFlashSNA");
+			}
 			return modelAndView;
 		}
 		catch (Exception e){
@@ -480,28 +526,42 @@ public class ExercisesSequenceController implements Serializable{
         	JSONObject result = new JSONObject();
             JSONObject obj = new JSONObject();
             JSONArray array = new JSONArray();
-            obj.put("numerator", 5);
-            obj.put("denominator", 5);
-            obj.put("partition", 5);
-            obj.put("type", "MoonSet");
-            JSONObject pos = new JSONObject();
-            pos.put("x", -4);
-            pos.put("y", 0);
-            obj.put("position", pos);
-            obj.put("color", "yellow");
-            array.add(obj);
+//            obj.put("numerator", 5);
+//            obj.put("denominator", 5);
+//            obj.put("partition", 5);
+//            obj.put("type", "MoonSet");
+//            JSONObject pos = new JSONObject();
+//            pos.put("x", -4);
+//            pos.put("y", 0);
+//            obj.put("position", pos);
+//            obj.put("color", "yellow");
+//            array.add(obj);
+            //JLF: The initial model is empty
             result.put("initial_model", array);
-            obj.clear();
             array.clear();
-            obj.put("param", true);
+            obj.clear();
+            obj.put("item", "lines");
+            obj.put("active", true);
             array.add(obj);
-            result.put("initial_configuration", obj);
+            obj.clear();
+            obj.put("item", "rectangles");
+            obj.put("active", true);
+            array.add(obj);
+            obj.clear();
+            obj.put("item", "sets");
+            obj.put("active", true);
+            array.add(obj);
+            obj.clear();
+            obj.put("item", "liquids");
+            obj.put("active", true);
+            array.add(obj);
+            result.put("initial_configuration", array);
             result.put("extra_information", "");
             obj.clear();
             obj.put("id", "");
             obj.put("title", "");
             obj.put("desctiption", "");
-            obj.put("showAtStartup", "true");
+            obj.put("showAtStartup", "false");
             result.put("task_description", obj);
             FileWriter file = new FileWriter(_TIPPATH + flRequest.getTIPFileName()+ ".tip");
             try {

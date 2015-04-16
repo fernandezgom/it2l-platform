@@ -1,0 +1,64 @@
+{
+  "initial_model": [
+
+  ],
+  "initial_configuration": [
+    {
+      "item": "lab",
+      "active": true
+    },
+    {
+      "item": "lines",
+      "active": false
+    },
+    {
+      "item": "rectangles",
+      "active": true
+    },
+    {
+      "item": "sets",
+      "active": true
+    },
+    {
+      "item": "liquids",
+      "active": true
+    },
+    {
+      "item": "change_color",
+      "active": true
+    },
+    {
+      "item": "copy",
+      "active": false
+    },
+    {
+      "item": "find_equivalence",
+      "active": true
+    },
+    {
+       "item": "find_parent",
+       "active": true
+    },
+    {	
+	"item": "highlight",
+	"active": true
+    },
+    {
+      "item": "add",
+      "active": true
+    },
+    {
+      "item": "subtract",
+      "active": true
+    }
+  ],
+  "extra_information": {
+  },
+  "task_description": {
+    "id": "idtask",
+    "title": "My task title",
+    "desctiption": "This is an example of task description",
+    "showAtStartup": "false"
+  }  
+}
+

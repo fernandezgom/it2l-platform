@@ -51,7 +51,7 @@ public class SpeechRecognitionController{
 	
 	private static final int NUM_SECONDS = 10 * 60 * 1000;
 	
-	private Timer timer = new Timer();
+	//private Timer timer = new Timer();
 	
 	/*Services*/
 	private ISpeechRecognitionBO speechRecognitionService;
@@ -116,7 +116,7 @@ public class SpeechRecognitionController{
 				AudioRequestVO reqad=new AudioRequestVO();
 				reqad.setHeaderVO(new HeaderVO());
 				reqad.getHeaderVO().setLoginUser(user);
-				timer.scheduleAtFixedRate(new AudioSNATask(reqad), NUM_SECONDS,NUM_SECONDS);
+				//timer.scheduleAtFixedRate(new AudioSNATask(reqad), NUM_SECONDS,NUM_SECONDS);
 			}
 			return response.isOpen();
 		} catch (Exception e){
@@ -137,7 +137,7 @@ public class SpeechRecognitionController{
 		if (body==null)
 			body=new byte[0];
 		try {
-			timer.cancel();
+			//timer.cancel();
 			request.setHeaderVO(new HeaderVO());
 			reqad.setHeaderVO(new HeaderVO());
 			request.getHeaderVO().setLoginUser(getUsername());

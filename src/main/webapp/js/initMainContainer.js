@@ -83,6 +83,7 @@
 			$("#connectedOFF").hide();
 			soundButtonEnable(true);
 			getCondition();
+			setInEngland();
 			//$("#initContainer").click(function() {
 			$.ajax({
 				type: 'GET',
@@ -225,6 +226,29 @@
 		        	//window.location.href = "/italk2learn/login";
 		        },
 		    });
+		}
+		
+		function setInEngland(){
+			var val=false;
+			var len=getLocale();
+			if (len.indexOf("en") > -1)
+				val=true;
+			var evt = {
+			       	 "english": val
+			        };
+			$.ajax({
+				type: 'POST',
+		        contentType : 'application/json; charset=utf-8',
+		        dataType : 'json',
+		        url: "sna/setInEngland",
+		        data: JSON.stringify(evt),
+		        success: function(data){
+
+		        },
+		        error : function(jqXHR, status, error) {
+		        	//window.location.href = "/italk2learn/login";
+		        },
+		    });			
 		}
 		
 		function checkTDSWrapper(){
@@ -406,6 +430,10 @@
 				$("#sButton").addClass("it2lSoundOffbutton");
 				sEnabled=false;
 			}
+		}
+    	
+    	function ShowMessage(){
+			
 		}
 
     	function playS(url){

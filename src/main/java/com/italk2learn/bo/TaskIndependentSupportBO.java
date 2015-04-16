@@ -26,7 +26,7 @@ import com.italk2learn.bo.inter.ILoginUserService;
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
 import com.italk2learn.bo.inter.ITaskIndependentSupportBO;
 import com.italk2learn.exception.ITalk2LearnException;
-import com.italk2learn.tis.TISWrapper;
+import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
 import com.italk2learn.tis.inter.ITISWrapper;
 import com.italk2learn.vo.AudioRequestVO;
 import com.italk2learn.vo.HeaderVO;
@@ -46,6 +46,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	private ISpeechRecognitionBO speechRecognitionService;
 	private ITISWrapper TISWrapperService;
 	private ILoginUserService loginUserService;
+	private IStudentNeedsAnalysis studentNeedsAnalysis;
 	
 	private static final int ARRAY_SIZE = 500000;
 	private static final int NUM_SECONDS = 5 * 1000;
@@ -64,10 +65,11 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	private RestTemplate restTemplate;
 
 	@Autowired
-	public TaskIndependentSupportBO(ITISWrapper tisWrapper, ISpeechRecognitionBO speechRecognition, ILoginUserService loginUserService) {
+	public TaskIndependentSupportBO(ITISWrapper tisWrapper, ISpeechRecognitionBO speechRecognition, ILoginUserService loginUserService, IStudentNeedsAnalysis studendNeedsAnalysis) {
 		this.TISWrapperService=tisWrapper;
 		this.speechRecognitionService=speechRecognition;
 		this.setLoginUserService(loginUserService);
+		this.setStudentNeedsAnalysis(studendNeedsAnalysis);
 	}
 	
 	public ITISWrapper getTISWrapperService() {
@@ -104,28 +106,27 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	
 	/**
 	 * Method to calling Task Independent Support from Task Dependent Support, it receives some parameters from TDS
+	 * At the moment, no storing audio on the database
 	 */
 	public TaskIndependentSupportResponseVO callTISfromTID(TaskIndependentSupportRequestVO request) throws ITalk2LearnException{
 		logger.info("JLF TaskIndependentSupportBO callTISfromTID() --- Calling Task Independent Support from Task Dependent Support");
 		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
 		LdapUserDetailsImpl user=(LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		AudioRequestVO reqad=new AudioRequestVO();
-		SpeechRecognitionRequestVO reqsr=new SpeechRecognitionRequestVO();
-		byte[] audioSt;
+		//SpeechRecognitionRequestVO reqsr=new SpeechRecognitionRequestVO();
+		//byte[] audioSt;
 		try {
 			reqad.setHeaderVO(new HeaderVO());
 			reqad.getHeaderVO().setLoginUser(user.getUsername());
-			reqsr.setHeaderVO(new HeaderVO());
-			reqsr.getHeaderVO().setLoginUser(user.getUsername());
-			reqsr.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(reqsr.getHeaderVO()));
-			audioSt=getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio();
+//			reqsr.setHeaderVO(new HeaderVO());
+//			reqsr.getHeaderVO().setLoginUser(user.getUsername());
+//			reqsr.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(reqsr.getHeaderVO()));
+			//audioSt=getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio();
 			//JLF: The audio could be null because we need to retrieve at least 2 minutes
-			if (audioSt!=null && audioSt.length>1){
-				getTISWrapperService().setAudio(audioSt);
-				//JLF: Store audio on the database
-				reqsr.setFinalByteArray(audioSt);
-				getSpeechRecognitionService().saveByteArray(reqsr);
-			}
+			getTISWrapperService().setAudio(getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio());
+			//JLF: Store audio on the database
+			//reqsr.setFinalByteArray(audioSt);
+			//getSpeechRecognitionService().saveByteArray(reqsr);
 			getTISWrapperService().sendTDStoTIS(user.getUsername(), request.getFeedbackText(), request.getCurrentFeedbackType(), request.getLevel(), request.getFollowed(), request.isViewed());
 			//JLF: Getting the result
 			response.setPopUpWindow(getTISWrapperService().getPopUpWindow());
@@ -149,6 +150,11 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			//JLF: Getting the result
 			response.setPopUpWindow(getTISWrapperService().getPopUpWindow());
 			response.setMessage(getTISWrapperService().getMessage());
+			//JLF: If contains message
+			if (response.getMessage().length()>0){
+				getStudentNeedsAnalysis().sendFeedbackTypeToSNA(getTISWrapperService().getFeedbackType());
+				getStudentNeedsAnalysis().sendAffectToSNA(getTISWrapperService().getCurrentAffect());
+			}
 			return response;
 		}
 		catch (Exception e){
@@ -309,6 +315,14 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 
 	public void setLoginUserService(ILoginUserService loginUserService) {
 		this.loginUserService = loginUserService;
+	}
+
+	public IStudentNeedsAnalysis getStudentNeedsAnalysis() {
+		return studentNeedsAnalysis;
+	}
+
+	public void setStudentNeedsAnalysis(IStudentNeedsAnalysis studentNeedsAnalysis) {
+		this.studentNeedsAnalysis = studentNeedsAnalysis;
 	}
 
 	class SpeechTask extends TimerTask {
