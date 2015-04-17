@@ -64,7 +64,7 @@
 	<context:component-scan base-package="com.italk2learn.controller" />
 	
 	<!-- Scans for application @Service to deploy -->
-	<context:component-scan base-package="com.italk2learn.bo" />
+	<context:component-scan base-package="com.italk2learn.bo" scoped-proxy="targetClass"/>
 	
 	<!-- Scans for application @Service to deploy -->
 <!-- 	<context:component-scan base-package="com.italk2learn.tis" /> -->

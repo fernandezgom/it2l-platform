@@ -360,6 +360,13 @@ public class ExercisesSequenceController implements Serializable{
 				modelAndView.addObject("error", e.getSnamessage());
 			}
 			String response=getSnaService().getNextTask();
+			
+			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
+			//JLF: Getting exercise to store as well as the idSequencer
+			request.setNameExercise(response);
+			request.setIdExercise(getExerciseSequenceService().getSpecificExercise(request).getExercise().getIdExercise());
+			request.setIdVPSExercise(response);
+			getExerciseSequenceService().insertCurrentVPSExercise(request);
 			if (response==null || response.equals("")){
 				return getStateMachineSequencerExercise(request);
 			}

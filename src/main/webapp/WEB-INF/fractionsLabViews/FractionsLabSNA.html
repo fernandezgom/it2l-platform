@@ -1,0 +1,32 @@
+<!DOCTYPE html> 
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org"
+      lang="en">	  
+ 	<head>
+		<meta name="google" value="notranslate"/> 
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Unity Web Player | WebPlayer</title>
+	</head>
+	<body tiles:fragment="content">
+		<h1 id="idTask" align="center" th:text="${idTask}">Author</h1>
+        <table id="taskContainer" align="center">
+        	<tr>
+        		<td>
+        			<span style="font-size:17px; color: #0076a3; font-weight: normal;" id="task" align="center" th:text="${taskName}"> </span>
+        			<span style="font-size:17px; color: #0076a3; " align="center" th:text="${taskName2}"> </span>
+				</td>
+			</tr>
+		</table>
+		<div class="content">
+			<div id="unityPlayer">
+				<div class="missing">
+					<a href="http://unity3d.com/webplayer/" title="Unity Web Player. Install now!">
+						<img alt="Unity Web Player. Install now!" src="http://webplayer.unity3d.com/installation/getunity.png" width="193" height="63" />
+					</a>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
