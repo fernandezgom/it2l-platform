@@ -1,7 +1,5 @@
 package com.italk2learn.controller;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -10,8 +8,6 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +37,7 @@ import com.italk2learn.sna.exception.SNAException;
 import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
 import com.italk2learn.util.ComputeScoreFTUtil;
 import com.italk2learn.util.ExercisesConverter;
+import com.italk2learn.util.TipFilesUtil;
 import com.italk2learn.vo.AudioRequestVO;
 import com.italk2learn.vo.CTATRequestVO;
 import com.italk2learn.vo.ExerciseSequenceRequestVO;
@@ -62,8 +59,6 @@ public class ExercisesSequenceController implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private static String _RANDOMTEST = "testr";
-	
-	private String _TIPPATH ="/var/lib/tomcat7/webapps/italk2learn/tip/";
 	
 	private LdapUserDetailsImpl user;
 	
@@ -109,8 +104,6 @@ public class ExercisesSequenceController implements Serializable{
 		logger.info("JLF --- ExerciseSequence Main Controller");
 		ModelAndView modelAndView = new ModelAndView();
 		try {
-			ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
-			_TIPPATH=rb.getString("tippath");
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			setUsername(user.getUsername());
 			request= new ExerciseSequenceRequestVO();
@@ -256,7 +249,7 @@ public class ExercisesSequenceController implements Serializable{
 			studentId = getLoginUserService().getIdUserInfo(request.getHeaderVO());
 			prevStudentScore=getLoginUserService().getLastScoreSequenceUser(request.getHeaderVO());
 			SetDB.SetConnectionAddress(true);
-			String ID= WhizzSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Boolean.parseBoolean(TRIAL));
+			String ID= WhizzSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Integer.parseInt(TRIAL));
 			if (ID==null || ID.equals("")){
 				return getStateMachineSequencerExercise(request);
 			}
@@ -283,6 +276,8 @@ public class ExercisesSequenceController implements Serializable{
 	 */
 	private ModelAndView getVygotskyPolicySequencerExerciseCTAT(ExerciseSequenceRequestVO request){
 		logger.info("JLF --- getVygotskyPolicySequencerExerciseCTAT() --- Get the exercise from the Vygotsky Policy Sequencer "+"User= "+this.getUsername());
+		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
+		String TRIAL = rb.getString("vps.trial");
 		ModelAndView modelAndView = new ModelAndView();
 		Date date= new Date();
 		Timestamp timestamp= new Timestamp(date.getTime());
@@ -299,7 +294,7 @@ public class ExercisesSequenceController implements Serializable{
 			ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs(), getCurrentExerciseName());
 			prevStudentScore=cs.getScoreRounded();
 			SetDB.SetConnectionAddress(false);
-			String ID= FTSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion);
+			String ID= FTSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Integer.parseInt(TRIAL));
 			if (ID==null || ID.equals("")){
 				return getStateMachineSequencerExercise(request);
 			}
@@ -342,7 +337,7 @@ public class ExercisesSequenceController implements Serializable{
 			String whizzLessonSuggestion = "GB0900CAx0200";//JLF: Hardcoded, this parameter is used in both sequencers
 			if (getCurrentView().equals(ExerciseVO.FRACTIONS_LAB)) {
 				getSnaService().setExploratoryExercise(true);
-			} else if (getCurrentView().equals(ExerciseVO.WHIZZ)){
+			} else if (getCurrentView().equals(ExerciseVO.WHIZZ)|| getCurrentView().equals(ExerciseVO.WHIZZ_TEST)){
 				SetDB.SetConnectionAddress(true);
 				getSnaService().setExploratoryExercise(false);
 				getSnaService().setWhizzExercise(true);
@@ -353,7 +348,7 @@ public class ExercisesSequenceController implements Serializable{
 			}
 			getSnaService().setAudio(getSpeechRecognitionService().getCurrentAudioFromExercise(reqad).getAudio());
 			try {
-				getSnaService().calculateNextTask(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Boolean.parseBoolean(TRIAL));
+				getSnaService().calculateNextTask(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Integer.parseInt(TRIAL));
 			} catch (SNAException e) {
 				// TODO Auto-generated catch block
 				logger.error(e.getSnamessage());
@@ -376,7 +371,10 @@ public class ExercisesSequenceController implements Serializable{
 					viewName=ExerciseVO.FRACTIONS_LAB;
 					
 				} else {
-					viewName=ExerciseVO.WHIZZ;
+					if (response.contains(ExerciseVO.IS_WHIZZ_EXERCISE)){
+						viewName=ExerciseVO.WHIZZ;
+					} else 
+						viewName=ExerciseVO.WHIZZ_TEST;
 				}
 			} else {
 				if (response.contains("task")==true){
@@ -386,15 +384,18 @@ public class ExercisesSequenceController implements Serializable{
 					viewName=ExerciseVO.FRACTIONS_TUTOR;
 				}
 			}
+			setCurrentView(viewName);
 			if (viewName.equals(ExerciseVO.FRACTIONS_LAB)){
+				TipFilesUtil.createTIPFile(response, getSnaService().getTaskDescription(), getSnaService().getAvailableRepresentationsInFL());
 				modelAndView.addObject("idTask", response);
 				modelAndView.addObject("taskName", ec.getExercise().get(response));
 				//modelAndView.addObject("taskName2", ec.getExercise().get(response));
-				modelAndView.setViewName("fractionsLabViews/FractionsLabSNA");
 			} else{
 				modelAndView.addObject("taskName", response);
-				modelAndView.setViewName(viewName+"/WhizzFlashSNA");
+				//JLF: CTAT view
+				modelAndView.addObject("brd", "someBRD");
 			}
+			modelAndView.setViewName(viewName+"/GenericSNA");
 			return modelAndView;
 		}
 		catch (Exception e){
@@ -521,72 +522,6 @@ public class ExercisesSequenceController implements Serializable{
         }
 	}
 	
-	/**
-	 * JLF: Creates a TIP file and saves into the system 
-	 */
-	@RequestMapping(value = "/createTIPFile", method = RequestMethod.POST)
-    public @ResponseBody void createTIPFile(@RequestBody FractionsLabRequestVO flRequest, HttpServletRequest req){
-		logger.info("JLF --- createTIPFile --- Creates a TIP file and saves into the system "+"User: "+this.getUsername());
-		logger.info("id_exercise="+flRequest.getIdExercise()+" ,event="+flRequest.getEvent());
-		FractionsLabRequestVO request=new FractionsLabRequestVO();
-        try {
-        	JSONObject result = new JSONObject();
-            JSONObject obj = new JSONObject();
-            JSONArray array = new JSONArray();
-//            obj.put("numerator", 5);
-//            obj.put("denominator", 5);
-//            obj.put("partition", 5);
-//            obj.put("type", "MoonSet");
-//            JSONObject pos = new JSONObject();
-//            pos.put("x", -4);
-//            pos.put("y", 0);
-//            obj.put("position", pos);
-//            obj.put("color", "yellow");
-//            array.add(obj);
-            //JLF: The initial model is empty
-            result.put("initial_model", array);
-            array.clear();
-            obj.clear();
-            obj.put("item", "lines");
-            obj.put("active", true);
-            array.add(obj);
-            obj.clear();
-            obj.put("item", "rectangles");
-            obj.put("active", true);
-            array.add(obj);
-            obj.clear();
-            obj.put("item", "sets");
-            obj.put("active", true);
-            array.add(obj);
-            obj.clear();
-            obj.put("item", "liquids");
-            obj.put("active", true);
-            array.add(obj);
-            result.put("initial_configuration", array);
-            result.put("extra_information", "");
-            obj.clear();
-            obj.put("id", "");
-            obj.put("title", "");
-            obj.put("desctiption", "");
-            obj.put("showAtStartup", "false");
-            result.put("task_description", obj);
-            FileWriter file = new FileWriter(_TIPPATH + flRequest.getTIPFileName()+ ".tip");
-            try {
-                file.write(result.toJSONString());
-                logger.info("Successfully Copied JSON Object to File..."+ flRequest.getTIPFileName()+ ".tip");
-                logger.debug("\nJSON Object: " + result);
-     
-            } catch (IOException e) {
-                e.printStackTrace();
-     
-            } finally {
-                file.flush();
-                file.close();
-            }
-        } catch (Exception ex) {
-        	logger.error(ex.toString());
-        }
-	}
 
 	
 	public IExerciseSequenceBO getExerciseSequenceService() {

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:tiles="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org"
+      lang="en">
+    <head>
+        <title>WhizzShell</title>
+        <meta name="google" value="notranslate" />         
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    </head>
+    <body tiles:fragment="content">
+        <!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough 
+             JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
+             when JavaScript is disabled.
+        -->
+        <h1 id="idTask" align="center" th:text="${taskName}"></h1>
+        <h1 id="errSeq" align="center" th:text="${error}"></h1>
+        <div id="flashContent" width="1024" height="768" data-title="${taskName}">
+            <p>
+                To view this page ensure that Adobe Flash Player version 
+                11.1.0 or greater is installed. 
+            </p>
+        </div>
+		<script src='sequence/js/monitorWOZClient.js'></script>
+   </body>
+</html>

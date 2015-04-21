@@ -418,6 +418,32 @@
 			audio.play();
     	}
     	
+    	function play_sound_marytts(message){
+			var len=getLocale();
+			var data = {
+			       	 "language": len,
+			       	 "message": message
+			        };
+			$.ajax({
+				type: 'POST',
+		        contentType : 'application/json; charset=utf-8',
+		        dataType : 'json',
+		        url: "speechProduction/generateAudioFile",
+		        data: JSON.stringify(data),
+		        success: function(data){
+		        	if (data.length>0){
+			        	var audio = new Audio();
+						audio.src = "wavFiles/"+data;
+						audio.load();                                
+						audio.play();
+					}
+		        },
+		        error : function(jqXHR, status, error) {
+		        	//window.location.href = "/italk2learn/login";
+		        },
+		    });		
+    	}
+    	
     	
     	function soundButtonEnable(value){
 			if (value==true || value=="true" || value=="True"){

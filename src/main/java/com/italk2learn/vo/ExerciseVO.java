@@ -18,7 +18,9 @@ public class ExerciseVO extends ResponseVO {
 	
 	public static final String FRACTIONS_LAB= "fractionsLabViews";
 	public static final String WHIZZ= "whizzViews";
+	public static final String WHIZZ_TEST= "whizzViewsTest";
 	public static final String FRACTIONS_TUTOR= "fractionsTutorViews";
+	public static final String IS_WHIZZ_EXERCISE= "x";
 	
 	
 	public int getIdExercise() {

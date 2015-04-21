@@ -1,26 +1,33 @@
 <!DOCTYPE html>
+
 <html xmlns="http://www.w3.org/1999/xhtml" 
       xmlns:th="http://www.thymeleaf.org"
       xmlns:tiles="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org"
       lang="en">
+    <!-- 
+    Smart developers always View Source. 
+    
+    This application was built using Adobe Flex, an open source framework
+    for building rich Internet applications that get delivered via the
+    Flash Player or to desktops via Adobe AIR. 
+    
+    Learn more about Flex at http://flex.org 
+    // -->
     <head>
-        <title>WhizzShell</title>
+        <title>Fractions Tutor</title>
         <meta name="google" value="notranslate" />         
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     </head>
     <body tiles:fragment="content">
-        <!-- SWFObject's dynamic embed method replaces this alternative HTML content with Flash content when enough 
-             JavaScript and Flash plug-in support is available. The div is initially hidden so that it doesn't show
-             when JavaScript is disabled.
-        -->
         <h1 id="idTask" align="center" th:text="${taskName}"></h1>
-        <div id="flashContent" width="1024" height="768" data-title="${taskName}">
+        <h1 id="brdTask" align="center" th:text="${brd}"></h1>
+        <h1 id="errSeq" align="center" th:text="${error}"></h1>
+        <div id="flashContent" data-title="equivalentFractionsProceduralIdea1" data-brd="equivalentFractionsProcedural1_1_4.brd">
             <p>
                 To view this page ensure that Adobe Flash Player version 
                 11.1.0 or greater is installed. 
             </p>
         </div>
-		<script src='sequence/js/monitorWOZClient.js'></script>
    </body>
 </html>

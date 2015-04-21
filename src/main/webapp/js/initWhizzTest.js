@@ -1,11 +1,26 @@
-// For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+// For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection.
+		var flid;
+		if ($('#idTask')){
+			$('#idTask').hide();
+			flid=$('#idTask').html();
+        	$('#idTask').remove();
+        } else {
+        	flid=$("#flashContent").data("title");
+        }
+		if ($('#errSeq')){
+			$('#errSeq').hide();
+			if ($('#errSeq').html().length>1){
+				alert($('#errSeq').html());
+			}
+        	$('#errSeq').remove();
+        } 
 		setFractionsLabinUse(false);
         var swfVersionStr = "11.1.0";
         // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
         var xiSwfUrlStr = "playerProductInstall.swf";
         var flashvars = {
-        		flashvarID: $("#flashContent").data("title"),
-        		flashvarDomain: 'http://it2l.dcs.bbk.ac.uk/italk2learn',
+        		flashvarID: flid,
+        		flashvarDomain: 'http://localhost:8080/italk2learn',
         		flashvarPath: '/sequence/tests/',
         		flashvarAssessment: 0,
         		flashvarViewAll: 0

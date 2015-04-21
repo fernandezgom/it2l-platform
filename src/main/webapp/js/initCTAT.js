@@ -1,11 +1,34 @@
 // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+			var idExercise;
+			if ($('#idTask')){
+				$('#idTask').hide();
+				idExercise=$('#idTask').html();
+	        	$('#idTask').remove();
+	        } else {
+	        	idExercise=$("#flashContent").data("title");
+	        }
+			var brd;
+			if ($('#brdTask')){
+				$('#brdTask').hide();
+				brd=$('#brdTask').html();
+	        	$('#brdTask').remove();
+	        } else {
+	        	brd=$("#flashContent").data("brd");
+	        }
+			if ($('#errSeq')){
+				$('#errSeq').hide();
+				if ($('#errSeq').html().length>1){
+					alert($('#errSeq').html());
+				}
+	        	$('#errSeq').remove();
+	        } 
 			setFractionsLabinUse(false);
             arrowButtonEnable(false);
 			var swfVersionStr = "11.1.0";
             // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
             var xiSwfUrlStr = "playerProductInstall.swf";
             var flashvars = {
-                        question_file: $("#flashContent").data("brd"),
+                        question_file: brd,
                         BehaviorRecorderMode:"AuthorTimeTutoring",
                         //remoteSocketURL: "localhost",
                         remoteSocketURL: "it2l.dcs.bbk.ac.uk",
@@ -20,7 +43,7 @@
                         dataset_level_type2:"section",
                         problem_name:"CTAT_Example_Problem",
                         user_guid:"CTAT_Example_User",
-                        session_id: userName + '_' + $("#flashContent").data("brd"),
+                        session_id: userName + '_' + brd,
                         source_id:"PACT_CTAT_FLASH",
                         DeliverUsingOLI:"false"
             };
@@ -30,11 +53,11 @@
             params.allowscriptaccess = "sameDomain";
             params.allowfullscreen = "true";
             var attributes = {};
-            attributes.id = $("#flashContent").data("title");
-            attributes.name = $("#flashContent").data("title");
+            attributes.id = idExercise;
+            attributes.name = idExercise;
             attributes.align = "middle";
             swfobject.embedSWF(
-            	"sequence/"+$("#flashContent").data("title")+".swf", "flashContent", 
+            	"sequence/"+idExercise+".swf", "flashContent", 
                 "800", "600", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
