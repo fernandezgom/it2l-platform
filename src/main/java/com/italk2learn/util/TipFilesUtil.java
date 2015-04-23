@@ -23,7 +23,6 @@ public class TipFilesUtil {
 		String _TIPPATH=rb.getString("tippath");
         try {
         	JSONObject result = new JSONObject();
-            JSONObject obj = new JSONObject();
             JSONObject objDesc = new JSONObject();
             JSONArray array = new JSONArray();
 //            obj.put("numerator", 5);
@@ -38,21 +37,22 @@ public class TipFilesUtil {
 //            array.add(obj);
             //JLF: The initial model is empty
             result.put("initial_model", new JSONArray());
-            obj.put("item", "lines");
-            obj.put("active", values[0]);
-            array.add(obj);
-            obj.clear();
-            obj.put("item", "rectangles");
-            obj.put("active", values[1]);
-            array.add(obj);
-            obj.clear();
-            obj.put("item", "sets");
-            obj.put("active", values[2]);
-            array.add(obj);
-            obj.clear();
-            obj.put("item", "liquids");
-            obj.put("active", values[3]);
-            array.add(obj);
+            JSONObject obj1 = new JSONObject();
+            obj1.put("item", "lines");
+            obj1.put("active", values[0]);
+            array.add(obj1);
+            JSONObject obj2 = new JSONObject();
+            obj2.put("item", "rectangles");
+            obj2.put("active", values[1]);
+            array.add(obj2);
+            JSONObject obj3 = new JSONObject();
+            obj3.put("item", "sets");
+            obj3.put("active", values[2]);
+            array.add(obj3);
+            JSONObject obj4 = new JSONObject();
+            obj4.put("item", "liquids");
+            obj4.put("active", values[3]);
+            array.add(obj4);
             result.put("initial_configuration", array);
             result.put("extra_information", "");
             objDesc.put("id", name);

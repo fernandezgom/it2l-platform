@@ -9,7 +9,7 @@
     },
     {
       "item": "lines",
-      "active": false
+      "active": true
     },
     {
       "item": "rectangles",
@@ -55,9 +55,9 @@
   "extra_information": {
   },
   "task_description": {
-    "id": "idtask",
-    "title": "My task title",
-    "desctiption": "This is an example of task description",
+    "id": "task2.2",
+    "title": "task2.2",
+    "desctiption": "Make a fraction and right click it. Select 'Find equivalent' and partition the fraction into 2, 3, 4 and 5.",
     "showAtStartup": "false"
   }  
 }

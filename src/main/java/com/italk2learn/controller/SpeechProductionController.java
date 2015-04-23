@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.italk2learn.bo.inter.ISpeechProductionBO;
@@ -52,12 +53,23 @@ public class SpeechProductionController{
 			request.setHeaderVO(new HeaderVO());
 			request.getHeaderVO().setLoginUser(user.getUsername());
 			request.setMessage(data.getMessage());
+			request.setLanguage(data.getLanguage());
 			SpeechProductionResponseVO response=getSpeechProductionBO().generateAudioFile(request);
 			return response.getFile();
 		} catch (Exception e){
 			logger.error(e.toString());
 		}
 		return null;
+	}
+	
+	/**
+	 * Method that creates speech production
+	 */
+	@RequestMapping(value = "/getHash",method = RequestMethod.POST)
+	@ResponseBody
+	public int getHash(@RequestBody SpeechProductionRequestVO data, HttpServletRequest req) {
+		logger.info("JLF --- SpeechProductionController getHash");
+			return data.getMessage().hashCode();
 	}
 
 

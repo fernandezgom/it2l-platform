@@ -3,12 +3,16 @@
 				var isEnabledLightBulb=true;
 				$("#help").show();
 				helpButtonEnable(false);
-				$("#next").click(function() {
-					arrowButtonPressed();
-				});
-				$("#help").click(function() {
-					helpButtonPressed();
-				});
+				if (helpadded==false){
+					$("#next").click(function() {
+						arrowButtonPressed();
+					});
+				}
+				if (helpadded==false){
+					$("#help").unbind("click").click(function() {
+						helpButtonPressed();
+					});
+				}
 				var config = {
 					width: 800,
 					height: 600,

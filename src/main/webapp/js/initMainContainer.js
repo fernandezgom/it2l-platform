@@ -1,7 +1,10 @@
+		var iloadedjs=0;
+		var loadedjs=[];
 		var userName;
 		var chTIS=false;
 		var sEnabled=false;
 		var aEnabled=true;
+		var helpadded=false;
 		setInterval(function(){checkTDSWrapper()},3000);
 
 		window.onbeforeunload = function(){
@@ -74,6 +77,40 @@
 			 if (typeof fileref!="undefined")
 			  document.getElementsByTagName("head")[0].appendChild(fileref)
 			}
+			
+		function removejscssfile(filename, filetype){
+			var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none" //determine element type to create nodelist from
+			var targetattr=(filetype=="js")? "src" : (filetype=="css")? "href" : "none" //determine corresponding attribute to test for
+			var allsuspects=document.getElementsByTagName(targetelement)
+			for (var i=allsuspects.length; i>=0; i--){ //search backwards within nodelist for matching elements to remove
+			if (allsuspects[i] && allsuspects[i].getAttribute(targetattr)!=null && allsuspects[i].getAttribute(targetattr).indexOf(filename)!=-1)
+				allsuspects[i].parentNode.removeChild(allsuspects[i]) //remove element by calling parentNode.removeChild()
+			}
+		}
+		
+		function alreadyInDOM(filename, filetype){
+			var val=false;
+			var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none" //determine element type to create nodelist from
+			var targetattr=(filetype=="js")? "src" : (filetype=="css")? "href" : "none" //determine corresponding attribute to test for
+			var allsuspects=document.getElementsByTagName(targetelement)
+			for (var i=allsuspects.length; i>=0; i--){ //search backwards within nodelist for matching elements to remove
+			if (allsuspects[i] && allsuspects[i].getAttribute(targetattr)!=null && allsuspects[i].getAttribute(targetattr).indexOf(filename)!=-1)
+				val=true; //remove element by calling parentNode.removeChild()
+			}
+			return val;
+		}
+		
+		function replacejscssfile(oldfilename, newfilename, filetype){
+			var targetelement=(filetype=="js")? "script" : (filetype=="css")? "link" : "none" //determine element type to create nodelist using
+			var targetattr=(filetype=="js")? "src" : (filetype=="css")? "href" : "none" //determine corresponding attribute to test for
+			var allsuspects=document.getElementsByTagName(targetelement)
+			for (var i=allsuspects.length; i>=0; i--){ //search backwards within nodelist for matching elements to remove
+				if (allsuspects[i] && allsuspects[i].getAttribute(targetattr)!=null && allsuspects[i].getAttribute(targetattr).indexOf(oldfilename)!=-1){
+					var newelement=createjscssfile(newfilename, filetype)
+					allsuspects[i].parentNode.replaceChild(newelement, allsuspects[i])
+				}
+			}
+		}
 		
 		$(document).ready(function() {
 			$("#next").hide();
@@ -128,7 +165,11 @@
 		        	document.getElementById("mainContainer").innerHTML=jqXHR.responseText;
 		            var reponse = jQuery(jqXHR.responseText);
 		            var reponseScript = reponse.filter("script");
-		            jQuery.each(reponseScript, function(idx, val) { 
+					iloadedjs=0;
+					loadedjs=[];
+		            jQuery.each(reponseScript, function(idx, val) {
+						loadedjs[iloadedjs]=val.src;
+						iloadedjs++;						
 		            	loadjscssfile(val.src, "js");
 				    } );
 		        },
@@ -182,8 +223,24 @@
 		        	document.getElementById("mainContainer").innerHTML=jqXHR.responseText;
 		            var reponse = jQuery(jqXHR.responseText);
 		            var reponseScript = reponse.filter("script");
-		            jQuery.each(reponseScript, function(idx, val) { 
-		            	loadjscssfile(val.src, "js");
+					removejscssfile("initFracLab.js", "js");
+					removejscssfile("initWhizz.js", "js");
+					removejscssfile("initWhizzTest.js", "js");
+					removejscssfile("initCTAT.js", "js");
+					$("#flscript").remove();
+					for (var i=0;i<iloadedjs;i++){
+						removejscssfile(loadedjs[i], "js")
+					}
+					iloadedjs=0;
+					loadedjs=[];
+		            jQuery.each(reponseScript, function(idx, val) {
+						if (val.src.localeCompare("http://localhost:8080/italk2learn/resources/js/initFracLab.js")==0){
+							helpadded=true;
+							loadjscssfile(val.src, "js");
+						}
+						else {
+							loadjscssfile(val.src, "js");
+						}
 				    } );
 		            safeexit();
 		        },
@@ -193,19 +250,6 @@
 		        complete : function(jqXHR, status) {
 		        }
 		    });
-		    //JLF: Commented by the moment
-//		    $.ajax({
-//				type: 'POST',
-//		        contentType : 'application/json; charset=utf-8',
-//		        dataType : 'json',
-//		        url: "speechRecognition/callPTD",
-//		        success: function(data){
-//		        	//alert('PTD successfully called');
-//		        },
-//		        error : function(jqXHR, status, error) {
-//
-//		        },
-//		    });
 		}
 		
 		function setFractionsLabinUse(val)
@@ -362,7 +406,8 @@
 			if (l_lang=="de_DE")
 				play_soundGerman(message);
 			else	
-				play_sound("http://translate.google.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(message)+"&tl="+l_lang+"&total=1&idx=0prev=input");
+				reproduceAudioMaryTTS(message);
+				//play_sound("http://translate.google.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(message)+"&tl="+l_lang+"&total=1&idx=0prev=input");
         }
 		
 
@@ -418,9 +463,42 @@
 			audio.play();
     	}
     	
-    	function play_sound_marytts(message){
-			var len=getLocale();
+    	function play_sound_marytts_cache(message){
 			var data = {
+			       	 "message": message
+			        };
+			$.ajax({
+				type: 'POST',
+		        contentType : 'application/json; charset=utf-8',
+		        dataType : 'json',
+		        url: "speechProduction/getHash",
+		        data: JSON.stringify(data),
+		        success: function(data){
+		        	$.ajax({
+		    		    url:"wavFiles/"+ data+".wav",
+		    		    type:'HEAD',
+		    		    error: function()
+		    		    {
+		    		    	reproduceAudio(message);
+		    		    },
+		    		    success: function()
+		    		    {
+		    		    	var audio = new Audio();
+							audio.src = "wavFiles/"+data+".wav";
+							audio.load();                                
+							audio.play();
+		    		    }
+		    		});
+		        },
+		        error : function(jqXHR, status, error) {
+		        	//window.location.href = "/italk2learn/login";
+		        },
+		    });
+    	}
+    	
+    	function reproduceAudioMaryTTS(message){
+    		var len=getLocale();
+			var mes = {
 			       	 "language": len,
 			       	 "message": message
 			        };
@@ -429,19 +507,20 @@
 		        contentType : 'application/json; charset=utf-8',
 		        dataType : 'json',
 		        url: "speechProduction/generateAudioFile",
-		        data: JSON.stringify(data),
+		        data: JSON.stringify(mes),
 		        success: function(data){
 		        	if (data.length>0){
-			        	var audio = new Audio();
+						var audio = new Audio();
 						audio.src = "wavFiles/"+data;
 						audio.load();                                
 						audio.play();
+						
 					}
 		        },
 		        error : function(jqXHR, status, error) {
 		        	//window.location.href = "/italk2learn/login";
 		        },
-		    });		
+		    });
     	}
     	
     	

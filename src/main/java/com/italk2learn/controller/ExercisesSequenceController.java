@@ -326,15 +326,18 @@ public class ExercisesSequenceController implements Serializable{
 		ModelAndView modelAndView = new ModelAndView();
 		ExercisesConverter ec= new ExercisesConverter();
 		AudioRequestVO reqad=new AudioRequestVO();
+		CTATRequestVO rqctat=new CTATRequestVO();
 		try {
 			reqad.setHeaderVO(new HeaderVO());
 			reqad.getHeaderVO().setLoginUser(user.getUsername());
+			rqctat.setHeaderVO(new HeaderVO());
+			rqctat.getHeaderVO().setLoginUser(user.getUsername());
 			Date date= new Date();
 			Timestamp timestamp= new Timestamp(date.getTime());
 			int studentId= getLoginUserService().getIdUserInfo(request.getHeaderVO());
 			int prevStudentScore=getLoginUserService().getLastScoreSequenceUser(request.getHeaderVO());
 			String prevLessonId=getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
-			String whizzLessonSuggestion = "GB0900CAx0200";//JLF: Hardcoded, this parameter is used in both sequencers
+			String whizzLessonSuggestion = "GB0900CAx0200";//JLF: Hardcoded, this parameter is used in both sequencers??
 			if (getCurrentView().equals(ExerciseVO.FRACTIONS_LAB)) {
 				getSnaService().setExploratoryExercise(true);
 			} else if (getCurrentView().equals(ExerciseVO.WHIZZ)|| getCurrentView().equals(ExerciseVO.WHIZZ_TEST)){
@@ -342,6 +345,8 @@ public class ExercisesSequenceController implements Serializable{
 				getSnaService().setExploratoryExercise(false);
 				getSnaService().setWhizzExercise(true);
 			} else if (getCurrentView().equals(ExerciseVO.FRACTIONS_TUTOR)){
+				ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs(), getCurrentExerciseName());
+				prevStudentScore=cs.getScoreRounded();
 				SetDB.SetConnectionAddress(false);
 				getSnaService().setExploratoryExercise(false);
 				getSnaService().setFractionsTutorExercise(true);
