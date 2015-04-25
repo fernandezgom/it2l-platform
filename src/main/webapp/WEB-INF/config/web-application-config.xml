@@ -69,8 +69,8 @@
 	<!-- Scans for application @Service to deploy -->
 <!-- 	<context:component-scan base-package="com.italk2learn.tis" /> -->
 	
-	<bean id="TISWrapperService" class="com.italk2learn.tis.TISWrapper">  
-   	 	<constructor-arg name="user" value="anonym" />
+	<bean id="TISWrapperService" class="com.italk2learn.tis.TISWrapper" scope="session">
+		<aop:scoped-proxy/>  
 	</bean>
 	
 	<!-- Scans for application @Service to deploy -->

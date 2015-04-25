@@ -471,7 +471,7 @@
 				type: 'POST',
 		        contentType : 'application/json; charset=utf-8',
 		        dataType : 'json',
-		        url: "speechProduction/getHash",
+		        url: "/italk2learnsp/speechProduction/getHash",
 		        data: JSON.stringify(data),
 		        success: function(data){
 		        	$.ajax({
@@ -506,7 +506,7 @@
 				type: 'POST',
 		        contentType : 'application/json; charset=utf-8',
 		        dataType : 'json',
-		        url: "speechProduction/generateAudioFile",
+		        url: "/italk2learnsp/speechProduction/generateAudioFile",
 		        data: JSON.stringify(mes),
 		        success: function(data){
 		        	if (data.length>0){
@@ -518,7 +518,12 @@
 					}
 		        },
 		        error : function(jqXHR, status, error) {
-		        	//window.location.href = "/italk2learn/login";
+					if (jqXHR.responseText.length>0){
+						var audio = new Audio();
+						audio.src = "wavFiles/"+jqXHR.responseText;
+						audio.load();                                
+						audio.play();
+					}
 		        },
 		    });
     	}
