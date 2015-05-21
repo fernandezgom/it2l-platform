@@ -40,6 +40,7 @@
 	<!-- Message internalisation -->
     <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
         <property name="basename" value="messages" />
+        <property name="defaultEncoding" value="UTF-8" />
     </bean>
     
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
@@ -107,6 +108,22 @@
 	</bean>
 	
 	<bean id="audioStreamDAO" class="com.italk2learn.dao.AudioStreamDAO">
+		<property name="sessionFactory" ref="italk2learnSessionFactory" />
+	</bean>
+	
+	<bean id="exerciseQuizDAO" class="com.italk2learn.dao.ExerciseQuizDAO">
+		<property name="sessionFactory" ref="italk2learnSessionFactory" />
+	</bean>
+	
+	<bean id="studentModelDAO" class="com.italk2learn.dao.StudentModelDAO">
+		<property name="sessionFactory" ref="italk2learnSessionFactory" />
+	</bean>
+	
+	<bean id="snaLogDAO" class="com.italk2learn.dao.SNALogDAO">
+		<property name="sessionFactory" ref="italk2learnSessionFactory" />
+	</bean>
+	
+	<bean id="tisLogDAO" class="com.italk2learn.dao.TISLogDAO">
 		<property name="sessionFactory" ref="italk2learnSessionFactory" />
 	</bean>
 	

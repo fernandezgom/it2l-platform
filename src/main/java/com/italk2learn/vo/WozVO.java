@@ -5,6 +5,8 @@ public class WozVO {
 	private String user;
 	private String idNextexercise;
 	private String[] sequence;
+	private int condition;
+	private String lang; 
 	
 	
 	public String getUser() {
@@ -24,6 +26,18 @@ public class WozVO {
 	}
 	public void setSequence(String[] sequence) {
 		this.sequence = sequence;
+	}
+	public int getCondition() {
+		return condition;
+	}
+	public void setCondition(int condition) {
+		this.condition = condition;
+	}
+	public String getLang() {
+		return lang;
+	}
+	public void setLang(String lang) {
+		this.lang = lang;
 	}
 
 }

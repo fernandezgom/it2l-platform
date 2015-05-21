@@ -1,6 +1,8 @@
 package com.italk2learn.bo.inter;
 
 import com.italk2learn.exception.ITalk2LearnException;
+import com.italk2learn.vo.ExerciseQuizRequestVO;
+import com.italk2learn.vo.ExerciseQuizResponseVO;
 import com.italk2learn.vo.ExerciseSequenceRequestVO;
 import com.italk2learn.vo.ExerciseSequenceResponseVO;
 import com.italk2learn.vo.ExerciseVO;
@@ -33,6 +35,10 @@ public interface IExerciseSequenceBO {
 	public ExerciseSequenceResponseVO insertSequenceByUser(ExerciseSequenceRequestVO request) throws ITalk2LearnException;
 	
 	public ExerciseSequenceResponseVO getIdExerciseFromSequence(ExerciseSequenceRequestVO request) throws ITalk2LearnException;
+	
+	public ExerciseQuizResponseVO storeExerciseQuiz(ExerciseQuizRequestVO request) throws ITalk2LearnException;
+	
+	public ExerciseSequenceResponseVO insertCondition(ExerciseSequenceRequestVO request) throws ITalk2LearnException;
 
 
 }

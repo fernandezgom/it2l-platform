@@ -55,11 +55,12 @@ public class TipFilesUtil {
             array.add(obj4);
             result.put("initial_configuration", array);
             result.put("extra_information", "");
-            objDesc.put("id", name);
-            objDesc.put("title", name);
-            objDesc.put("desctiption", description);
-            objDesc.put("showAtStartup", "false");
-            result.put("task_description", objDesc);
+            // JLF: These lines are commented to hide tip scroll button
+//            objDesc.put("id", name);
+//            objDesc.put("title", name);
+//            objDesc.put("desctiption", description);
+//            objDesc.put("showAtStartup", "false");
+//            result.put("task_description", objDesc);
             FileWriter file = new FileWriter(_TIPPATH + name+ ".tip");
             try {
                 file.write(result.toJSONString());

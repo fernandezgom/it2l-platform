@@ -1,0 +1,123 @@
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.wrapper {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+section {
+  margin-top: 30px;
+}
+section p {
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  font: inherit;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  background: #C8C8C8;
+  color: #444444;
+  font-weight: 300;
+  font-size: 16px;
+  -moz-border-radius: 0px;
+  -webkit-border-radius: 0px;
+  border-radius: 0px;
+  /*  &:last-child {
+      border-color: red;
+      margin-bottom: 0;
+    }*/
+}
+button:hover {
+  text-decoration: underline;
+}
+button.button-border {
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 10px 12px 8px 12px;
+  border: 1px solid #007aff;
+}
+button.button-border:hover {
+  background: #007aff;
+  color: #ffffff;
+  text-decoration: none;
+}
+button.button-success {
+  color: #4dd865;
+  border-color: #4dd865;
+}
+button.button-success:hover {
+  background: #4dd865;
+}
+button.button-error {
+  color: #ff3b30;
+  border-color: #ff3b30;
+}
+button.button-error:hover {
+  background: #ff3b30;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  width: 400px;
+  height: auto;
+  margin-left: -200px;
+  margin-top: -150px;
+  background-color: #ffffff;
+  padding: 25px;
+  border-radius: 5px;
+  z-index: 10;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+}
+.modal.active {
+  display: block;
+}
+.modal header {
+  position: relative;
+}
+.modal h2 {
+  text-align: center;
+}
+.modal .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  margin: 0;
+}
+
+.pull-right {
+  float: right;
+}
+
+.icon {
+  display: inline-block;
+  font-size: inherit;
+  font-family: 'ios7-icon';
+  margin-right: 5px;
+  color: inherit;
+  -webkit-text-rendering: geometricPrecision;
+  -moz-text-rendering: geometricPrecision;
+  -ms-text-rendering: geometricPrecision;
+  -o-text-rendering: geometricPrecision;
+  text-rendering: geometricPrecision;
+}

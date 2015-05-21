@@ -5,7 +5,15 @@
 		var sEnabled=false;
 		var aEnabled=true;
 		var helpadded=false;
+		var nLocale = getUrlVars()["locale"];
+		if (nLocale ==null || nLocale =='' ){
+			nLocale=getLocale();
+		} 
 		setInterval(function(){checkTDSWrapper()},3000);
+		history.pushState(null, null, 'exercise');
+		window.addEventListener('popstate', function(event) {
+		  history.pushState(null, null, 'exercise');
+		});
 
 		window.onbeforeunload = function(){
 			  $.ajax({
@@ -121,6 +129,7 @@
 			soundButtonEnable(true);
 			getCondition();
 			setInEngland();
+			setLanguageBrowser();
 			//$("#initContainer").click(function() {
 			$.ajax({
 				type: 'GET',
@@ -129,6 +138,7 @@
 					//JLF: Call connect WOZ. If it's connected or authfail initialises the container.
 					$('#user').html(data);
 					userName=data;
+					initContainer();
 					connectWOZ (data);
 				},
 				error: function (jqXHR, status, error) {
@@ -137,8 +147,9 @@
 			});
 			//});
 			$("#next").click(function() {
-				if (aEnabled)
-					nextExercise();
+				if (aEnabled) {
+					$('.modal').toggleClass('active');
+				}
 			});	
 			$("#submitEx").click(function() {
 				submitExercise();
@@ -234,13 +245,10 @@
 					iloadedjs=0;
 					loadedjs=[];
 		            jQuery.each(reponseScript, function(idx, val) {
-						if (val.src.localeCompare("http://localhost:8080/italk2learn/resources/js/initFracLab.js")==0){
+						if (val.src.indexOf("initFracLab.js")>-1){
 							helpadded=true;
-							loadjscssfile(val.src, "js");
 						}
-						else {
-							loadjscssfile(val.src, "js");
-						}
+						loadjscssfile(val.src, "js");
 				    } );
 		            safeexit();
 		        },
@@ -274,7 +282,7 @@
 		
 		function setInEngland(){
 			var val=false;
-			var len=getLocale();
+			var len=nLocale;
 			if (len.indexOf("en") > -1)
 				val=true;
 			var evt = {
@@ -295,23 +303,49 @@
 		    });			
 		}
 		
+		function setLanguageBrowser(){
+			var evt = {
+			       	 "idLanguage": nLocale
+			        };
+			$.ajax({
+				type: 'POST',
+		        contentType : 'application/json; charset=utf-8',
+		        dataType : 'json',
+		        url: "sequence/setLanguageBrowser",
+		        data: JSON.stringify(evt),
+		        success: function(data){
+
+		        },
+		        error : function(jqXHR, status, error) {
+		        	//window.location.href = "/italk2learn/login";
+		        },
+		    });			
+		}
+		
 		function checkTDSWrapper(){
 			if (chTIS==true) {
 				$.ajax({
 					type: 'GET',
 			        url: "tis/checkTISWrapper",
 			        success: function(data){
-			        	if (data.popUpWindow ==true) {
-							if (data.message.length>0) {
-								textToSpeech(data.message);
-								SendHighMessage(data.message);
+			        	if (data.fromTDS == true) {
+				        	if (data.popUpWindow ==true) {
+								if (data.message.length>0) {
+									textToSpeech(data.message, true);
+									SendHighMessage(data.message);
+								}
 							}
-						}
-						else {
-							if (data.message.length>0) {
-								sendMessageToLightBulb(data.message);
+							else {
+								if (data.message.length>0) {
+									sendMessageToLightBulb(data.message);
+								}
 							}
-						}
+			        	} else {
+			        		if (data.message.length>0) {
+			        			textToSpeech(data.message, false);
+			        			Alert.render(data.message);
+			        		}
+			        	}
 			        },
 			        error : function(jqXHR, status, error) {
 			        	//window.location.href = "/italk2learn/login";
@@ -372,18 +406,13 @@
 			$.ajax({
 		        type: 'GET',
 		        url: "sequence/getCondition",
-		        data: {
-		            
-		            },
 		        success: function(data, textStatus, jqXHR){
-		        	$('#condition').html(data);
+		        	$('#condition').html(" "+data);
 		        	if (data==2){
 		        		soundButtonEnable(false);
 		        		$("#sButton").hide();
 		        		$("#speechComponent").hide();
-		        	} else if (data==3){
-		        		alert("no fractions lab exercise");
-		        	}
+		        	} 
 		        },
 		        error : function(jqXHR, status, error) {
 		           alert('Sorry!, no condition retrieved, reloading webpage');
@@ -395,7 +424,7 @@
 			
 		}
 
-		function textToSpeech(message) {
+		function textToSpeech(message, voice) {
 			var l_lang=getParameterByName("locale");
 			if (l_lang=="" && navigator.userLanguage) // Explorer
 			  l_lang = navigator.userLanguage;
@@ -403,10 +432,7 @@
 			  l_lang = navigator.language;
 			else if (l_lang=="")
 			  l_lang = "en";
-			if (l_lang=="de_DE")
-				play_soundGerman(message);
-			else	
-				reproduceAudioMaryTTS(message);
+			reproduceAudioMaryTTS(message, voice);
 				//play_sound("http://translate.google.com/translate_tts?ie=UTF-8&q="+encodeURIComponent(message)+"&tl="+l_lang+"&total=1&idx=0prev=input");
         }
 		
@@ -464,68 +490,72 @@
     	}
     	
     	function play_sound_marytts_cache(message){
-			var data = {
-			       	 "message": message
-			        };
-			$.ajax({
-				type: 'POST',
-		        contentType : 'application/json; charset=utf-8',
-		        dataType : 'json',
-		        url: "/italk2learnsp/speechProduction/getHash",
-		        data: JSON.stringify(data),
-		        success: function(data){
-		        	$.ajax({
-		    		    url:"wavFiles/"+ data+".wav",
-		    		    type:'HEAD',
-		    		    error: function()
-		    		    {
-		    		    	reproduceAudio(message);
-		    		    },
-		    		    success: function()
-		    		    {
-		    		    	var audio = new Audio();
-							audio.src = "wavFiles/"+data+".wav";
-							audio.load();                                
-							audio.play();
-		    		    }
-		    		});
-		        },
-		        error : function(jqXHR, status, error) {
-		        	//window.location.href = "/italk2learn/login";
-		        },
-		    });
+    		if (sEnabled == true) {
+				var data = {
+				       	 "message": message
+				        };
+				$.ajax({
+					type: 'POST',
+			        contentType : 'application/json; charset=utf-8',
+			        dataType : 'json',
+			        url: "/italk2learnsp/speechProduction/getHash",
+			        data: JSON.stringify(data),
+			        success: function(data){
+			        	$.ajax({
+			    		    url:"wavFiles/"+ data+".wav",
+			    		    type:'HEAD',
+			    		    error: function()
+			    		    {
+			    		    	reproduceAudio(message);
+			    		    },
+			    		    success: function()
+			    		    {
+			    		    	var audio = new Audio();
+								audio.src = "wavFiles/"+data+".wav";
+								audio.load();                                
+								audio.play();
+			    		    }
+			    		});
+			        },
+			        error : function(jqXHR, status, error) {
+			        	//window.location.href = "/italk2learn/login";
+			        },
+			    });
+			}
     	}
     	
-    	function reproduceAudioMaryTTS(message){
-    		var len=getLocale();
-			var mes = {
-			       	 "language": len,
-			       	 "message": message
-			        };
-			$.ajax({
-				type: 'POST',
-		        contentType : 'application/json; charset=utf-8',
-		        dataType : 'json',
-		        url: "/italk2learnsp/speechProduction/generateAudioFile",
-		        data: JSON.stringify(mes),
-		        success: function(data){
-		        	if (data.length>0){
-						var audio = new Audio();
-						audio.src = "wavFiles/"+data;
-						audio.load();                                
-						audio.play();
-						
-					}
-		        },
-		        error : function(jqXHR, status, error) {
-					if (jqXHR.responseText.length>0){
-						var audio = new Audio();
-						audio.src = "wavFiles/"+jqXHR.responseText;
-						audio.load();                                
-						audio.play();
-					}
-		        },
-		    });
+    	function reproduceAudioMaryTTS(message, voice){
+    		if (sEnabled == true) {
+				var mes = {
+				       	 "language": nLocale,
+				       	 "message": message,
+				       	 "voiceType" : voice
+				        };
+				$.ajax({
+					type: 'POST',
+			        contentType : 'application/json; charset=utf-8',
+			        dataType : 'json',
+			        url: "/italk2learnsp/speechProduction/generateAudioFile",
+			        data: JSON.stringify(mes),
+			        success: function(data){
+			        	if (data.length>0){
+							var audio = new Audio();
+							audio.src = "wavFiles/"+data;
+							audio.load();                                
+							audio.play();
+							
+						}
+			        },
+			        error : function(jqXHR, status, error) {
+						if (jqXHR.responseText.length>0){
+							var audio = new Audio();
+							audio.src = "wavFiles/"+jqXHR.responseText;
+							audio.load();                                
+							audio.play();
+						}
+			        },
+			    });
+			}
     	}
     	
     	
@@ -541,6 +571,19 @@
 				sEnabled=false;
 			}
 		}
+    	
+    	function getUrlVars()
+    	{
+    	    var vars = [], hash;
+    	    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    	    for(var i = 0; i < hashes.length; i++)
+    	    {
+    	        hash = hashes[i].split('=');
+    	        vars.push(hash[0]);
+    	        vars[hash[0]] = hash[1];
+    	    }
+    	    return vars;
+    	}
     	
     	function ShowMessage(){
 			
@@ -580,3 +623,39 @@
 			audio.load();				
 			audio.play();
 		}
+        
+        function CustomAlert(){
+            this.render = function(dialog){
+                var winW = window.innerWidth;
+                var winH = window.innerHeight;
+                var dialogoverlay = document.getElementById('dialogoverlay');
+                var dialogbox = document.getElementById('dialogbox');
+                dialogoverlay.style.display = "block";
+                dialogoverlay.style.height = winH+"px";
+                 dialogbox.style.left = (winW/2) - (700 * .5)+"px";
+                dialogbox.style.top = "35%";
+                dialogbox.style.display = "block";
+              document.getElementById('dialogboxhead').innerHTML = '<div id="dialogboxbody"> <table id="tableAlign"><tr><td><span id="verticalSpanLeft"><img th:src="@{/resources/images/frobot.png}" src="/italk2learn/images/frobot.png"></img></span></td><td> <span id="verticalSpanRight">' + dialog + '</span></td></tr></table></div><div style="margin-top: 7px; margin-bottom:2px; display:flex; "> <button style="margin-left:auto; margin-right:auto; " class="it2lbutton" onclick="Alert.ok()">OK</button></div>';
+             
+            }
+            this.ok = function(){
+                document.getElementById('dialogbox').style.display = "none";
+                document.getElementById('dialogoverlay').style.display = "none";
+                var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*closeFeedbackPopup*\"}}";
+                u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
+            }
+            window.onresize = function()
+            {
+                var winW = window.innerWidth;
+                var winH = window.innerHeight;
+                var dialogoverlay = document.getElementById('dialogoverlay');
+                var dialogbox = document.getElementById('dialogbox');
+                dialogoverlay.style.display = "block";
+                dialogoverlay.style.height = winH+"px";
+                dialogbox.style.left = (winW/2) - (550 * .5)+"px";
+                dialogbox.style.top = "35%";
+                dialogbox.style.display = "block";
+
+            }
+        }
+    var Alert = new CustomAlert();

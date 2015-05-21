@@ -94,6 +94,60 @@ public class MainContainerController {
 		}
 	}
 	
+	/**
+	 * Handles and retrieves the main page
+	 * 
+	 * @return the name of the page
+	 */
+	@RequestMapping(value = "/main",method = RequestMethod.GET)
+	public String initMainPage(Model model) {
+		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
+		try {
+			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return "main";
+		} catch (Exception e){
+			logger.info("Returning to loginpage due previous errors");
+			logger.error(e.toString());
+			return "redirect:/login";
+		}
+	}
+	
+	/**
+	 * Handles and retrieves the main page
+	 * 
+	 * @return the name of the page
+	 */
+	@RequestMapping(value = "/beforeQuiz",method = RequestMethod.GET)
+	public String beforeQuiz(Model model) {
+		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
+		try {
+			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return "beforeQuiz";
+		} catch (Exception e){
+			logger.info("Returning to loginpage due previous errors");
+			logger.error(e.toString());
+			return "redirect:/login";
+		}
+	}
+	
+	/**
+	 * Handles and retrieves the main page
+	 * 
+	 * @return the name of the page
+	 */
+	@RequestMapping(value = "/afterQuiz",method = RequestMethod.GET)
+	public String afterQuiz(Model model) {
+		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
+		try {
+			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return "afterQuiz";
+		} catch (Exception e){
+			logger.info("Returning to loginpage due previous errors");
+			logger.error(e.toString());
+			return "redirect:/login";
+		}
+	}
+	
 	@RequestMapping(value="/invalidate", method=RequestMethod.GET)
 	public void invalidate(HttpSession session, Model model) {
 		logger.info("JLF --- MainContainerController invalidate --- Invalidating session required by the user");

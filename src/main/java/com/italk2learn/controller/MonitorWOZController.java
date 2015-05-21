@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,7 @@ import com.italk2learn.vo.WozVO;
  * Handles requests for the application exercise sequence.
  */
 @Controller
+@Scope("session")
 @RequestMapping("/monitorWOZ")
 public class MonitorWOZController {
 	
@@ -147,7 +149,7 @@ public class MonitorWOZController {
 	 * JLF: Insert a sequence of id's by a given user
 	 */
 	@RequestMapping(value = "/insertSequenceByUser", method = RequestMethod.POST)
-    public @ResponseBody String insertSequenceByUser(@RequestBody WozVO messageForm, HttpServletRequest req){
+    public @ResponseBody String insertSequenceByUser(@RequestBody WozVO messageForm){
 		logger.info("JLF --- MonitorWOZ insertSequenceByUser() --- Inserting a sequence of exercises for that user");
 		logger.info("user= "+ messageForm.getUser()+" ,sequence="+ messageForm.getSequence());
 		ExerciseSequenceRequestVO request= new ExerciseSequenceRequestVO();
@@ -159,6 +161,46 @@ public class MonitorWOZController {
 			request.setIdUser(getLoginUserService().getIdUser(messageForm.getUser()));
 			request.setSequence(messageForm.getSequence());
 			ExerciseSequenceResponseVO response=getExerciseSequenceService().insertSequenceByUser(request);
+			return "success";
+		}
+		catch (Exception e){
+			logger.error(e.toString());
+		}
+		return "error";
+		
+	}
+	
+	/**
+	 * JLF: Insert a sequence of id's by a given user
+	 */
+	@RequestMapping(value = "/insertConditionByUser", method = RequestMethod.POST)
+    public @ResponseBody String insertConditionByUser(@RequestBody WozVO messageForm, HttpServletRequest req){
+		logger.info("JLF --- MonitorWOZ insertSequenceByUser() --- Inserting a sequence of exercises for that user");
+		logger.info("user= "+ messageForm.getUser()+" ,condition="+ messageForm.getCondition());
+		ExerciseSequenceRequestVO request= new ExerciseSequenceRequestVO();
+		ModelAndView modelAndView=new ModelAndView();
+		modelAndView.setViewName("monitorWOZ");
+		try{
+			request.setHeaderVO(new HeaderVO());
+			request.getHeaderVO().setLoginUser(user.getUsername());
+			request.setIdUser(getLoginUserService().getIdUser(messageForm.getUser()));
+			request.setCondition(messageForm.getCondition());
+			ExerciseSequenceResponseVO response=getExerciseSequenceService().insertCondition(request);
+			if (messageForm.getCondition()==3) {
+				if (messageForm.getLang().contains("de")){
+					String[] seq = new String[]{"67","61","64","65","63","69","74","78","73","77","70","71","75","79","62","68"};
+					messageForm.setSequence(seq);
+					insertSequenceByUser(messageForm);
+				} else {
+					String[] seq = new String[]{"103","104","105","106","107","108","109","110","111","112","113","114"};
+					messageForm.setSequence(seq);
+					insertSequenceByUser(messageForm);
+				}
+			} else {
+				String[] seq = new String[]{"101"};
+				messageForm.setSequence(seq);
+				insertSequenceByUser(messageForm);
+			}
 			return "success";
 		}
 		catch (Exception e){

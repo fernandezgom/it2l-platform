@@ -13,5 +13,7 @@ public interface ITaskIndependentSupportBO {
 	public TaskIndependentSupportResponseVO setFractionsLabinUse(TaskIndependentSupportRequestVO request) throws ITalk2LearnException;
 	public TaskIndependentSupportResponseVO startNewExercise(TaskIndependentSupportRequestVO request) throws ITalk2LearnException;
 	public TaskIndependentSupportResponseVO sendRealSpeechToSupport(TaskIndependentSupportRequestVO req) throws Exception;
+	public TaskIndependentSupportResponseVO sendDoneButtonPressedToTIS(TaskIndependentSupportRequestVO request) throws ITalk2LearnException;
+
 
 }

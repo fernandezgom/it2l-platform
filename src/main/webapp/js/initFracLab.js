@@ -29,7 +29,7 @@
 					$missingScreen.hide();
 					$brokenScreen.hide();
 
-	                textToSpeech($('#task').text().substring(0,110));
+	                textToSpeech($('#task').text(), true);
 	                
 	                if ($('#idTask')){
 	                	idTask=$('#idTask').html();
@@ -69,55 +69,77 @@
 					setFractionsLabinUse(true);
 					if (idTask!=null && idTask.length>0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/"+idTask+".tip"+"&idtask="+idTask+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/"+idTask+".tip"+"&idtask="+idTask+userName);
+						if (chTIS==true){
+							enableTIS(true);
+						} else {
+							enableTIS(false);
+						}
+						sendLanguageEvent();
 					}
 					else if (body.localeCompare("Make a fraction that equals 3/4 and has 12 as denominator.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/EQUIValence1.tip"+"&idtask=EQUIValence1"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/EQUIValence1.tip"+"&idtask=EQUIValence1"+userName);
 					}
 					else if (body.localeCompare("Make a fraction that equals 1/2 and has 4 as denominator.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/EQUIValence2.tip"+"&idtask=EQUIValence2"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/EQUIValence2.tip"+"&idtask=EQUIValence2"+userName);
 					}
 					else if (body.localeCompare("Use the same representations to show whether 1/3 is bigger or smaller than 1/5.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/task11setA.tip"+"&idtask=task1.1setA"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task11setA.tip"+"&idtask=task1.1setA"+userName);
 					}
 					else if (body.localeCompare("Make a fraction using each of the representations.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/task21.tip"+"&idtask=task2.1"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task21.tip"+"&idtask=task2.1"+userName);
 					}
 					else if (body.localeCompare("Make a fraction and right click it. Select 'Find equivalent' and partition the fraction into 2, 3, 4 and 5.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/task22.tip"+"&idtask=task2.2"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task22.tip"+"&idtask=task2.2"+userName);
+						if (chTIS==true){
+							enableTIS(true);
+						} else {
+							enableTIS(false);
+						}
+						sendLanguageEvent();
+					}
+					else if (body.localeCompare("Machen Sie eine Fraktion und klicken Sie rechts. Wählen Sie Suche gleichwertig und partitioniert die Fraktion in 2, 3, 4 und 5.")==0){
+						arrowButtonEnable(false);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task22.tip"+"&idtask=task2.2"+userName);
+						if (chTIS==true){
+							enableTIS(true);
+						} else {
+							enableTIS(false);
+						}
+						sendLanguageEvent();
 					}
 					else if (body.localeCompare("Make a fraction that is equivalent to 1/2, using liquid measures. Check they are equivalent.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/task24setAliqu.tip"+"&idtask=task2.4.setA.liqu"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task24setAliqu.tip"+"&idtask=task2.4.setA.liqu"+userName);
 					}
 					else if (body.localeCompare("Michel says '3/4 = 1/12 because 3 times 4 equals 12'. Do you agree or disagree with Michel?.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/task26setA.tip"+"&idtask=task2.6.setA"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task26setA.tip"+"&idtask=task2.6.setA"+userName);
 					}
 					else if (body.localeCompare("Make a fraction that equals 1/6 and has 18 as denominator.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/task27setA.tip"+"&idtask=task2.7.setA"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task27setA.tip"+"&idtask=task2.7.setA"+userName);
 					}
 					else if (body.localeCompare("Show how you could make 3/5 by adding two fractions.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task3aPlus.1.setA.area"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task3aPlus.1.setA.area"+userName);
 					}
 					else if (body.localeCompare("Make a fraction that is equivalent to 3/4, using liquid measures. Check they are equivalent.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task2.4.setB.liqu"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task2.4.setB.liqu"+userName);
 					}
 					else if (body.localeCompare("Make a fraction that is equivalent to 1/2, using area. Check they are equivalent.")==0){
 						arrowButtonEnable(false);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task2.4.setA.area"+userName);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task2.4.setA.area"+userName);
 					}
 					else {
 						arrowButtonEnable(true);
-						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&username="+userName+"&tip=/italk2learn/tip/Default.tip");
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/Default.tip");
 					}
 				});
 				
@@ -127,7 +149,7 @@
 						type: 'GET',
 						url: "sequence/getFLTask",
 						success: function (data) {
-							u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+getLocale()+"&idtask="+data);
+							u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale()+"&idtask="+data);
 						},
 						error: function (jqXHR, status, error) {
 						}
@@ -168,15 +190,16 @@
 				        	//alert('Change submitted!');
 				        },
 				        error : function(jqXHR, status, error) {
-				        	window.location.href = "/italk2learn/login";
+				        	//window.location.href = "/italk2learn/login";
 				        },
 				    });
 				}
 				
-				function sendMessageToTIS(feedbackText, currentFeedbackType, level, followed, viewed){
+				function sendMessageToTIS(feedbackText, currentFeedbackType, feedbackID, level, followed, viewed){
 					var evt = {
 					       	 "feedbackText": feedbackText,
 					       	 "currentFeedbackType": currentFeedbackType,
+					       	 "feedbackID": feedbackID,
 					       	 "level": level,
 					       	 "followed": followed.toLowerCase(),
 					       	 "viewed": viewed.toLowerCase()
@@ -188,20 +211,45 @@
 				        url: "tis/callTIS",
 				        data: JSON.stringify(evt),
 				        success: function(data){
-				        	if (data.popUpWindow ==true) {
-								if (data.message.length>0) {
-									textToSpeech(data.message);
-									SendHighMessage(data.message);
+				        	if (data.fromTDS == true) {
+					        	if (data.popUpWindow ==true) {
+									if (data.message.length>0) {	
+										textToSpeech(data.message, true);
+										SendHighMessage(data.message);
+									}
 								}
-							}
-							else {
-								if (data.message.length>0) {
-									sendMessageToLightBulb(data.message);
+								else {
+									if (data.message.length>0) {
+										sendMessageToLightBulb(data.message);
+									}
 								}
-							}
+				        	} else {
+				        		if (data.message.length>0) {
+				        			textToSpeech(data.message, false);
+				        			Alert.render(data.message);
+				        		}
+				        	}
 				        },
 				        error : function(jqXHR, status, error) {
 				        	//window.location.href = "/italk2learn/login";
+				        },
+				    });
+					
+				}
+				
+				function sendDoneButtonPressedToTIS(value){
+					var evt = {
+					       	 "donePressed": value.toLowerCase()
+					        };
+					$.ajax({
+						type: 'POST',
+				        contentType : 'application/json; charset=utf-8',
+				        dataType : 'json',
+				        url: "tis/sendDoneButtonPressed",
+				        data: JSON.stringify(evt),
+				        success: function(data){
+				        },
+				        error : function(jqXHR, status, error) {
 				        },
 				    });
 					
@@ -285,7 +333,7 @@
 				
 				function playSound(message)
 				{
-					textToSpeech(message);
+					textToSpeech(message,true);
 				}
 				
 				
@@ -340,23 +388,25 @@
 				}
 				
 				function arrowButtonPressed(){
-                    var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*doneButtonPressed*\"}}";
-                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
+					if (aEnabled==false) {
+						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*doneButtonPressed*\"}}";
+						u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
+                    }
 				}
 				
 				function helpButtonPressed(){
 					if (isEnabledLightBulb==true){
-						textToSpeech(lowMessage);
+						textToSpeech(lowMessage,true);
 						SendHighMessage(lowMessage);
 						//lowMessage="";
 						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*lightBulbPressedON*\"}}";
 	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
 	                    helpButtonEnable(false);
 					}
-					else {
-						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*lightBulbPressedOFF*\"}}";
-	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
-					}
+//					else {
+//						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*lightBulbPressedOFF*\"}}";
+//	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
+//					}
 				}
 				
 				function enableTIS(enable){
@@ -369,5 +419,19 @@
 						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*switchTISON*\"}}";
 	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
 					}
+				}
+				
+				function sendLanguageEvent(){
+					var len=nLocale;
+					if (len.indexOf("en") > -1) {
+						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*switchEnglishON*\"}}";
+	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
+					} else if (len.indexOf("de") > -1){
+						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*switchGermanON*\"}}";
+	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);						
+					} else if (len.indexOf("es") > -1) {
+						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*switchSpanishON*\"}}";
+                    	u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
+                    }
 				}
 				

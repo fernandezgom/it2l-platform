@@ -33,5 +33,7 @@ public interface IExerciseDAO {
 	public List<Exercises> getAllExercises() throws ITalk2LearnException;
 	
 	public Exercises getIDExerciseFromSequencer(String nameExercise) throws Exception;
+	
+	public void insertCondition(int idUser, int condition) throws ITalk2LearnException;
 
 }

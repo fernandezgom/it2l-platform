@@ -1,29 +1,6 @@
 // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
-			var idExercise;
-			if ($('#idTask')){
-				$('#idTask').hide();
-				idExercise=$('#idTask').html();
-	        	$('#idTask').remove();
-	        } else {
-	        	idExercise=$("#flashContent").data("title");
-	        }
-			var brd;
-			if ($('#brdTask')){
-				$('#brdTask').hide();
-				brd=$('#brdTask').html();
-	        	$('#brdTask').remove();
-	        } else {
-	        	brd=$("#flashContent").data("brd");
-	        }
-			if ($('#errSeq')){
-				$('#errSeq').hide();
-				if ($('#errSeq').html().length>1){
-					alert($('#errSeq').html());
-				}
-	        	$('#errSeq').remove();
-	        } 
-			setFractionsLabinUse(false);
-            arrowButtonEnable(false);
+			var idExercise=$("#flashContent").data("title");
+			var brd=$("#flashContent").data("brd");
 			var swfVersionStr = "11.1.0";
             // To use express install, set to playerProductInstall.swf, otherwise the empty string. 
             var xiSwfUrlStr = "playerProductInstall.swf";
@@ -64,49 +41,23 @@
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.
             swfobject.createCSS("#flashContent", "display:block;text-align:left;");
             
-            setInterval(getResult(),3000);
-            
-            
-            function getResult()
-            {
-            	$.ajax({
-					type: 'GET',
-					url: "ctatlogserver/getResult",
-					success: function (data) {
-						arrowButtonEnable(true);
-					},
-					error: function (jqXHR, status, error) {
-						alert("error");
-					}
-				});
-            }
-            
-            
-            function arrowButtonEnable(value){
-				if (value==true || value=="true" || value=="True") {
-					$("#next").removeAttr("disabled");
-				}	
-				else {
-					$("#next").attr("disabled", "disabled");
-				}	
-			}
             
             function SendHighMessage(message)
 			{
-            	setTimeout(function(){alert(message)},5000);
+            	setTimeout(function(){Alert.render(message)},1000);
 			}
 
 			function SendLowMessage(message)
 			{
-				setTimeout(function(){alert(message)},5000);
+				setTimeout(function(){Alert.render(message)},1000);
 			}
 			
 			function EnableHelpButton(message)
 			{
-				setTimeout(function(){alert(message)},5000);
+				setTimeout(function(){Alert.render(message)},1000);
 			}
 			
 			function sendMessageToLightBulb(message)
 			{
-				setTimeout(function(){alert(message)},1000);			
+				setTimeout(function(){Alert.render(message)},1000);			
 			}

@@ -2,6 +2,7 @@ package com.italk2learn.controller;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.ResourceBundle;
 
@@ -35,11 +36,15 @@ import com.italk2learn.bo.inter.ISpeechRecognitionBO;
 import com.italk2learn.bo.inter.IWhizzExerciseBO;
 import com.italk2learn.sna.exception.SNAException;
 import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
+import com.italk2learn.tis.inter.ITISWrapper;
 import com.italk2learn.util.ComputeScoreFTUtil;
 import com.italk2learn.util.ExercisesConverter;
+import com.italk2learn.util.ExperimentalCondition;
 import com.italk2learn.util.TipFilesUtil;
+import com.italk2learn.util.WhizzUtil;
 import com.italk2learn.vo.AudioRequestVO;
 import com.italk2learn.vo.CTATRequestVO;
+import com.italk2learn.vo.ExerciseQuizRequestVO;
 import com.italk2learn.vo.ExerciseSequenceRequestVO;
 import com.italk2learn.vo.ExerciseSequenceResponseVO;
 import com.italk2learn.vo.ExerciseVO;
@@ -68,12 +73,13 @@ public class ExercisesSequenceController implements Serializable{
 	
 	private String currentView;
 	
+	private String languageBrowser="en";
+	
 	private ExerciseSequenceRequestVO request;
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExercisesSequenceController.class);
 
 	private static ExerciseSequenceResponseVO response= new ExerciseSequenceResponseVO();
-	
 	
 	/*Services*/
 	private IExerciseSequenceBO exerciseSequenceService;
@@ -81,12 +87,13 @@ public class ExercisesSequenceController implements Serializable{
 	private IWhizzExerciseBO whizzExerciseBO;
 	private IFractionsLabBO fractionsLabBO;
 	private IStudentNeedsAnalysis snaService;
+	private ITISWrapper TISWrapperService;
 	private ISpeechRecognitionBO speechRecognitionService;
 	private ICTATExerciseBO ctatExerciseBO;
 
 
     @Autowired
-    public ExercisesSequenceController(IExerciseSequenceBO exerciseSequence, ILoginUserService loginUserService, IWhizzExerciseBO whizzExerciseBO, IFractionsLabBO fractionsLabBO, IStudentNeedsAnalysis snaService, ISpeechRecognitionBO speechRecognition, ICTATExerciseBO ctatExerciseBO) {
+    public ExercisesSequenceController(IExerciseSequenceBO exerciseSequence, ILoginUserService loginUserService, IWhizzExerciseBO whizzExerciseBO, IFractionsLabBO fractionsLabBO, IStudentNeedsAnalysis snaService, ISpeechRecognitionBO speechRecognition, ICTATExerciseBO ctatExerciseBO, ITISWrapper tisWrapper) {
     	this.exerciseSequenceService = exerciseSequence;
     	this.loginUserService=loginUserService;
     	this.setWhizzExerciseBO(whizzExerciseBO);
@@ -94,6 +101,7 @@ public class ExercisesSequenceController implements Serializable{
     	this.setSnaService(snaService);
     	this.setSpeechRecognitionService(speechRecognition);
     	this.setCtatExerciseBO(ctatExerciseBO);
+    	this.TISWrapperService=tisWrapper;
     }
 	
 	/**
@@ -115,16 +123,13 @@ public class ExercisesSequenceController implements Serializable{
 			this.currentExerciseName=response.getExercise().getExercise();
 			this.currentView=response.getExercise().getView();
 			switch (getLoginUserService().getCondition(request.getHeaderVO())) {
-				case 1:	modelAndView.setViewName(response.getExercise().getView()+"/"+ response.getExercise().getExercise());
-						break;
-				case 2:	modelAndView.setViewName(response.getExercise().getView()+"/"+ response.getExercise().getExercise());
-						break;
-				case 3:	modelAndView=getVygotskyPolicySequencerExerciseWhizz(request);
-						break;
-				case 4:	modelAndView=getVygotskyPolicySequencerExerciseCTAT(request);
-						break;
+				case ExperimentalCondition.FULL_SYSTEM:	return getStudentNeedsAnalysisExercise(request, true);
+				case ExperimentalCondition.NO_SPEECH: return getStudentNeedsAnalysisExercise(request, true);
+				case ExperimentalCondition.NO_ELE:	modelAndView.addObject("taskName", currentExerciseName);
+													modelAndView.setViewName(currentView+"/GenericSNA");
+													break;
 				default: modelAndView.setViewName(response.getExercise().getView()+"/"+ response.getExercise().getExercise());
-						break;
+						 break;
 			}
 			return modelAndView;
 		} catch (Exception e){
@@ -144,6 +149,23 @@ public class ExercisesSequenceController implements Serializable{
 		logger.info("JLF --- ExercisesSequence.getUserConnected");
 		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return user.getUsername();
+	}
+	
+	/**
+	 * JLF: Set the language browser to select if it is ft task or fl
+	 */
+	@RequestMapping(value = "/setLanguageBrowser",method = RequestMethod.POST)
+	@ResponseBody
+	public void postLanguageBrowser(@RequestBody HeaderVO req) {
+		logger.info("JLF --- ExercisesSequence.setLanguageBrowser ---");
+		if (req.getIdLanguage().contains(HeaderVO.GERMAN)){
+			getTISWrapperService().setLanguageInTIStoGerman();
+		} else if (req.getIdLanguage().contains(HeaderVO.SPANISH)){
+			getTISWrapperService().setLanguageInTIStoSpanish();
+		} else {
+			getTISWrapperService().setLanguageInTIStoEnglish();
+		}
+		setLanguageBrowser(req.getIdLanguage());
 	}
 	
 	/**
@@ -190,11 +212,9 @@ public class ExercisesSequenceController implements Serializable{
 			}
 			else {
 				switch (getLoginUserService().getCondition(request.getHeaderVO())) {
-					case 1:	return getStateMachineSequencerExercise(request);
-					case 2:	return getStateMachineSequencerExercise(request);//JLF: No speech
-					case 3:	return getVygotskyPolicySequencerExerciseWhizz(request);
-					case 4:	return getVygotskyPolicySequencerExerciseCTAT(request);
-					case 5:	return getStudentNeedsAnalysisExercise(request);
+					case ExperimentalCondition.FULL_SYSTEM:	return getStudentNeedsAnalysisExercise(request, false);
+					case ExperimentalCondition.NO_SPEECH:	return getStudentNeedsAnalysisExercise(request, false);//JLF: No speech
+					case ExperimentalCondition.NO_ELE:	return getStateMachineSequencerExercise2ndVersion(request);
 					default: return getStateMachineSequencerExercise(request);
 				}
 			}
@@ -230,6 +250,96 @@ public class ExercisesSequenceController implements Serializable{
 		}
 	}
 	
+	
+	/**
+	 * Get the exercise from the state machine
+	 */
+	private ModelAndView getStateMachineSequencerExercise2ndVersionWhizz(ExerciseSequenceRequestVO request){
+		logger.info("JLF --- getStateMachineSequencerExercise() --- Get the exercise from the state machine "+"User= "+this.getUsername());
+		ModelAndView modelAndView = new ModelAndView();
+		boolean usingTests=true;
+		try{
+			if (usingTests){
+				if (getCurrentExerciseName().contains("x")){
+					modelAndView.addObject("taskName", getCurrentExerciseName().replace("x", "p"));
+					modelAndView.setViewName(ExerciseVO.WHIZZ_TEST+"/GenericSNA");
+					setCurrentView(ExerciseVO.WHIZZ_TEST);
+					setCurrentExerciseName(getCurrentExerciseName().replace("x", "p"));
+					return modelAndView;
+				}
+				else {
+					request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
+					ExerciseVO response=getExerciseSequenceService().getNextExercise(request).getExercise();
+					request.setIdExercise(response.getIdExercise());
+					getExerciseSequenceService().insertCurrentExercise(request);
+					setCurrentView(response.getView());
+					setCurrentExerciseName(response.getExercise());
+					modelAndView.addObject("taskName", response.getExercise());
+					modelAndView.setViewName(response.getView()+"/GenericSNA");
+					return modelAndView;
+					
+				}
+			} else {
+				request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
+				ExerciseVO response=getExerciseSequenceService().getNextExercise(request).getExercise();
+				request.setIdExercise(response.getIdExercise());
+				getExerciseSequenceService().insertCurrentExercise(request);
+				setCurrentView(response.getView());
+				setCurrentExerciseName(response.getExercise());
+				modelAndView.addObject("taskName", response.getExercise());
+				modelAndView.setViewName(response.getView()+"/GenericSNA");
+				return modelAndView;
+			}
+		}
+		catch (Exception e){
+			logger.info("Returning to login due previous errors");
+			logger.error(e.toString());
+			modelAndView.setViewName("redirect:/login");
+			return new ModelAndView();
+		}
+	}
+	
+	/**
+	 * Get the exercise from the state machine
+	 */
+	private ModelAndView getStateMachineSequencerExercise2ndVersionCTAT(ExerciseSequenceRequestVO request){
+		logger.info("JLF --- getStateMachineSequencerExercise() --- Get the exercise from the state machine "+"User= "+this.getUsername());
+		ModelAndView modelAndView = new ModelAndView();
+		try{
+			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
+			ExerciseVO response=getExerciseSequenceService().getNextExercise(request).getExercise();
+			request.setIdExercise(response.getIdExercise());
+			getExerciseSequenceService().insertCurrentExercise(request);
+			modelAndView.addObject("taskName", response.getExercise());
+			modelAndView.setViewName(response.getView()+"/GenericSNA");
+			return modelAndView;
+		}
+		catch (Exception e){
+			logger.info("Returning to login due previous errors");
+			logger.error(e.toString());
+			modelAndView.setViewName("redirect:/login");
+			return new ModelAndView();
+		}
+	}
+	
+	
+	private ModelAndView getVygotskyPolicySequencerExercise(ExerciseSequenceRequestVO request){
+		//JLF: Needs to be fixed getting the proper locale from the webbrowser
+		if (getLanguageBrowser().contains(HeaderVO.GERMAN))
+			return getVygotskyPolicySequencerExerciseCTAT(request);
+		else
+			return getVygotskyPolicySequencerExerciseWhizz(request);
+	}
+	
+	
+	private ModelAndView getStateMachineSequencerExercise2ndVersion(ExerciseSequenceRequestVO request){
+		//JLF: Needs to be fixed getting the proper locale from the webbrowser
+		if (getLanguageBrowser().contains(HeaderVO.GERMAN))
+			return getStateMachineSequencerExercise2ndVersionCTAT(request);
+		else
+			return getStateMachineSequencerExercise2ndVersionWhizz(request);
+	}
+	
 	/**
 	 * Get the exercise from the Vygotsky Policy Sequencer 
 	 */
@@ -245,22 +355,30 @@ public class ExercisesSequenceController implements Serializable{
 		String prevLessonId;//"GB0875AAx0100";
 		String whizzLessonSuggestion = "GB0900CAx0200";
 		try {
-			prevLessonId = getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
+			prevLessonId = WhizzUtil.marshallWhizz(getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString());
 			studentId = getLoginUserService().getIdUserInfo(request.getHeaderVO());
-			prevStudentScore=getLoginUserService().getLastScoreSequenceUser(request.getHeaderVO());
+			prevStudentScore=WhizzUtil.computeScore(getLoginUserService().getLastScoreSequenceUser(request.getHeaderVO()));
 			SetDB.SetConnectionAddress(true);
 			String ID= WhizzSequencer.next(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Integer.parseInt(TRIAL));
 			if (ID==null || ID.equals("")){
 				return getStateMachineSequencerExercise(request);
 			}
+			else {
+				ID=WhizzUtil.unmarshallWhizz(ID);
+			}
+			String viewName="";
+			if (ID.contains(ExerciseVO.IS_WHIZZ_EXERCISE)){
+				viewName=ExerciseVO.WHIZZ;
+			} else 
+				viewName=ExerciseVO.WHIZZ_TEST;
 			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
 			//JLF: Getting exercise to store as well as the idSequencer
 			request.setNameExercise(ID);
 			request.setIdExercise(getExerciseSequenceService().getSpecificExercise(request).getExercise().getIdExercise());
 			request.setIdVPSExercise(ID);
 			getExerciseSequenceService().insertCurrentVPSExercise(request);
-			ExerciseVO response=getExerciseSequenceService().getWholeViewFromIDSequencer(request).getExercise();
-			modelAndView.setViewName(response.getView()+"/"+ response.getExercise());
+			modelAndView.addObject("taskName", ID);
+			modelAndView.setViewName(viewName+"/GenericSNA");
 			return modelAndView;
 		}
 		catch (Exception e){
@@ -301,11 +419,12 @@ public class ExercisesSequenceController implements Serializable{
 			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
 			//JLF: Getting exercise to store as well as the idSequencer
 			request.setNameExercise(ID);
-			request.setIdExercise(getExerciseSequenceService().getSpecificExercise(request).getExercise().getIdExercise());
-			request.setIdVPSExercise(ID);
+			request.setIdExercise(Integer.parseInt(ID));
 			getExerciseSequenceService().insertCurrentVPSExercise(request);
-			ExerciseVO response=getExerciseSequenceService().getWholeViewFromIDSequencer(request).getExercise();
-			modelAndView.setViewName(response.getView()+"/"+ response.getExercise());
+			ExerciseVO response=getExerciseSequenceService().getSpecificExercise(request).getExercise();
+			request.setIdVPSExercise(response.getExercise());
+			getExerciseSequenceService().insertCurrentVPSExercise(request);
+			modelAndView.setViewName(ExerciseVO.FRACTIONS_TUTOR+"/"+ response.getExercise());
 			return modelAndView;
 		}
 		catch (Exception e){
@@ -319,7 +438,7 @@ public class ExercisesSequenceController implements Serializable{
 	/**
 	 * Get the exercise from student needs analysis
 	 */
-	private ModelAndView getStudentNeedsAnalysisExercise(ExerciseSequenceRequestVO request){
+	private ModelAndView getStudentNeedsAnalysisExercise(ExerciseSequenceRequestVO request, boolean first){
 		logger.info("JLF --- getStudentNeedsAnalysisExercise() --- Get the exercise from student needs analysis "+"User= "+this.getUsername());
 		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
 		String TRIAL = rb.getString("vps.trial");
@@ -332,28 +451,38 @@ public class ExercisesSequenceController implements Serializable{
 			reqad.getHeaderVO().setLoginUser(user.getUsername());
 			rqctat.setHeaderVO(new HeaderVO());
 			rqctat.getHeaderVO().setLoginUser(user.getUsername());
-			Date date= new Date();
+			Calendar calendar = Calendar.getInstance();
+			Date date= calendar.getTime();
 			Timestamp timestamp= new Timestamp(date.getTime());
 			int studentId= getLoginUserService().getIdUserInfo(request.getHeaderVO());
 			int prevStudentScore=getLoginUserService().getLastScoreSequenceUser(request.getHeaderVO());
 			String prevLessonId=getLoginUserService().getIdExersiceSequenceUser(request.getHeaderVO()).toString();
 			String whizzLessonSuggestion = "GB0900CAx0200";//JLF: Hardcoded, this parameter is used in both sequencers??
+
+			getSnaService().setStudentModel(studentId);
 			if (getCurrentView().equals(ExerciseVO.FRACTIONS_LAB)) {
 				getSnaService().setExploratoryExercise(true);
 			} else if (getCurrentView().equals(ExerciseVO.WHIZZ)|| getCurrentView().equals(ExerciseVO.WHIZZ_TEST)){
+				prevLessonId= WhizzUtil.marshallWhizz(prevLessonId);
+				prevStudentScore=WhizzUtil.computeScore(prevStudentScore);
 				SetDB.SetConnectionAddress(true);
 				getSnaService().setExploratoryExercise(false);
 				getSnaService().setWhizzExercise(true);
 			} else if (getCurrentView().equals(ExerciseVO.FRACTIONS_TUTOR)){
 				ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs(), getCurrentExerciseName());
 				prevStudentScore=cs.getScoreRounded();
+				ExerciseSequenceRequestVO reqCTAT= new ExerciseSequenceRequestVO();
+				reqCTAT.setHeaderVO(new HeaderVO());
+				reqCTAT.getHeaderVO().setLoginUser(user.getUsername());
+				reqCTAT.setNameExercise(prevLessonId);
+				prevLessonId=Integer.toString(getExerciseSequenceService().getIdExerciseFromSequence(reqCTAT).getExercise().getIdExercise());
 				SetDB.SetConnectionAddress(false);
 				getSnaService().setExploratoryExercise(false);
 				getSnaService().setFractionsTutorExercise(true);
 			}
 			getSnaService().setAudio(getSpeechRecognitionService().getCurrentAudioFromExercise(reqad).getAudio());
 			try {
-				getSnaService().calculateNextTask(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Integer.parseInt(TRIAL));
+				getSnaService().calculateNextTask(studentId, prevLessonId, prevStudentScore, timestamp, whizzLessonSuggestion, Integer.parseInt(TRIAL), first);
 			} catch (SNAException e) {
 				// TODO Auto-generated catch block
 				logger.error(e.getSnamessage());
@@ -382,23 +511,36 @@ public class ExercisesSequenceController implements Serializable{
 						viewName=ExerciseVO.WHIZZ_TEST;
 				}
 			} else {
-				if (response.contains("task")==true){
-					viewName=ExerciseVO.FRACTIONS_LAB;
-					
-				} else {
+				if (response.contains("sequencer")==true) {
 					viewName=ExerciseVO.FRACTIONS_TUTOR;
+					ExerciseSequenceRequestVO reqCTAT= new ExerciseSequenceRequestVO();
+					reqCTAT.setHeaderVO(new HeaderVO());
+					reqCTAT.getHeaderVO().setLoginUser(user.getUsername());
+					reqCTAT.setIdExercise(Integer.parseInt(response.replace("sequencer", "")));
+					response=getExerciseSequenceService().getSpecificExercise(reqCTAT).getExercise().getExercise();
+				}
+				else if (response.contains("graph")==true){
+					viewName=ExerciseVO.FRACTIONS_TUTOR;
+				} else {
+					viewName=ExerciseVO.FRACTIONS_LAB;
 				}
 			}
+			getSnaService().saveStudentModel(studentId);
 			setCurrentView(viewName);
+			setCurrentExerciseName(response);
 			if (viewName.equals(ExerciseVO.FRACTIONS_LAB)){
 				TipFilesUtil.createTIPFile(response, getSnaService().getTaskDescription(), getSnaService().getAvailableRepresentationsInFL());
 				modelAndView.addObject("idTask", response);
-				modelAndView.addObject("taskName", ec.getExercise().get(response));
-				//modelAndView.addObject("taskName2", ec.getExercise().get(response));
-			} else{
+				if (getLanguageBrowser().contains(HeaderVO.GERMAN)==true)
+					modelAndView.addObject("taskName", ec.getExercise().get(response+"_de"));
+				else {
+					modelAndView.addObject("taskName", ec.getExercise().get(response));
+				}
+			} else if (viewName.equals(ExerciseVO.FRACTIONS_TUTOR)) {
+				modelAndView.setViewName(viewName+"/"+response);
+				return modelAndView;
+			} else {
 				modelAndView.addObject("taskName", response);
-				//JLF: CTAT view
-				modelAndView.addObject("brd", "someBRD");
 			}
 			modelAndView.setViewName(viewName+"/GenericSNA");
 			return modelAndView;
@@ -485,6 +627,33 @@ public class ExercisesSequenceController implements Serializable{
             request.setWhizz(exercise);
             getWhizzExerciseBO().storeWhizzInfo(request);
             getExerciseSequenceService().insertLastScore(request);
+        } catch (Exception ex) {
+        	logger.error(ex.toString());
+        }
+	}
+	
+	/**
+	 * JLF: Controller to store Whizz Data
+	 */
+	@RequestMapping(value = "/storeExerciseQuiz", method = RequestMethod.POST)
+    public @ResponseBody void storeExerciseQuiz(@RequestBody ExerciseQuizRequestVO exercise, HttpServletRequest req){
+		logger.info("JLF --- Whizz storeExerciseQuiz --- Storing whizz data on the data base"+" User: "+this.getUsername());
+		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        try {
+        	request= new ExerciseSequenceRequestVO();
+			request.setHeaderVO(new HeaderVO());
+			request.getHeaderVO().setLoginUser(user.getUsername());
+        	exercise.setHeaderVO(new HeaderVO());
+        	exercise.getHeaderVO().setLoginUser(user.getUsername());
+        	if (exercise.getTypeQuiz()==2) {
+        		exercise.setExName(getCurrentExerciseName());
+        		exercise.setExView(getCurrentView());
+        	} else {
+        		exercise.setExName("---");
+        		exercise.setExView("---");
+        	}
+        	exercise.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
+            getExerciseSequenceService().storeExerciseQuiz(exercise);
         } catch (Exception ex) {
         	logger.error(ex.toString());
         }
@@ -619,6 +788,22 @@ public class ExercisesSequenceController implements Serializable{
 
 	public void setCurrentView(String currentView) {
 		this.currentView = currentView;
+	}
+
+	public ITISWrapper getTISWrapperService() {
+		return TISWrapperService;
+	}
+
+	public void setTISWrapperService(ITISWrapper tISWrapperService) {
+		TISWrapperService = tISWrapperService;
+	}
+
+	public String getLanguageBrowser() {
+		return languageBrowser;
+	}
+
+	public void setLanguageBrowser(String languageBrowser) {
+		this.languageBrowser = languageBrowser;
 	}
 	
 }

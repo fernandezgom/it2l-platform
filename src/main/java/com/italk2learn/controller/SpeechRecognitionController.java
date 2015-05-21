@@ -49,8 +49,6 @@ public class SpeechRecognitionController{
 	
 	private String username;
 	
-	private static final int NUM_SECONDS = 10 * 60 * 1000;
-	
 	//private Timer timer = new Timer();
 	
 	/*Services*/
@@ -87,9 +85,7 @@ public class SpeechRecognitionController{
 			reqad.setAudio(body);
 			getSpeechRecognitionService().concatenateAudioStream(reqad);
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().sendNewAudioChunk(request));
-			TaskIndependentSupportRequestVO tisObject= new TaskIndependentSupportRequestVO();
-			tisObject.setWords(response.getLiveResponse());
-			getTISWrapperService().sendSpeechOutputToSupport(getUsername(), tisObject);
+			getTISWrapperService().sendSpeechOutputToSupport(getUsername(), response.getLiveResponse());
 		} catch (Exception e){
 			logger.error(e.toString());
 		}

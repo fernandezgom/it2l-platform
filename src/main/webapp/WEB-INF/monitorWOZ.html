@@ -68,6 +68,38 @@
 							</td>
 						</tr>
 				</table>
+				<table>
+						<tr>
+    						<th>Change condition for an user</th>
+						</tr>
+						<tr>
+						 	<td>
+								User 
+							</td>
+							<td>
+								<input id="user2" name="user2" type="text" th:value="*{user2}" />
+							</td>	
+						</tr>
+						<tr>
+							<td>
+								Condition
+							</td>
+							<td>
+								<select id="coList">
+								  <option value="1">FULL_SYSTEM</option>
+								  <option value="2">NO_SPEECH</option>
+								  <option value="3">NO_ELE</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>
+							</td>
+							<td align="right">
+								<input id="stCondition" name="stCondition" type="button" value="Submit" />
+							</td>
+						</tr>
+				</table>
 			</td>
 		</tr>
 		<tr align="left">

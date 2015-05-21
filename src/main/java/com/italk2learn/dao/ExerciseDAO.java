@@ -230,6 +230,18 @@ public class ExerciseDAO extends HibernateDaoSupport implements IExerciseDAO {
 			throw new ITalk2LearnException(e);
 		}
 	}
+	
+	public void insertCondition(int idUser, int condition) throws ITalk2LearnException {
+		final Session session = this.getITalk2LearnSession();
+		try{
+			User us=(User) session.load(User.class, idUser);
+			us.setCond(condition);
+			session.saveOrUpdate(us);
+		}catch (Exception e){
+			e.printStackTrace();
+			throw new ITalk2LearnException(e);
+		}
+	}
 
 	
 	public Exercises getFirstExercise(int idExercise) throws ITalk2LearnException {

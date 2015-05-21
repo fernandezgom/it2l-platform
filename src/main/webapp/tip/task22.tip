@@ -53,12 +53,6 @@
     }
   ],
   "extra_information": {
-  },
-  "task_description": {
-    "id": "task2.2",
-    "title": "task2.2",
-    "desctiption": "Make a fraction and right click it. Select 'Find equivalent' and partition the fraction into 2, 3, 4 and 5.",
-    "showAtStartup": "false"
-  }  
+  } 
 }
 

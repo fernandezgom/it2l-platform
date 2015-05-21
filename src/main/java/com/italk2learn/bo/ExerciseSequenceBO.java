@@ -11,10 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.italk2learn.bo.inter.IExerciseSequenceBO;
 import com.italk2learn.dao.inter.IExerciseDAO;
+import com.italk2learn.dao.inter.IExerciseQuizDAO;
 import com.italk2learn.dao.inter.ISequenceDAO;
 import com.italk2learn.exception.ITalk2LearnException;
 import com.italk2learn.repositories.ExercisesRepository;
 import com.italk2learn.util.ExerciseAssembler;
+import com.italk2learn.vo.ExerciseQuizRequestVO;
+import com.italk2learn.vo.ExerciseQuizResponseVO;
 import com.italk2learn.vo.ExerciseSequenceRequestVO;
 import com.italk2learn.vo.ExerciseSequenceResponseVO;
 import com.italk2learn.vo.WhizzRequestVO;
@@ -30,13 +33,17 @@ public class ExerciseSequenceBO implements IExerciseSequenceBO  {
 	
 	public ISequenceDAO sequenceDAO;
 	
-    @Autowired
+	public IExerciseQuizDAO exerciseQuizDAO;
+	
+
+	@Autowired
     private ExercisesRepository exercisesRepository; 
 	
 	@Autowired
-	public ExerciseSequenceBO(IExerciseDAO exerciseDAO,ISequenceDAO sequenceDAO) {
+	public ExerciseSequenceBO(IExerciseDAO exerciseDAO,ISequenceDAO sequenceDAO, IExerciseQuizDAO exerciseQuizDAO) {
 		this.exerciseDAO = exerciseDAO;
 		this.sequenceDAO = sequenceDAO;
+		this.exerciseQuizDAO= exerciseQuizDAO;
 	}
 	
     public ExerciseSequenceResponseVO findAllExercises(ExerciseSequenceRequestVO request) {
@@ -188,6 +195,18 @@ public class ExerciseSequenceBO implements IExerciseSequenceBO  {
 		return null;
 	}
 	
+	public ExerciseSequenceResponseVO insertCondition(ExerciseSequenceRequestVO request) throws ITalk2LearnException{
+		try {
+			ExerciseSequenceResponseVO response= new ExerciseSequenceResponseVO();
+			getExerciseDAO().insertCondition(request.getIdUser(), request.getCondition());
+			return response;
+		}
+		catch (Exception e){
+			logger.error(e.toString());
+		}
+		return null;
+	}
+	
 	public ExerciseSequenceResponseVO insertLastScore(WhizzRequestVO request) throws ITalk2LearnException{
 		try {
 			ExerciseSequenceResponseVO response= new ExerciseSequenceResponseVO();
@@ -212,6 +231,18 @@ public class ExerciseSequenceBO implements IExerciseSequenceBO  {
 		return null;
 	}
 	
+	public ExerciseQuizResponseVO storeExerciseQuiz(ExerciseQuizRequestVO request) throws ITalk2LearnException{
+		logger.info("JLF WhizzExerciseBO storeWhizzInfo() --- Storing Whizz data on the database");
+		ExerciseQuizResponseVO response= new ExerciseQuizResponseVO();
+		try {
+			getExerciseQuizDAO().storeExerciseQuiz(request.getIdUser(), request.getExName(),request.getExView(), request.getData(), request.getTypeQuiz());
+		}
+		catch (Exception e){
+			logger.error(e.toString());
+		}
+		return response;
+	}
+	
 
 	public IExerciseDAO getExerciseDAO() {
 		return exerciseDAO;
@@ -229,4 +260,11 @@ public class ExerciseSequenceBO implements IExerciseSequenceBO  {
 		this.sequenceDAO = sequenceDAO;
 	}
 
+    public IExerciseQuizDAO getExerciseQuizDAO() {
+		return exerciseQuizDAO;
+	}
+
+	public void setExerciseQuizDAO(IExerciseQuizDAO exerciseQuizDAO) {
+		this.exerciseQuizDAO = exerciseQuizDAO;
+	}
 }

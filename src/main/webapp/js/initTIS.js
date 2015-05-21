@@ -21,7 +21,7 @@ function submitEmotion(option){
 		success: function (data) {
 			if (data.popUpWindow ==true) {
 				if (data.message.length>0) {
-					textToSpeech(data.message);
+					textToSpeech(data.message, false);
 					SendHighMessage(data.message);
 				}
 			}

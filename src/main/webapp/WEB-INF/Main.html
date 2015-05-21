@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8"/>
+	<link rel="stylesheet" type="text/css" media="screen, projection" href="/italk2learn/styles/it2lmainstyles.css" />
+	<script src="../js/popupIOS/jquery-1.9.1.js"></script>
+	<link rel="stylesheet" href="../css/popupIOS/index.css"/>
+	<script src="../js/popupIOS/generalFunctions.js"></script>
+	
+	
+</head>
+<body class="back" style="margin-top: 0px; margin-bottom: 0px; height: auto;">
+	<div class="background" style="height: auto;margin-left: auto; margin-right: auto; margin-top: 0px; margin-bottom: 0px; max-width: 915px;">
+<!-- 		<div id="flags" class="flags"> -->
+<!-- 					<a href="?lang=en" style="text-decoration: none"> -->
+<!-- 				        <img alt="en" title="English" src="../../images/UK.png" th:src="@{/resources/images/UK.png}"/> -->
+<!-- 				    </a> -->
+<!-- 				    <a href="?lang=de" style="text-decoration: none"> -->
+<!-- 				        <img alt="de" title="German" src="../../images/GE.png" th:src="@{/resources/images/GE.png}"/> -->
+<!-- 				    </a> -->
+<!-- 				    <a href="?lang=es" style="text-decoration: none"> -->
+<!-- 				        <img alt="fr" title="Spanish" src="../../images/ES.png" th:src="@{/resources/images/ES.png}"/> -->
+<!-- 				    </a> -->
+<!-- 		</div> -->
+		<table align="center">
+			<tbody>
+				<tr>
+					<td>
+						<div>
+							<a href="#"> <img src="../../images/iLearnFraction_banner_05.jpg" th:src="@{/resources/images/iLearnFraction_banner_05.jpg}" alt="italk2learn" /></a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table align="center">
+			<tbody>
+				<tr align="center">
+					<td align="center">
+						<div id="wrapper_dark_gray" style="height: auto; width: 890px; padding-top: 20px;">
+							<div style="display: inline; width: 890px">
+								<span id="intro" style="display: inline; font-size: 18px;">Welcome to iLearnFractions</span>
+							</div>
+							<div id="wrapper_light_gray" style="height: auto; width: 815px; margin-top: 30px;">
+								<a id="q1" href="/italk2learn/exercise/beforeQuiz">Cuestionario1</a><br/>
+								<a id="q2" href="/italk2learn/exercise/afterQuiz">Cuestionario2</a><br/>
+								<a id="q3" href="/italk2learn/exercise">iTalk2Learn</a><br/>
+							</div>
+							<br/>
+							<br/>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br/>
+	</div>
+	<script type="text/javascript">
+		function changeLabels(lang){
+			var q1 = "Pre-Questionnaire";
+			var q2 = "Post-Questionnaire";
+			if(lang == "es"){
+				q1 = "Pre-Cuestionario";
+			    q2 = "Post-Cuestionario";
+			}
+			else if(lang == "de"){
+				q1 = "Pre-Fragebogen";
+			    q2 = "Post-Fragebogen";
+			}
+			$("#q1").html(q1);
+			$("#q2").html(q2);
+		}
+		changeLabels(getURLParameter("lang"));
+	</script>
+</body>
+</html>

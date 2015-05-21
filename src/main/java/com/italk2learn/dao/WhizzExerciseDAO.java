@@ -39,7 +39,7 @@ public class WhizzExerciseDAO extends HibernateDaoSupport implements IWhizzExerc
 			wh.setHelp3(whizz.getHelp3());
 			session.saveOrUpdate(wh);
 			return true;
-		}catch (Exception e){
+		} catch (Exception e){
 			e.printStackTrace();
 			throw new ITalk2LearnException(e);
 		}

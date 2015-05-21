@@ -5,6 +5,9 @@ $(document).ready(function() {
 	   $("#submit").click(function() {
 		   submitWOZ();
 	   });
+	   $("#stCondition").click(function() {
+		   submitCondition();
+	   });
 	   $("#submitUser").click(function() {
 		   $("#testConn").hide();
 		   $("#nextBHandler").hide();
@@ -71,4 +74,48 @@ function submitWOZ(){
 //           alert('Done!');
 //        }
     });
+}
+
+function submitCondition(){
+	var sub = {
+       	 "condition": $('#coList').val(), 
+    	 "user": $('#user2').val(),
+    	 "lang": getLocale()
+        };
+    $.ajax({
+        type: 'POST',
+        contentType : 'application/json; charset=utf-8',
+        dataType : 'json',
+        url: "insertConditionByUser",
+        data: JSON.stringify(sub),
+        success: function(data){
+        	alert('Change submitted!');
+        },
+        error : function(jqXHR, status, error) {
+           alert('Sorry!, there was a problem');
+        },
+//        complete : function(jqXHR, status) {
+//           alert('Done!');
+//        }
+    });
+    
+    function getLocale(){
+    	var l_lang=getParameterByName("locale");
+		if (l_lang=="" && navigator.userLanguage) // Explorer
+		  l_lang = navigator.userLanguage;
+		else if (l_lang=="" && navigator.language) // FF
+		  l_lang = navigator.language;
+		else if (l_lang=="")
+		  l_lang = "en";
+		return l_lang;
+    }
+    
+    
+    
+	function getParameterByName(name) {
+	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+	    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+	        results = regex.exec(location.search);
+	    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+	}
 }

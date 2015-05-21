@@ -35,7 +35,7 @@ var Gab = {
                 body = body.text();
 				if (body.charAt(0)==='h'){ 
 				   var s=body.substring(1,body.lenght);
-				   textToSpeech(s);
+				   textToSpeech(s,true);
 				   SendHighMessage(s);
 				}
 				else if (body.localeCompare("SYN")==0){ 
@@ -70,12 +70,12 @@ var Gab = {
 				}
 				else if (body.charAt(0)==='s'){
 				   var s=body.substring(1,body.lenght);
-				   textToSpeech(s);
+				   textToSpeech(s,true);
 				   SendLowMessage(s);
 				}
                 else if (body.charAt(0)!=''){ 
-                   textToSpeech(body);
-                   setTimeout(function(){alert(body)},5000);
+                   textToSpeech(body,true);
+                   setTimeout(function(){Alert.render(body)},1000);
 				}				   
             } else {
                 body = null;
@@ -116,12 +116,12 @@ function connectWOZ (user) {
 	//conn.connect(userWOZ+'@it2l.dcs.bbk.ac.uk', userWOZ, function (status) {
 	conn.connect(userWOZ+'@it2l-32', userWOZ, function (status) {
 		if (status === Strophe.Status.CONNECTED) {
-			initContainer();
+			//initContainer();
             $(document).trigger('connected');
         } else if (status === Strophe.Status.DISCONNECTED) {
             $(document).trigger('disconnected');
         } else if (status === Strophe.Status.AUTHFAIL) {
-        	initContainer();
+        	//initContainer();
         } else {
         	//$('#connect').html("Status: "+status);
         	if (status === Strophe.Status.DISCONNECTING) {

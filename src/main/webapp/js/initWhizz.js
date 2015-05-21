@@ -76,29 +76,33 @@
 			
 			function arrowButtonEnable(value){
 				if (value==true || value=="true" || value=="True") {
-					$("#next").removeAttr("disabled");
+					$("#next").removeClass("it2lNextbuttonOFF");
+					$("#next").addClass("it2lNextbuttonON");
+					aEnabled=true;
 				}	
 				else {
-					$("#next").attr("disabled", "disabled");
+					$("#next").removeClass("it2lNextbuttonON");
+					$("#next").addClass("it2lNextbuttonOFF");
+					aEnabled=false;
 				}	
 			}
 			
 			function SendHighMessage(message)
 			{
-				setTimeout(function(){alert(message)},1000);			
+				setTimeout(function(){Alert.render(message)},1000);			
 			}
 
 			function SendLowMessage(message)
 			{
-				setTimeout(function(){alert(message)},1000);
+				setTimeout(function(){Alert.render(message)},1000);
 			}
 			
 			function EnableHelpButton(message)
 			{
-				setTimeout(function(){alert(message)},1000);
+				setTimeout(function(){Alert.render(message)},1000);
 			}
 			
 			function sendMessageToLightBulb(message)
 			{
-				setTimeout(function(){alert(message)},1000);			
+				setTimeout(function(){Alert.render(message)},1000);			
 			}

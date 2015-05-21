@@ -81,16 +81,29 @@ public class TaskIndependentSupportController {
 		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		logger.info("JLF --- TaskIndependentSupportController callTIDfromTDS --- Calling TIS from TDS "+"User: "+user.getUsername());
 		logger.info("feedbackTest="+ tisRequest.getFeedbackText()+" ,currentFeedbackType="+tisRequest.getCurrentFeedbackType()+ " ,level="+ tisRequest.getLevel()+" ,followed"+tisRequest.getFollowed());
-		TaskIndependentSupportRequestVO request= new TaskIndependentSupportRequestVO();
         try {
-        	request.setHeaderVO(new HeaderVO());
-			request.getHeaderVO().setLoginUser(user.getUsername());
-			request.setCurrentFeedbackType(tisRequest.getCurrentFeedbackType());
-			request.setFeedbackText(tisRequest.getFeedbackText());
-			request.setLevel(tisRequest.getLevel());
-			request.setFollowed(tisRequest.getFollowed());
-			request.setViewed(tisRequest.isViewed());
-			TaskIndependentSupportResponseVO res=getTisService().callTISfromTID(request);
+        	tisRequest.setHeaderVO(new HeaderVO());
+        	tisRequest.getHeaderVO().setLoginUser(user.getUsername());
+			TaskIndependentSupportResponseVO res=getTisService().callTISfromTID(tisRequest);
+			return res;
+        } catch (Exception ex) {
+        	logger.error(ex.toString());
+        }
+        return null;
+	}
+	
+	/**
+	 * JLF: Controller to call TIS from TDS sending an event when done button is pressed
+	 */
+	@RequestMapping(value = "/sendDoneButtonPressed", method = RequestMethod.POST)
+	@ResponseBody
+	public TaskIndependentSupportResponseVO sendDoneButtonPressedToTIS(@RequestBody TaskIndependentSupportRequestVO tisRequest){
+		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		logger.info("JLF --- TaskIndependentSupportController sendDoneButtonPressedToTIS --- Calling TIS from TDS "+"User: "+user.getUsername());
+        try {
+        	tisRequest.setHeaderVO(new HeaderVO());
+        	tisRequest.getHeaderVO().setLoginUser(user.getUsername());
+			TaskIndependentSupportResponseVO res=getTisService().sendDoneButtonPressedToTIS(tisRequest);
 			return res;
         } catch (Exception ex) {
         	logger.error(ex.toString());

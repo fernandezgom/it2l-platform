@@ -127,10 +127,27 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			//JLF: Store audio on the database
 			//reqsr.setFinalByteArray(audioSt);
 			//getSpeechRecognitionService().saveByteArray(reqsr);
-			getTISWrapperService().sendTDStoTIS(user.getUsername(), request.getFeedbackText(), request.getCurrentFeedbackType(), request.getLevel(), request.getFollowed(), request.isViewed());
+			getTISWrapperService().sendTDStoTIS(user.getUsername(), request.getFeedbackText(), request.getCurrentFeedbackType(), request.getFeedbackID(), request.getLevel(), request.getFollowed(), request.isViewed());
 			//JLF: Getting the result
 			response.setPopUpWindow(getTISWrapperService().getPopUpWindow());
 			response.setMessage(getTISWrapperService().getMessage());
+			response.setFromTDS(getTISWrapperService().getTDSfeedback());
+			return response;
+		}
+		catch (Exception e){
+			logger.error(e.toString());
+		}
+		return null;
+	}
+	
+	/**
+	 * Method to calling Task Independent Support from Task Dependent Support, it receives an event when done button is pressed on Fractions Lab
+	 */
+	public TaskIndependentSupportResponseVO sendDoneButtonPressedToTIS(TaskIndependentSupportRequestVO request) throws ITalk2LearnException{
+		logger.info("JLF TaskIndependentSupportBO sendDoneButtonPressedToTIS() --- Calling Task Independent Support from Task Dependent Support");
+		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
+		try {
+			getTISWrapperService().sendDoneButtonPressedToTIS(request.isDonePressed());
 			return response;
 		}
 		catch (Exception e){
@@ -150,8 +167,12 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			//JLF: Getting the result
 			response.setPopUpWindow(getTISWrapperService().getPopUpWindow());
 			response.setMessage(getTISWrapperService().getMessage());
+			response.setFromTDS(getTISWrapperService().getTDSfeedback());
 			//JLF: If contains message
 			if (response.getMessage().length()>0){
+				System.out.println("TEST:::isFromTDS"+response.isFromTDS());
+				System.out.println("TEST:::message"+response.getMessage());
+				System.out.println("TEST:::popUpWindow"+response.getPopUpWindow());
 				getStudentNeedsAnalysis().sendFeedbackTypeToSNA(getTISWrapperService().getFeedbackType());
 				getStudentNeedsAnalysis().sendAffectToSNA(getTISWrapperService().getCurrentAffect());
 			}
@@ -283,7 +304,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		    				words.add(aux);
 		    			}
 		    			req.setWords(words);
-		    			getTISWrapperService().sendSpeechOutputToSupport(user.getUsername(),req);
+		    			getTISWrapperService().sendSpeechOutputToSupport(user.getUsername(),words);
 		    			System.out.println("Output: "+response);
 		    			loop=false;
 		    		}

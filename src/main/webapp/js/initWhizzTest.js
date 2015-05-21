@@ -1,4 +1,4 @@
-// For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection.
+// For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
 		var flid;
 		if ($('#idTask')){
 			$('#idTask').hide();
@@ -20,11 +20,10 @@
         var xiSwfUrlStr = "playerProductInstall.swf";
         var flashvars = {
         		flashvarID: flid,
-        		flashvarDomain: 'http://localhost:8080/italk2learn',
+				flashvarDomain: 'http://localhost:8080/italk2learn/',
         		flashvarPath: '/sequence/tests/',
         		flashvarAssessment: 0,
         		flashvarViewAll: 0
-
         };
         var params = {};
         params.quality = "high";
@@ -36,7 +35,7 @@
         attributes.name = "iTalk2Learn";
         attributes.align = "middle";
         swfobject.embedSWF(
-            "sequence/tests/esq_viewer.swf", "flashContent", 
+            "sequence/iTalk2Learn.swf", "flashContent", 
             "800", "600", 
             swfVersionStr, xiSwfUrlStr, 
             flashvars, params, attributes);
@@ -81,29 +80,33 @@
 			
 			function arrowButtonEnable(value){
 				if (value==true || value=="true" || value=="True") {
-					$("#next").removeAttr("disabled");
+					$("#next").removeClass("it2lNextbuttonOFF");
+					$("#next").addClass("it2lNextbuttonON");
+					aEnabled=true;
 				}	
 				else {
-					$("#next").attr("disabled", "disabled");
+					$("#next").removeClass("it2lNextbuttonON");
+					$("#next").addClass("it2lNextbuttonOFF");
+					aEnabled=false;
 				}	
 			}
 			
 			function SendHighMessage(message)
 			{
-				setTimeout(function(){alert(message)},1000);			
+				setTimeout(function(){Alert.render(message)},1000);			
 			}
 
 			function SendLowMessage(message)
 			{
-				setTimeout(function(){alert(message)},1000);
+				setTimeout(function(){Alert.render(message)},1000);
 			}
 			
 			function EnableHelpButton(message)
 			{
-				setTimeout(function(){alert(message)},1000);
+				setTimeout(function(){Alert.render(message)},1000);
 			}
 			
 			function sendMessageToLightBulb(message)
 			{
-				setTimeout(function(){alert(message)},1000);			
+				setTimeout(function(){Alert.render(message)},1000);			
 			}
