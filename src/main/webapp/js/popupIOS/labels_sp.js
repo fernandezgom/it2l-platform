@@ -1,103 +1,69 @@
+
 var labels = {
-	title: "Por favor Selecciona una cara por pregunta",
-	responseDialog: "Por favor, responde a todas las preguntas",
+	title: "Please answer these two questions",
+	responseDialog: "Please answer both questions!",
 	1: {
-		labelQues: "¿Que tan fácil fue realizar la última tarea?",
+		labelQues: "I thought the last task was...",
 		answers: {
 			1: {
-				label: "Fácil",
-				srcIma: "images/popupQuiz/1.png"
+				label: "Easy",
+				srcIma: "images/popupQuiz/1.png",
+				random: true
 			},
 			
 			2: {
 				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
+				srcIma: "images/popupQuiz/2.png",
+				random: true
 			},
 			
 			3: {
-				label: "Dificil",
-				srcIma: "images/popupQuiz/3.png"
+				label: "Difficult",
+				srcIma: "images/popupQuiz/3.png",
+				random: true
 			}
 		}
 	},
 	
 	2: {
-		labelQues: "¿Que tan Confuso fue realizar la última tarea?",
+		labelQues: "I found the last task...",
 		answers: {
 			1: {
-				label: "Nada Confuso",
-				srcIma: "images/popupQuiz/1.png"
+				label: "Enjoyable",
+				srcIma: "images/popupQuiz/1.png",
+				random: true
 			},
 			
 			2: {
-				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
+				label: "Frustrating",
+				srcIma: "images/popupQuiz/2.png",
+				random: true
 			},
 			
 			3: {
-				label: "Confuso",
-				srcIma: "images/popupQuiz/3.png"
-			}
-		}
-	},
-	
-	3: {
-		labelQues: "¿Que tan Disfrutable fue realizar la última tarea?",
-		answers: {
-			1: {
-				label: "Disfrutable",
-				srcIma: "images/popupQuiz/1.png"
+				label: "Confusing",
+				srcIma: "images/popupQuiz/3.png",
+				random: true
 			},
 			
-			2: {
-				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
+			4: {
+				label: "Interesting",
+				srcIma: "images/popupQuiz/3.png",
+				random: true
 			},
 			
-			3: {
-				label: "Nada Disfrutable",
-				srcIma: "images/popupQuiz/3.png"
-			}
-		}
-	},
-	
-	4: {
-		labelQues: "¿Que tan aburrido fue realizar la última tarea?",
-		answers: {
-			1: {
-				label: "Nada aburrido",
-				srcIma: "images/popupQuiz/1.png"
+			5: {
+				label: "Something else",
+				srcIma: "images/popupQuiz/3.png",
+				random: false
 			},
 			
-			2: {
-				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
-			},
-			
-			3: {
-				label: "Aburrido",
-				srcIma: "images/popupQuiz/3.png"
-			}
-		}
-	},
-	
-	5: {
-		labelQues: "¿Que tan frustrante fue realizar la última tarea?",
-		answers: {
-			1: {
-				label: "Nada Frustrante",
-				srcIma: "images/popupQuiz/1.png"
-			},
-			
-			2: {
-				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
-			},
-			
-			3: {
-				label: "Frustrante",
-				srcIma: "images/popupQuiz/3.png"
+			6: {
+				label: "Don't know",
+				srcIma: "images/popupQuiz/3.png",
+				random: false
 			}
 		}
 	}
+	
 };

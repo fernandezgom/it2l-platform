@@ -1,26 +1,30 @@
 $(document).ready(function() {
-	// iniciar el controlador y llamar a la funcion loadPage
-	principalCtl = new IndexController();
+   	//iniciar el controlador y llamar a la funcion loadPage
+   	principalCtl = new IndexController();
 	principalCtl.loadPage();
 });
 
 function IndexController() {
-	// variables
-	var scope = this;
-	this.lang = ""; // variable del idioma
+	//variables
+	var scope =  this;
+	this.lang =  ""; // variable del idioma
+	
+	
 	this.faceRadio = false; ///**********************
+	
 	this.dataLang = null;
-	this.loadPage = function() {
-		var len = getLocale();
-		if (len.indexOf("en") > -1)
-			scope.lang = "en";
-		else
-			scope.lang = len;
+	
+	this.loadPage =  function (){
+		scope.lang = getURLParameter("lang");//obtener el idioma de la url, si es 'en' es ingles, otro caso (sp o null) es español
+		
+		
+		
 		scope.faceRadio = getURLParameter2("faceRadio");///**********************
 		if(scope.faceRadio == null || scope.faceRadio=="false")///**********************
 			scope.faceRadio = false;///**********************
-		// scope.lang = getURLParameter("lang");//obtener el idioma de la url,
-		// si es 'en' es ingles, otro caso (sp o null) es español
+			
+			
+		
 		var theLangScript = "js/popupIOS/labels_en.js";// etiquetas en español
 		if (scope.lang == "es") {
 			theLangScript = "js/popupIOS/labels_sp.js";// etiquetas en ingles
@@ -60,6 +64,7 @@ function IndexController() {
 			$('.modal').removeClass('active');
 		});
 	};
+	
 	this.checkIfNumberExistInArr = function(arr, numAns){
 		if(arr!=null && arr.length >0){
 			for(var i=0; i< arr.length ;i++){
@@ -178,12 +183,9 @@ function IndexController() {
 		return Math.floor(Math.random() * (max - min + 1)) + min;
 	};
 	
-	/*******************************************************************/
-	//funcion que se pasa como parametro a la funcion general loadScript
-	//obtiene las etiquetas en un idioma y se ponen a cada componente de la pagina
-	this.prepareLabels = function(data, textStatus, jqxhr){
-		scope.dataLang = labels;
-		$.map(labels, function(obj, index) {
+	this.makePop = function(){
+		$("#questionsDialog").html("");
+		$.map(scope.dataLang, function(obj, index) {
 			if(index=="title"){
 				$("#titlePop").html(obj);
 			}
@@ -246,6 +248,13 @@ function IndexController() {
 				}
 			}
 		});
+	};
+	
+	/*******************************************************************/
+	//funcion que se pasa como parametro a la funcion general loadScript
+	//obtiene las etiquetas en un idioma y se ponen a cada componente de la pagina
+	this.prepareLabels = function(data, textStatus, jqxhr){
+		scope.dataLang = labels;
 	};
 	
 	this.buildJSONResponse = function(){

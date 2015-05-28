@@ -34,3 +34,23 @@ function loadScript2(url, res){
     	}
 	});
 }
+
+function getLocale(){
+	var l_lang=getParameterByName("locale");
+	if (l_lang=="" && navigator.userLanguage) // Explorer
+	  l_lang = navigator.userLanguage;
+	else if (l_lang=="" && navigator.language) // FF
+	  l_lang = navigator.language;
+	else if (l_lang=="")
+	  l_lang = "en";
+	return l_lang;
+}
+
+
+
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}

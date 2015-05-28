@@ -126,6 +126,7 @@
 			$("#help").hide();
 			$("#connectedON").hide();
 			$("#connectedOFF").hide();
+			$("#recording").hide();
 			soundButtonEnable(true);
 			getCondition();
 			setInEngland();
@@ -148,6 +149,7 @@
 			//});
 			$("#next").click(function() {
 				if (aEnabled) {
+					principalCtl.makePop();
 					$('.modal').toggleClass('active');
 				}
 			});	
@@ -281,10 +283,10 @@
 		}
 		
 		function setInEngland(){
-			var val=false;
+			var val=true;
 			var len=nLocale;
-			if (len.indexOf("en") > -1)
-				val=true;
+			if (len.indexOf("de") > -1)
+				val=false;
 			var evt = {
 			       	 "english": val
 			        };

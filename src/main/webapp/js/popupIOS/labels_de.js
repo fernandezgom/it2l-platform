@@ -1,102 +1,67 @@
+
 var labels = {
-	title: "Bitte wählen Sie ein Gesicht Fragen",
-	responseDialog: "Bitte beantworten Sie alle Fragen",
+	title: "GERMAN Please answer these two questions",
+	responseDialog: "GERMAN Please answer both questions!",
 	1: {
-		labelQues: "Wie einfach war die Durchführung der letzten Aufgabe?",
+		labelQues: "GermanI thought the last task was...",
 		answers: {
 			1: {
-				label: "Leicht",
-				srcIma: "images/popupQuiz/1.png"
+				label: "Einfach",
+				srcIma: "images/popupQuiz/1.png",
+				random: true
 			},
 			
 			2: {
 				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
+				srcIma: "images/popupQuiz/2.png",
+				random: true
 			},
 			
 			3: {
-				label: "Schwer",
-				srcIma: "images/popupQuiz/3.png"
+				label: "Schwierig",
+				srcIma: "images/popupQuiz/3.png",
+				random: true
 			}
 		}
 	},
 	
 	2: {
-		labelQues: "Was war so verwirrend führen die letzte Aufgabe?",
+		labelQues: "GermanI found the last task...",
 		answers: {
 			1: {
-				label: "Nichts Confused",
-				srcIma: "images/popupQuiz/1.png"
+				label: "GermanEnjoyable",
+				srcIma: "images/popupQuiz/1.png",
+				random: true
 			},
 			
 			2: {
-				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
+				label: "GermanFrustrating",
+				srcIma: "images/popupQuiz/2.png",
+				random: true
 			},
 			
 			3: {
-				label: "Verwirrt",
-				srcIma: "images/popupQuiz/3.png"
-			}
-		}
-	},
-	
-	3: {
-		labelQues: "Was war so angenehm, um die letzte Aufgabe zu erfüllen?",
-		answers: {
-			1: {
-				label: "Angenehm",
-				srcIma: "images/popupQuiz/1.png"
+				label: "GermanConfusing",
+				srcIma: "images/popupQuiz/3.png",
+				random: true
 			},
 			
-			2: {
-				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
+			4: {
+				label: "GermanInteresting",
+				srcIma: "images/popupQuiz/3.png",
+				random: true
 			},
 			
-			3: {
-				label: "Nichts Angenehmer",
-				srcIma: "images/popupQuiz/3.png"
-			}
-		}
-	},
-	
-	4: {
-		labelQues: "Wie langweilig wurde die Durchführung der letzten Aufgabe?",
-		answers: {
-			1: {
-				label: "Nicht Langweilig",
-				srcIma: "images/popupQuiz/1.png"
+			5: {
+				label: "GermanSomething else",
+				srcIma: "images/popupQuiz/3.png",
+				random: false
 			},
 			
-			2: {
-				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
-			},
-			
-			3: {
-				label: "Langweilig",
-				srcIma: "images/popupQuiz/3.png"
-			}
-		}
-	},
-	
-	5: {
-		labelQues: "Wie frustrierend war die Durchführung der letzten Aufgabe?",
-		answers: {
-			1: {
-				label: "Nichts Frustrierend",
-				srcIma: "images/popupQuiz/1.png"
-			},
-			
-			2: {
-				label: "OK",
-				srcIma: "images/popupQuiz/2.png"
-			},
-			
-			3: {
-				label: "Frustrierend",
-				srcIma: "images/popupQuiz/3.png"
+			6: {
+				label: "GermanDon't know",
+				srcIma: "images/popupQuiz/3.png",
+				random: false
 			}
 		}
 	}

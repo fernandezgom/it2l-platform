@@ -85,16 +85,20 @@
 			var options = null;
 			var titles = [];
 			
-			var lang = getURLParameter("lang");
+			var lang = getLocale();
 			
 			function prepareOptions(){
-				if(lang == "es"){
+				if (lang.indexOf("es") > -1){
 					$("#intro").html("Welcome to iLearnFractions Quizz");
 					$("#form1-button").val("Enviar");
+					lang="es";
 				}
-				else if(lang == "de"){
+				else if (lang.indexOf("de") > -1){
 					$("#intro").html("Herzlich willkommen iLearnFractions Quizz");
 					$("#form1-button").val("Senden");
+					lang="de";
+				} else {
+					lang="en";
 				}
 				
 				//loadScript2("alpacaFiles/data.js", ladata); //cargar script de idioma
@@ -200,11 +204,11 @@
 								data : JSON.stringify(evt),
 								success : function(data) {
 									alert("Changes submitted correctly");
-									setTimeout(function(){window.location.href = "/italk2learn/exercise"},2000);
+									setTimeout(function(){window.location.href = "/italk2learn/exercise/main"},2000);
 								},
 								error : function(jqXHR, status, error) {
 									alert("Changes submitted correctly");
-									setTimeout(function(){window.location.href = "/italk2learn/exercise"},2000);
+									setTimeout(function(){window.location.href = "/italk2learn/exercise/main"},2000);
 								},
 							});
 					}else{

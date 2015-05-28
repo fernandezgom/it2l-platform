@@ -61,3 +61,12 @@
 			{
 				setTimeout(function(){Alert.render(message)},1000);			
 			}
+			
+			function enableTIS(enable){
+				if (enable==false){
+					$("#recording").hide();
+				}
+				else {
+					$("#recording").show();
+				}
+			}

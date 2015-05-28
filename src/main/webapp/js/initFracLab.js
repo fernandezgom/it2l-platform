@@ -412,10 +412,12 @@
 				function enableTIS(enable){
 					checkTIS(enable);
 					if (enable==false){
+						$("#recording").hide();
 						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*switchTISOFF*\"}}";
 	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
 					}
 					else {
+						$("#recording").show();
 						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*switchTISON*\"}}";
 	                    u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
 					}

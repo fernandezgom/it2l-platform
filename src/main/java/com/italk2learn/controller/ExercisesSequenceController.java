@@ -469,8 +469,8 @@ public class ExercisesSequenceController implements Serializable{
 				getSnaService().setExploratoryExercise(false);
 				getSnaService().setWhizzExercise(true);
 			} else if (getCurrentView().equals(ExerciseVO.FRACTIONS_TUTOR)){
-				ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs(), getCurrentExerciseName());
-				prevStudentScore=cs.getScoreRounded();
+				//ComputeScoreFTUtil cs= new ComputeScoreFTUtil(getCtatExerciseBO().getExerciseLogs(rqctat).getExLogs(), getCurrentExerciseName());
+				prevStudentScore=0;//cs.getScoreRounded();
 				ExerciseSequenceRequestVO reqCTAT= new ExerciseSequenceRequestVO();
 				reqCTAT.setHeaderVO(new HeaderVO());
 				reqCTAT.getHeaderVO().setLoginUser(user.getUsername());
@@ -531,11 +531,7 @@ public class ExercisesSequenceController implements Serializable{
 			if (viewName.equals(ExerciseVO.FRACTIONS_LAB)){
 				TipFilesUtil.createTIPFile(response, getSnaService().getTaskDescription(), getSnaService().getAvailableRepresentationsInFL());
 				modelAndView.addObject("idTask", response);
-				if (getLanguageBrowser().contains(HeaderVO.GERMAN)==true)
-					modelAndView.addObject("taskName", ec.getExercise().get(response+"_de"));
-				else {
-					modelAndView.addObject("taskName", ec.getExercise().get(response));
-				}
+				modelAndView.addObject("taskName", getSnaService().getTaskDescription());
 			} else if (viewName.equals(ExerciseVO.FRACTIONS_TUTOR)) {
 				modelAndView.setViewName(viewName+"/"+response);
 				return modelAndView;
