@@ -11,7 +11,8 @@ var schema = {
         },
         "question3": {
             "required": true,
-        	"enum": ["1", "2", "3", "4", "5"]
+        	"enum": ["1", "2", "3", "4", "5"],
+        	"needsToBeTable" : true,
         },
         "question4": {
             "required": true,
@@ -39,11 +40,12 @@ var schema = {
     	},
     	"question10": {
         	"required": true,
-        	"enum": ["1", "2", "3","4"]
+        	"enum": ["0", "1", "2", "3","4"],
+        	"titleImaSrc" : "../images/alpacaImages/questionary1/q5/1.png"
     	},
     	"question11": {
         	"required": true,
-        	"enum": ["1", "2", "3", "4", "5"]
+        	"enum": ["1", "2", "3", "4"]
     	}
     }
 };

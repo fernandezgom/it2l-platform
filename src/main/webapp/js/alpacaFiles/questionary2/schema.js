@@ -100,11 +100,12 @@ var schema = {
     	},
     	"question24": {
         	"required": true,
-        	"enum": ["1", "2", "3","4"]
+        	"enum": ["0","1", "2", "3","4"],
+        	"titleImaSrc" : "../images/alpacaImages/questionary2/q5/2.png"
     	},
     	"question25": {
         	"required": true,
-        	"enum": ["1", "2", "3", "4", "5"]
+        	"enum": ["1", "2", "3", "4"]
     	}
     }
 };

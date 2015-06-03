@@ -7,6 +7,7 @@
 	href="/italk2learn/styles/it2lmainstyles.css" />
 <link rel="stylesheet" href="../css/popupIOS/index.css" />
 <script src="../js/popupIOS/generalFunctions.js"></script>
+<script src="../js/alpacaFiles/js/alpacaGeneralFunctions.js"></script>
 
 
 <!-- dependencies (jquery, handlebars and bootstrap) -->
@@ -62,7 +63,7 @@
 							</div>
 							<div id="wrapper_light_gray"
 								style="height: auto; width: 815px; margin-top: 30px;">
-								<div id="form1" class="center" style="width: 400px;"></div>
+								<div id="form1" class="center" style="width: 800px;"></div>
 								<div id="subBton" class="center" style="width: 400px;">
 									<input type="button" id="form1-button" value="Send"
 										class="it2lbutton" />
@@ -80,168 +81,57 @@
 	<script type="text/javascript">
 	<!--
 	
-			var ladata = null;
-			var schema = null;
-			var options = null;
-			var titles = [];
-			
-			var lang = getLocale();
-			
-			function prepareOptions(){
-				if (lang.indexOf("es") > -1){
-					$("#intro").html("Welcome to iLearnFractions Quizz");
-					$("#form1-button").val("Enviar");
-					lang="es";
-				}
-				else if (lang.indexOf("de") > -1){
-					$("#intro").html("Herzlich willkommen iLearnFractions Quizz");
-					$("#form1-button").val("Senden");
-					lang="de";
-				} else {
-					lang="en";
-				}
-				
-				//loadScript2("alpacaFiles/data.js", ladata); //cargar script de idioma
-				loadScript2("../js/alpacaFiles/questionary2/schema.js", schema); //cargar script de idioma
-				loadScript2("../js/alpacaFiles/questionary2/"+lang+"/options.js", options); //cargar script de idioma
-				$("#form1").alpaca({
-		        	"data": null,
-		        	"schema": schema,
-		        	"options": options,
-		        	"postRender": postRenderCallback,
-		        	"view": "web-edit"
-		    	});
-			}
-			
-			prepareOptions();
-			
-			function changeText(text, subtext, newSubText){
-				var theText = text;
-				if(text.indexOf(subtext)>-1){
-					theText = text.replace(subtext,newSubText);
-				}
-				return theText;
-			}
-			
-			function prepareTranslationAlpacaForm() {
-				var alpacaMessages = $("div.alpaca-message");
-					for(var i=0; i < alpacaMessages.length; i++){
-						var jMess = $(alpacaMessages[i]);
-						var textMess = jMess.html();
-						if(lang == "es"){
-							textMess = changeText(textMess,"This field is not optional","Este campo no es opcional");
-							textMess = changeText(textMess,"This field should have one of the values in 1, 2, 3, 4.  Current value is: null","Este campo todavía no ha sido contestado")
-						}else if(lang == "de"){
-							textMess = changeText(textMess,"This field is not optional","Dieses Feld ist nicht optional");
-							textMess = changeText(textMess,"This field should have one of the values in 1, 2, 3, 4.  Current value is: null","Dieses Feld ist noch nicht beantwortet worden");
-						}else if(lang == "en"){
-							textMess = changeText(textMess,"This field should have one of the values in 1, 2, 3, 4.  Current value is: null","This field has not been answered yet!");
-						}
-						jMess.html(textMess);
-					}
-			}
-			
-			//this is only a quick fix to support the problems of alpaca to retrieve data from checkbox!!!!!
-			function fixCheckBoxResponse(json){
-				allDivs = $("div.alpaca-control");
-				var arrOp = [];
-				for(var i=0; i < allDivs.length; i++){
-		    		var ele = allDivs[i];
-		    		var sub = ele.getElementsByTagName("label");
-		    		var jsub = $(sub);
-		    		var check = jsub.find("input:checkbox");
-		    		if(check.prop('checked')!=undefined){
-		    			if(check.prop('checked')){
-		    				arrOp.push(check.attr("data-checkbox-value"));
-		    			}
-		    		}
-		    		
-		    	}
-		    	if(arrOp!=[] && arrOp.length>0){
-		    		var arrStr = " { ";
-		    		$.map(json, function(obj, index) { 
-		    			arrStr += '"'+index+'":'+'"'+obj+'",';
-		    		});
-		    		if(arrStr!=[] && arrStr.length>0)
-		    			arrStr += '"question21":['+arrOp.toString()+']';
-					arrStr += "} ";
-					return JSON.parse(arrStr);
-				}else
-					return json;
-			}
-			
-			function countQuestions(){
-				var cont = 0;
-				$.map(options.fields, function(obj, index) { 
-					cont++;
-		    	});
-		    	return cont;
-			}
-			
-
-		    function postRenderCallback(control) {
-		    	changeRadioLabelPerImage();
-		    	$('#form1-button').click(function() {
-					var val = control.getValue(); //objeto json
-					if(titles!=[] && titles.length>0)
-						val=fixCheckBoxResponse(val);
-					cont = 0;
-					$.map(val, function(obj, index) { 
-		    			cont++;
-		    		});
-		    		if(cont==countQuestions()){
-						var jsonVal = JSON.stringify(val); //string json
-						var alpacaMessages = $("div.alpaca-message");
-						var evt = {
-								"data" : JSON.stringify(jsonVal),
-								"typeQuiz" : 1
-							};
-							$.ajax({
-								type : 'POST',
-								contentType : 'application/json; charset=utf-8',
-								dataType : 'json',
-								url : "/italk2learn/sequence/storeExerciseQuiz",
-								data : JSON.stringify(evt),
-								success : function(data) {
-									alert("Changes submitted correctly");
-									setTimeout(function(){window.location.href = "/italk2learn/exercise/main"},2000);
-								},
-								error : function(jqXHR, status, error) {
-									alert("Changes submitted correctly");
-									setTimeout(function(){window.location.href = "/italk2learn/exercise/main"},2000);
-								},
-							});
-					}else{
-						alert("You must Filled all Questions please...");
-					}
-				});
-		    }
-		    
-		    function changeRadioLabelPerImage(){//**************************************************
-		    	
-		    	var allDivs = $("div.alpaca-container-item");
-				for(var i=0; i < allDivs.length; i++){
-		    		var ele = allDivs[i];
-		    		if($(ele).find("input:checkbox").length > 0)
-		    			titles.push($(ele).attr("data-alpaca-container-item-name"));
-		    	}
-		    
-		    	var allDivs = $("div.alpaca-control");
-		    	for(var i=0; i < allDivs.length; i++){
-		    		var ele = allDivs[i];
-		    		var sub = ele.getElementsByTagName("label");
-		    		var jsub = $(sub);
-		    		var rad = jsub.find("input:radio,input:checkbox");
-		    		var textJsub = jsub.html();
-		    		var title = textJsub.substring(textJsub.indexOf(">")+1, textJsub.length);
-		    		if(title.indexOf("png")>0){
-		    			textJsub = textJsub.substring(0, textJsub.indexOf(">")+1);
-		    			textJsub += "<img title='"+rad.val()+"' src='"+title+"' width='65' height='55' hspace='10'>"
-		    			//console.log(textJsub);
-		    			jsub.html(textJsub);
-		    		}
-		    	}
-		    }
+	var ladata = null;
+	var schema = null;
+	var options = null;
+	var titles = [];
+	var typeQ=1;
+	
+	var lang = getLocale();
+	
+	function prepareOptions(){
+		if (lang.indexOf("es") > -1){
+			$("#intro").html("Welcome to iLearnFractions Quizz");
+			$("#form1-button").val("Enviar");
+			lang="es";
+		}
+		else if (lang.indexOf("de") > -1){
+			$("#intro").html("Herzlich willkommen iLearnFractions Quizz");
+			$("#form1-button").val("Senden");
+			lang="de";
+		} else {
+			lang="en";
+		}
+		var data = {
+    		"question1": 1,
+    		"question3": 1,
+    		"question4": 1,
+    		"question5": 1,
+    		"question6": 1
+		};
+		
+		if(lang == "es"){
+			$("#intro").html("Welcome to iLearnFractions Quizz");
+			$("#form1-button").val("Enviar");
+		}
+		else if(lang == "de"){
+			$("#intro").html("Herzlich willkommen iLearnFractions Quizz");
+			$("#form1-button").val("Senden");
+		}
+		
+		//loadScript2("alpacaFiles/data.js", ladata); //cargar script de idioma
+		loadScript2("../js/alpacaFiles/questionary2/schema.js", schema); //cargar script de idioma
+		loadScript2("../js/alpacaFiles/questionary2/"+lang+"/options.js", options); //cargar script de idioma
+		$("#form1").alpaca({
+        	"data": null,
+        	"schema": schema,
+        	"options": options,
+        	"postRender": postRenderCallback,
+        	"view": "web-edit"
+    	});
+	}
+	
+	prepareOptions();
     	-->
 	</script>
 </body>
