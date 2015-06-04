@@ -1,0 +1,483 @@
+version: 1
+
+dn: o=italk2learn
+objectClass: top
+objectClass: extensibleObject
+objectClass: organization
+o: italk2learn
+dc: italk2learn
+
+dn: ou=groups,o=italk2learn
+objectClass: top
+objectClass: organizationalUnit
+objectClass: extensibleObject
+ou: groups
+
+dn: ou=users,o=italk2learn
+objectClass: top
+objectClass: organizationalUnit
+objectClass: extensibleObject
+ou: users
+
+dn: cn=Student Twentythree,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twentythree
+sn: Twentythree
+uid: student23
+userPassword:: e1NTSEF9V1VRcVdQNzRFVTl0bVB6dllaQXpib3JjVGRhd2dnTGtQaXNDUXc9P
+ Q==
+ 
+dn: cn=Student Twentyfive,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twentyfive
+sn: Twentyfive
+uid: student25
+userPassword:: e1NTSEF9blpUTFNEcEJHK0dVQ0RIWXE0amxxTU1qNG9LMFQwRE5pZUd1S0E9P
+ Q==
+
+dn: cn=Student Nineteen,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Nineteen
+sn: Nineteen
+uid: student19
+userPassword:: e1NTSEF9ZkovVktuTTFmNFFsOU42UDhvdWxaTXNtSVNmZE14b3E1NUFBYlE9P
+ Q==
+
+dn: cn=StudentG Four,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: StudentG Four
+sn: Four
+uid:: c2Now4PCvGxlcjQ=
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Eighteen,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Eighteen
+sn: Eighteen
+uid: student18
+userPassword:: e1NTSEF9YitqZURXSVZIQndUSUkwYmVld095dEUvTndHeXJ5WVRSa0h3cnc9P
+ Q==
+
+dn: cn=Student Nine,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Nine
+sn: Nine
+uid: student9
+userPassword:: e1NTSEF9Q1ZEb3h2UHMyMjh4YWh6MHZnc3owbVlJNkpjeFdmRzhKTERNbXc9P
+ Q==
+
+dn: cn=StudentG Two,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: StudentG Two
+sn: Two
+uid:: c2Now4PCvGxlcjI=
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Thirteen,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Thirteen
+sn: Thirteen
+uid: student13
+userPassword:: e1NTSEF9QjZzNWlXK3I5cEUwWWZpWFljL2J0WDRtQnZld0pWYTdJdHVGdWc9P
+ Q==
+
+dn: cn=Student Twentynine,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twentynine
+sn: Twentynine
+uid: student29
+userPassword:: e1NTSEF9STV2Q1R3YnZtUnZvWnJjSVBCdWxSNmFiVW80QStuVlBhYVhLMUE9P
+ Q==
+
+dn: cn=StudentG Three,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: StudentG Three
+sn: Three
+uid:: c2Now4PCvGxlcjM=
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Fifteen,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Fifteen
+sn: Fifteen
+uid: student15
+userPassword:: e1NTSEF9U1k1Nm85V2Zyb3ZwN1hhdXE5Tk5xMzdiTkk4ZWMwK0RVVW5jU2c9P
+ Q==
+
+dn: cn=Jose Luis Fernandez,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Jose Luis Fernandez
+sn: Fernandez
+ou: users
+uid: tludmetal
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Twenty,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twenty
+sn: Twenty
+uid: student20
+userPassword:: e1NTSEF9TTRUSVo1V0VQN3lERWtZdElYTFp6d0VKeDI2YnljM2t5QUFrOXc9P
+ Q==
+
+dn: cn=Manolis Mavrikis,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Manolis Mavrikis
+sn: Keats
+uid: manolis
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Robert Browning,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Robert Browning
+sn: Browning
+uid: rbrowning
+userPassword:: e1NTSEF9M0tRU0VyeWpEeExmOVlJZGxnaTlVa0N6WGFCT3FHS0hoOGsxRUE9P
+ Q==
+
+dn: cn=Student Eight,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Eight
+sn: Eight
+uid: student8
+userPassword:: e1NTSEF9cUQ4MlFpMk5EMVJhQzJXbzBHLytVUXpXa1JyYk80ZHdRM2FPeUE9P
+ Q==
+
+dn: cn=Student Twelve,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twelve
+sn: Twelve
+uid: student12
+userPassword:: e1NTSEF9TU43ZFdQdkcrZzNvZVllRHE5cHNpVC8xM2NtRTlzdklvS0hUdVE9P
+ Q==
+
+dn: cn=Alice Hansen,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Alice Hansen
+sn: Hansen
+uid: alice
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Four,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Four
+sn: Four
+uid: student4
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Twentysix,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twentysix
+sn: Twentysix
+uid: student26
+userPassword:: e1NTSEF9MEh4N3ViN2xvdXV1My8zQ2ZQM3Yxdk1vbTVwbDVWT1ZhRVJKVkE9P
+ Q==
+
+dn: cn=John Keats,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: John Keats
+sn: Keats
+uid: jkeats
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Twentytwo,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twentytwo
+sn: Twentytwo
+uid: student22
+userPassword:: e1NTSEF9RCtJdTdDTjVXVTQ5TmpxZExSRjF0cDNEQmFTNmF6UFNNbng2Zmc9P
+ Q==
+
+dn: cn=Student Three,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Three
+sn: Three
+uid: student3
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Six,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Six
+sn: Six
+uid: student6
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student One,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student One
+sn: One
+uid: student1
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Thirty,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Thirty
+sn: Thirty
+uid: student30
+userPassword:: e1NTSEF9QTk3TzBPUThLUENiZ2c5VmFrYWFNQ2NuQkZjZU1BakNSb0NycEE9P
+ Q==
+
+dn: cn=Student Twentyeight,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twentyeight
+sn: Twentyeight
+uid: student28
+userPassword:: e1NTSEF9Y2Npalp2SjJoVHFBZmtiQThGRW9iOG9FdFBENy9nTVRzcUxGOFE9P
+ Q==
+
+dn: cn=Student Seventeen,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Seventeen
+sn: Seventeen
+uid: student17
+userPassword:: e1NTSEF9Z1hER25nVm9sUWZxSXNJYU40blBSSENpWWVpK0k3S0YxR25NWkE9P
+ Q==
+
+dn: cn=Student Eleven,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Eleven
+sn: Eleven
+uid: student11
+userPassword:: e1NTSEF9R0JMYnZJWU5GL1pXNDVWejB6U3N1OEkwZDcrbGxiWGlpTHFHQmc9P
+ Q==
+
+dn: cn=Student Two,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Two
+sn: Two
+uid: student2
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Fourteen,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Fourteen
+sn: Fourteen
+uid: student14
+userPassword:: e1NTSEF9QW1Ra2YxU0tWdEpHOGNtOHNtVWlLcm9WRzYwYTdaY1NCMU5zWGc9P
+ Q==
+
+dn: cn=Student Five,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Five
+sn: Five
+uid: student5
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=StudentG One,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: StudentG One
+sn: One
+uid:: c2Now4PCvGxlcjE=
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Claudia Mazziotti,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Claudia Mazziotti
+sn: Mazziotti
+uid: claudia
+userPassword:: e1NIQX1qTElqZlFaNXlvamJaR1RxeGcycFkwVlJPV1E9
+
+dn: cn=Student Seven,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Seven
+sn: Seven
+uid: student7
+userPassword:: e1NTSEF9dk1LTjNIemxUWGRPNVRDUWRJUENtb2crU01zZDY5UWZlRnRWeVE9P
+ Q==
+
+dn: cn=Student Ten,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Ten
+sn: Ten
+uid: student10
+userPassword:: e1NTSEF9WFBOdCtjVmRReWEwYWRINVZRRy91SFhZWU9qK3IzOERuQXpWelE9P
+ Q==
+
+dn: cn=Student Twentyfour,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twentyfour
+sn: Twentyfour
+uid: student24
+userPassword:: e1NTSEF9dUxJNUdLNHdqOEk2OHNHQzBlTG9VN1M1dis4WGtFeFdNQkxLb0E9P
+ Q==
+
+dn: cn=Hugo Williams,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Hugo Williams
+sn: Williams
+uid: hwilliams
+userPassword:: e1NTSEF9ZG5udWVWZTFsSXFvd2V5MytMR1dwK1FmOWwvRHNFelA0aENGNVE9P
+ Q==
+
+dn: cn=Student Sixteen,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Sixteen
+sn: Sixteen
+uid: student16
+userPassword:: e1NTSEF9Skg4OGpFUGp4UElMZ3FXZ005N3FJbytTZTE1VkkweWFPWTlDakE9P
+ Q==
+
+dn: cn=Student Twentyone,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twentyone
+sn: Twentyone
+uid: student21
+userPassword:: e1NTSEF9TWc1bHpXcjF6OXc0SjA3TVpWa0lTcXpGUHEzT0ZqSkZXYklneHc9P
+ Q==
+
+dn: cn=Student Twentyseven,ou=users,o=italk2learn
+objectClass: top
+objectClass: inetOrgPerson
+objectClass: person
+objectClass: organizationalPerson
+cn: Student Twentyseven
+sn: Twentyseven
+uid: student27
+userPassword:: e1NTSEF9YTQ5eFZJQjNnVVZGbVJIRmhqZzJudDZrQ1JsR0lnbFIzMUpSZFE9P
+ Q==
+ 
+dn: cn=Admin,ou=groups,o=italk2learn
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: Admin
+uniqueMember: cn=Hugo Williams,ou=users,o=italk2learn
+uniqueMember: cn=Jose Luis Fernandez,ou=users,o=italk2learn
+uniqueMember: cn=Manolis Mavrikis,ou=users,o=italk2learn
+
+dn: cn=User,ou=groups,o=italk2learn
+objectClass: top
+objectClass: groupOfUniqueNames
+cn: User
+uniqueMember: cn=Robert Browning,ou=users,o=italk2learn
+uniqueMember: cn=Hugo Williams,ou=users,o=italk2learn
+uniqueMember: cn=John Keats,ou=users,o=italk2learn
+uniqueMember: cn=Jose Luis Fernandez,ou=users,o=italk2learn
+uniqueMember: cn=Alice Hansen,ou=users,o=italk2learn
+uniqueMember: cn=Manolis Mavrikis,ou=users,o=italk2learn
+uniqueMember: cn=Student One,ou=users,o=italk2learn
+uniqueMember: cn=Student Two,ou=users,o=italk2learn
+uniqueMember: cn=Student Three,ou=users,o=italk2learn
+uniqueMember: cn=Student Four,ou=users,o=italk2learn
+uniqueMember: cn=Student Five,ou=users,o=italk2learn
+uniqueMember: cn=Claudia Mazziotti,ou=users,o=italk2learn
+
