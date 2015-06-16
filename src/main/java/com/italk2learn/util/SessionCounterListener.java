@@ -13,6 +13,7 @@ import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
+import com.italk2learn.tis.inter.ITISWrapper;
 import com.italk2learn.vo.HeaderVO;
 import com.italk2learn.vo.SpeechRecognitionRequestVO;
  
@@ -58,12 +59,14 @@ public class SessionCounterListener implements HttpSessionListener {
 		  HttpSession session = sessionEvent.getSession();
 		  ApplicationContext ctx = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
 		  ISpeechRecognitionBO closeListener = (ISpeechRecognitionBO) ctx.getBean("speechRecognitionBO");
+		  ITISWrapper tisWrapper = (ITISWrapper) ctx.getBean("TISWrapperService");
 		  SpeechRecognitionRequestVO request= new SpeechRecognitionRequestVO();
 		  request.setHeaderVO(new HeaderVO());
 		  try {
 			  	if (user!=null) {
 			  		request.getHeaderVO().setLoginUser(user.getUsername());
 			  		closeListener.closeASREngine(request);
+			  		tisWrapper.stopTimers();
 			  	}
 		  } catch (Exception e){
 				logger.error(e.toString());

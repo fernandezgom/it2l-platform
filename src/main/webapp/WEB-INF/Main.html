@@ -6,6 +6,7 @@
 	<script src="../js/popupIOS/jquery-1.9.1.js"></script>
 	<link rel="stylesheet" href="../css/popupIOS/index.css"/>
 	<script src="../js/popupIOS/generalFunctions.js"></script>
+	<script type="text/javascript" src="/js/initMain.js" th:src="@{/resources/js/initMain.js}"></script>
 	
 	
 </head>
@@ -39,12 +40,9 @@
 					<td align="center">
 						<div id="wrapper_dark_gray" style="height: auto; width: 890px; padding-top: 20px;">
 							<div style="display: inline; width: 890px">
-								<span id="intro" style="display: inline; font-size: 18px;">Welcome to iLearnFractions</span>
+								<span style="display:inline; font-weight: bold;" th:text="#{welcome}"> Welcome </span> <div id="user" style="font-weight: bold; display:inline;"> Name </div>
 							</div>
 							<div id="wrapper_light_gray" style="height: auto; width: 815px; margin-top: 30px;">
-								<a id="q1" href="/italk2learn/exercise/beforeQuiz">Cuestionario1</a><br/>
-								<a id="q3" href="/italk2learn/exercise">iTalk2Learn</a><br/>
-								<a id="q2" href="/italk2learn/exercise/afterQuiz">Cuestionario2</a><br/>
 							</div>
 							<br/>
 							<br/>
@@ -55,22 +53,5 @@
 		</table>
 		<br/>
 	</div>
-	<script type="text/javascript">
-		function changeLabels(lang){
-			var q1 = "Pre-Questionnaire";
-			var q2 = "Post-Questionnaire";
-			if(lang == "es"){
-				q1 = "Pre-Cuestionario";
-			    q2 = "Post-Cuestionario";
-			}
-			else if(lang == "de"){
-				q1 = "Pre-Fragebogen";
-			    q2 = "Post-Fragebogen";
-			}
-			$("#q1").html(q1);
-			$("#q2").html(q2);
-		}
-		changeLabels(getURLParameter("lang"));
-	</script>
 </body>
 </html>

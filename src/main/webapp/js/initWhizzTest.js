@@ -112,6 +112,7 @@
 			}
 			
 			function enableTIS(enable){
+				checkTIS(enable);
 				if (enable==false){
 					$("#recording").hide();
 				}

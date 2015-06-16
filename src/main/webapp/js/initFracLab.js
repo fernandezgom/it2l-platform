@@ -70,11 +70,6 @@
 					if (idTask!=null && idTask.length>0){
 						arrowButtonEnable(false);
 						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/"+idTask+".tip"+"&idtask="+idTask+userName);
-						if (chTIS==true){
-							enableTIS(true);
-						} else {
-							enableTIS(false);
-						}
 						sendLanguageEvent();
 					}
 					else if (body.localeCompare("Make a fraction that equals 3/4 and has 12 as denominator.")==0){
@@ -97,9 +92,9 @@
 						arrowButtonEnable(false);
 						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task22.tip"+"&idtask=task2.2"+userName);
 						if (chTIS==true){
-							enableTIS(true);
+							sendEventEnabledTIStoTDS(true);
 						} else {
-							enableTIS(false);
+							sendEventEnabledTIStoTDS(false);
 						}
 						sendLanguageEvent();
 					}
@@ -107,9 +102,9 @@
 						arrowButtonEnable(false);
 						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task22.tip"+"&idtask=task2.2"+userName);
 						if (chTIS==true){
-							enableTIS(true);
+							sendEventEnabledTIStoTDS(true);
 						} else {
-							enableTIS(false);
+							sendEventEnabledTIStoTDS(false);
 						}
 						sendLanguageEvent();
 					}
@@ -143,6 +138,14 @@
 					}
 				});
 				
+				
+				function Flstarted() {
+					if (chTIS==true){
+						sendEventEnabledTIStoTDS(true);
+					} else {
+						sendEventEnabledTIStoTDS(false);
+					}
+				}
 				
 				function getFLTaskID() {
 					$.ajax({
@@ -211,23 +214,25 @@
 				        url: "tis/callTIS",
 				        data: JSON.stringify(evt),
 				        success: function(data){
-				        	if (data.fromTDS == true) {
-					        	if (data.popUpWindow ==true) {
-									if (data.message.length>0) {	
-										textToSpeech(data.message, true);
-										SendHighMessage(data.message);
+				        	if (isPopupOpened==false) {
+					        	if (data.fromTDS == true) {
+						        	if (data.popUpWindow ==true) {
+										if (data.message.length>0) {	
+											textToSpeech(data.message, true);
+											SendHighMessage(data.message);
+										}
 									}
-								}
-								else {
-									if (data.message.length>0) {
-										sendMessageToLightBulb(data.message);
+									else {
+										if (data.message.length>0) {
+											sendMessageToLightBulb(data.message);
+										}
 									}
-								}
-				        	} else {
-				        		if (data.message.length>0) {
-				        			textToSpeech(data.message, false);
-				        			Alert.render(data.message);
-				        		}
+					        	} else {
+					        		if (data.message.length>0) {
+					        			textToSpeech(data.message, false);
+					        			Alert.render(data.message);
+					        		}
+					        	}
 				        	}
 				        },
 				        error : function(jqXHR, status, error) {
@@ -238,6 +243,12 @@
 				}
 				
 				function sendDoneButtonPressedToTIS(value){
+					if (value==true || value=="true" || value=="True"){
+						isPopupOpened=false;
+					}
+					else {
+						isPopupOpened=true;
+					}
 					var evt = {
 					       	 "donePressed": value.toLowerCase()
 					        };
@@ -304,6 +315,7 @@
 				
 				function SendHighMessage(message)
 				{
+					isPopupOpened=true;
 					var json = "{\"method\": \"HighFeedback\", \"parameters\": {\"message\": \"" + message +"\"}}";
 					u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
 				}
@@ -411,6 +423,10 @@
 				
 				function enableTIS(enable){
 					checkTIS(enable);
+					sendEventEnabledTIStoTDS(enable);
+				}
+				
+				function sendEventEnabledTIStoTDS(enable){
 					if (enable==false){
 						$("#recording").hide();
 						var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*switchTISOFF*\"}}";

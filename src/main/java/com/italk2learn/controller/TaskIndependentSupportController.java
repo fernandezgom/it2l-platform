@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.italk2learn.bo.inter.ITaskIndependentSupportBO;
+import com.italk2learn.tis.inter.ITISWrapper;
 import com.italk2learn.vo.FractionsLabRequestVO;
 import com.italk2learn.vo.FractionsLabResponseVO;
 import com.italk2learn.vo.HeaderVO;
@@ -37,13 +38,16 @@ public class TaskIndependentSupportController {
        
 	private LdapUserDetailsImpl user;
 	
+//	JLF:Services
 	private ITaskIndependentSupportBO tisService;
+	private ITISWrapper TISWrapperService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(TaskIndependentSupportController.class);
 
 	@Autowired
-    public TaskIndependentSupportController(ITaskIndependentSupportBO tisService) {
+    public TaskIndependentSupportController(ITaskIndependentSupportBO tisService, ITISWrapper tisWrapper) {
 		this.tisService=tisService;
+		this.TISWrapperService=tisWrapper;
 	}
 	
 	
@@ -171,6 +175,28 @@ public class TaskIndependentSupportController {
         return null;
 	}
 	
+	
+	/**
+	 * Initialise TISWrapper component
+	 *
+	 */
+	@RequestMapping(value = "/initialiseTISWrapper",method = RequestMethod.GET)
+	@ResponseBody
+	public void initialiseTISWrapper(@RequestParam(value = "enable") String enable) {
+		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		logger.info("JLF --- TaskIndependentSupportController initialiseTISWrapper --- Initialise TIS Wrapper "+"User: "+user.getUsername());
+        try {
+        	if (Boolean.valueOf(enable)==true){
+        		getTISWrapperService().startTIS();
+        	} else {
+        		getTISWrapperService().stopTimers();
+        	}
+        	
+        } catch (Exception ex) {
+        	logger.error(ex.toString());
+        }
+	}
+	
 	/**
 	 * Checking TIS Wrapper to see if something has changed
 	 *
@@ -218,6 +244,16 @@ public class TaskIndependentSupportController {
 
 	public void setTisService(ITaskIndependentSupportBO tisService) {
 		this.tisService = tisService;
+	}
+
+
+	public ITISWrapper getTISWrapperService() {
+		return TISWrapperService;
+	}
+
+
+	public void setTISWrapperService(ITISWrapper tISWrapperService) {
+		TISWrapperService = tISWrapperService;
 	}
 	
 }

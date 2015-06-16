@@ -65,7 +65,7 @@
 								style="height: auto; width: 815px; margin-top: 30px;">
 								<div id="form1" class="center" style="width: 800px;"></div>
 								<div id="subBton" class="center" style="width: 400px;">
-									<input type="button" id="form1-button" value="Send"
+									<input type="button" id="form1-button" value="Continue"
 										class="it2lbutton" />
 								</div>
 								<br />
@@ -85,7 +85,7 @@
 	var schema = null;
 	var options = null;
 	var titles = [];
-	var typeQ=1;
+	var typeQ=22;
 	
 	var lang = getLocale();
 	
@@ -120,8 +120,8 @@
 		}
 		
 		//loadScript2("alpacaFiles/data.js", ladata); //cargar script de idioma
-		loadScript2("../js/alpacaFiles/questionary2/schema.js", schema); //cargar script de idioma
-		loadScript2("../js/alpacaFiles/questionary2/"+lang+"/options.js", options); //cargar script de idioma
+		loadScript2("../js/alpacaFiles/postB/schema.js", schema); //cargar script de idioma
+		loadScript2("../js/alpacaFiles/postB/"+lang+"/options.js", options); //cargar script de idioma
 		$("#form1").alpaca({
         	"data": null,
         	"schema": schema,

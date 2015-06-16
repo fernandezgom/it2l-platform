@@ -113,22 +113,14 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
 		LdapUserDetailsImpl user=(LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		AudioRequestVO reqad=new AudioRequestVO();
-		//SpeechRecognitionRequestVO reqsr=new SpeechRecognitionRequestVO();
-		//byte[] audioSt;
 		try {
 			reqad.setHeaderVO(new HeaderVO());
 			reqad.getHeaderVO().setLoginUser(user.getUsername());
-//			reqsr.setHeaderVO(new HeaderVO());
-//			reqsr.getHeaderVO().setLoginUser(user.getUsername());
-//			reqsr.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(reqsr.getHeaderVO()));
-			//audioSt=getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio();
-			//JLF: The audio could be null because we need to retrieve at least 2 minutes
 			getTISWrapperService().setAudio(getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio());
 			//JLF: Store audio on the database
 			//reqsr.setFinalByteArray(audioSt);
 			//getSpeechRecognitionService().saveByteArray(reqsr);
 			getTISWrapperService().sendTDStoTIS(user.getUsername(), request.getFeedbackText(), request.getCurrentFeedbackType(), request.getFeedbackID(), request.getLevel(), request.getFollowed(), request.isViewed());
-			//JLF: Getting the result
 			response.setPopUpWindow(getTISWrapperService().getPopUpWindow());
 			response.setMessage(getTISWrapperService().getMessage());
 			response.setFromTDS(getTISWrapperService().getTDSfeedback());
@@ -170,9 +162,6 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 			response.setFromTDS(getTISWrapperService().getTDSfeedback());
 			//JLF: If contains message
 			if (response.getMessage().length()>0){
-				System.out.println("TEST:::isFromTDS"+response.isFromTDS());
-				System.out.println("TEST:::message"+response.getMessage());
-				System.out.println("TEST:::popUpWindow"+response.getPopUpWindow());
 				getStudentNeedsAnalysis().sendFeedbackTypeToSNA(getTISWrapperService().getFeedbackType());
 				getStudentNeedsAnalysis().sendAffectToSNA(getTISWrapperService().getCurrentAffect());
 			}

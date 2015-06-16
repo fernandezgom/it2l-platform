@@ -5,6 +5,7 @@
 		var sEnabled=false;
 		var aEnabled=true;
 		var helpadded=false;
+		var isPopupOpened=false;
 		var nLocale = getUrlVars()["locale"];
 		if (nLocale ==null || nLocale =='' ){
 			nLocale=getLocale();
@@ -330,23 +331,25 @@
 					type: 'GET',
 			        url: "tis/checkTISWrapper",
 			        success: function(data){
-			        	if (data.fromTDS == true) {
-				        	if (data.popUpWindow ==true) {
-								if (data.message.length>0) {
-									textToSpeech(data.message, true);
-									SendHighMessage(data.message);
+			        	if (isPopupOpened==false) {
+				        	if (data.fromTDS == true) {
+					        	if (data.popUpWindow ==true) {
+									if (data.message.length>0) {
+										textToSpeech(data.message, true);
+										SendHighMessage(data.message);
+									}
 								}
-							}
-							else {
-								if (data.message.length>0) {
-									sendMessageToLightBulb(data.message);
+								else {
+									if (data.message.length>0) {
+										sendMessageToLightBulb(data.message);
+									}
 								}
-							}
-			        	} else {
-			        		if (data.message.length>0) {
-			        			textToSpeech(data.message, false);
-			        			Alert.render(data.message);
-			        		}
+				        	} else {
+				        		if (data.message.length>0) {
+				        			textToSpeech(data.message, false);
+				        			Alert.render(data.message);
+				        		}
+				        	}
 			        	}
 			        },
 			        error : function(jqXHR, status, error) {
@@ -371,6 +374,15 @@
 		
 		function checkTIS(enable){
 			chTIS=enable;
+			$.ajax({
+				type: 'GET',
+		        url: "tis/initialiseTISWrapper?enable="+chTIS,
+		        success: function(data){
+		        },
+		        error : function(jqXHR, status, error) {
+		        	//window.location.href = "/italk2learn/login";
+		        },
+		    });
 		}
 
 		function submitExercise(){
@@ -628,13 +640,14 @@
         
         function CustomAlert(){
             this.render = function(dialog){
+            	isPopupOpened=true;
                 var winW = window.innerWidth;
                 var winH = window.innerHeight;
                 var dialogoverlay = document.getElementById('dialogoverlay');
                 var dialogbox = document.getElementById('dialogbox');
                 dialogoverlay.style.display = "block";
                 dialogoverlay.style.height = winH+"px";
-                 dialogbox.style.left = (winW/2) - (700 * .5)+"px";
+                dialogbox.style.left = (winW/2) - (700 * .5)+"px";
                 dialogbox.style.top = "35%";
                 dialogbox.style.display = "block";
               document.getElementById('dialogboxhead').innerHTML = '<div id="dialogboxbody"> <table id="tableAlign"><tr><td><span id="verticalSpanLeft"><img th:src="@{/resources/images/frobot.png}" src="/italk2learn/images/frobot.png"></img></span></td><td> <span id="verticalSpanRight">' + dialog + '</span></td></tr></table></div><div style="margin-top: 7px; margin-bottom:2px; display:flex; "> <button style="margin-left:auto; margin-right:auto; " class="it2lbutton" onclick="Alert.ok()">OK</button></div>';
@@ -643,6 +656,7 @@
             this.ok = function(){
                 document.getElementById('dialogbox').style.display = "none";
                 document.getElementById('dialogoverlay').style.display = "none";
+                isPopupOpened=false;
                 var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*closeFeedbackPopup*\"}}";
                 u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
             }

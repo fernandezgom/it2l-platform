@@ -1,75 +1,75 @@
 var options = {
     "fields": {
     	"question1": {
-        	"label": "GERMAN1.- Learning with a computer is fun.",
+        	"label": "1. Mit dem Computer zu lernen macht Spafl.",
         	"type": "radio",
-        	"helper": "1 - Stimme überhaupt nicht zu. 5 - Stimme vollkommen zu",
-        	"optionLabels": ["1", "2", "3", "4", "5"],
+        	"helper": "",
+        	"optionLabels": ["<br/><spam class='eti'>Stimme voll<br/> und ganz zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme zu<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Weder noch<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme<br/>nicht zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme &uuml;berhaupt<br/>nicht zu</spam>"],
         	"vertical": false
     	},
     	"question2": {
-        	"label": "GERMAN2.- I have already used a learning program/platform. ",
+        	"label": "2. Ich habe bereits mit einem Lernprogramm gearbeitet. ",
         	"type": "radio",
         	"helper": "",
-        	"optionLabels": ["1", "2", "3", "4", "5"],
+        	"optionLabels": ["<br/><spam class='eti'>Stimme voll<br/> und ganz zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme zu<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Weder noch<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme<br/>nicht zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme &uuml;berhaupt<br/>nicht zu</spam>"],
         	"vertical": false
     	},
     	"question3": {
-        	"label": "GERMAN3.- I often work with a computer.",
+        	"label": "3. Ich arbeite h‰ufig am Computer.",
         	"type": "radio",
         	"helper": "",
-        	"optionLabels": ["1", "2", "3", "4", "5"],
+        	"optionLabels": ["<br/><spam class='eti'>Stimme voll<br/> und ganz zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme zu<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Weder noch<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme<br/>nicht zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme &uuml;berhaupt<br/>nicht zu</spam>"],
         	"vertical": false
     	},
     	"question4": {
-        	"label": "GERMAN4.- I like maths.",
+        	"label": "4. Ich mag Mathematik.",
         	"type": "radio",
         	"helper": "",
-        	"optionLabels": ["1", "2", "3", "4", "5"],
+        	"optionLabels": ["<br/><spam class='eti'>Stimme voll<br/> und ganz zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme zu<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Weder noch<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme<br/>nicht zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme &uuml;berhaupt<br/>nicht zu</spam>"],
         	"vertical": false
     	},
     	"question5": {
-        	"label": "GERMAN5.- I like fractions.",
+        	"label": "5. Ich mag Br¸che.",
         	"type": "radio",
-        	"helper": "",
-        	"optionLabels": ["1", "2", "3", "4", "5"],
+        	"helper": "----------------------------------------------------------------------------------------------------------------",
+        	"optionLabels": ["<br/><spam class='eti'>Stimme voll<br/> und ganz zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme zu<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Weder noch<br/></spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme<br/>nicht zu</spam>&nbsp;&nbsp;&nbsp;", "<br/><spam class='eti'>Stimme &uuml;berhaupt<br/>nicht zu</spam>"],
         	"vertical": false
     	},
     	"question6" : {
-            "label": "GERMAN6.- Which number line correctly shows 3/4?",
+            "label": "6. Welcher Zahlenstrahl zeigt 3/4?",
         	"type": "radio",
         	"helper": "",
         	"optionLabels": ["../images/alpacaImages/questionary1/q1/1.png", "../images/alpacaImages/questionary1/q1/2.png", "../images/alpacaImages/questionary1/q1/3.png", "../images/alpacaImages/questionary1/q1/4.png"],
         	"vertical": false
         },
         "question7": {
-        	"label": "GERMAN7.- Select the representations that show 1/3.",
+        	"label": "7. Wähle die Darstellungen aus, die 1/3 zeigen. Es gibt mehr als eine korrekte Darstellung.",
         	"type": "checkbox",
-        	"helper": "GERMANThere are more than one.",
+        	"helper": "",
         	"optionLabels": ["../images/alpacaImages/questionary1/q2/1.png", "../images/alpacaImages/questionary1/q2/2.png", "../images/alpacaImages/questionary1/q2/3.png", "../images/alpacaImages/questionary1/q2/4.png"]
     	},
     	"question8": {
-        	"label": "GERMAN8.- Which fraction is the odd one out?",
+        	"label": "8. Welcher Bruch passt nicht zu den anderen?",
         	"type": "radio",
         	"helper": "",
         	"optionLabels": ["../images/alpacaImages/questionary1/q3/1.png", "../images/alpacaImages/questionary1/q3/2.png", "../images/alpacaImages/questionary1/q3/3.png", "../images/alpacaImages/questionary1/q3/4.png"],
         	"vertical": false
     	},
     	"question9": {
-        	"label": "GERMAN9.- Which fraction is the odd one out?",
+        	"label": "9. Welcher Bruch passt nicht zu den anderen?",
         	"type": "radio",
         	"helper": "",
         	"optionLabels": ["../images/alpacaImages/questionary1/q4/1.png", "../images/alpacaImages/questionary1/q4/2.png", "../images/alpacaImages/questionary1/q4/3.png", "../images/alpacaImages/questionary1/q4/4.png", "../images/alpacaImages/questionary1/q4/5.png"],
         	"vertical": false
     	},
     	"question10": {
-        	"label": "GERMAN10.- 3/4 = 6/[  ] What goes in the box?",
+        	"label": "10. Was gehˆrt in die Box?",
         	"type": "select",
         	"helper": "",
-        	"optionLabels": ["4","8","9","12"]
+        	"optionLabels": ["wähle ein","4","8","9","12"]
     	},
     	"question11": {
-        	"label": "GERMAN11.- Which of these is equivalent to 5/6 and has 18 as the denominator?",
+        	"label": "11. Welcher dieser Br¸che ist wertgleich mit 5/6 und hat 18 im Nenner stehen?",
         	"type": "radio",
         	"helper": "",
         	"optionLabels": ["../images/alpacaImages/questionary1/q6/1.png", "../images/alpacaImages/questionary1/q6/2.png", "../images/alpacaImages/questionary1/q6/3.png", "../images/alpacaImages/questionary1/q6/4.png", "../images/alpacaImages/questionary1/q6/5.png"],

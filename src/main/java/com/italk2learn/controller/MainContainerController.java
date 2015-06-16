@@ -117,12 +117,12 @@ public class MainContainerController {
 	 * 
 	 * @return the name of the page
 	 */
-	@RequestMapping(value = "/beforeQuiz",method = RequestMethod.GET)
+	@RequestMapping(value = "/preA",method = RequestMethod.GET)
 	public String beforeQuiz(Model model) {
 		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			return "beforeQuiz";
+			return "preA";
 		} catch (Exception e){
 			logger.info("Returning to loginpage due previous errors");
 			logger.error(e.toString());
@@ -135,12 +135,48 @@ public class MainContainerController {
 	 * 
 	 * @return the name of the page
 	 */
-	@RequestMapping(value = "/afterQuiz",method = RequestMethod.GET)
+	@RequestMapping(value = "/postA",method = RequestMethod.GET)
 	public String afterQuiz(Model model) {
 		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			return "afterQuiz";
+			return "postA";
+		} catch (Exception e){
+			logger.info("Returning to loginpage due previous errors");
+			logger.error(e.toString());
+			return "redirect:/login";
+		}
+	}
+	
+	/**
+	 * Handles and retrieves the main page
+	 * 
+	 * @return the name of the page
+	 */
+	@RequestMapping(value = "/preB",method = RequestMethod.GET)
+	public String beforeQuiz2(Model model) {
+		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
+		try {
+			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return "preB";
+		} catch (Exception e){
+			logger.info("Returning to loginpage due previous errors");
+			logger.error(e.toString());
+			return "redirect:/login";
+		}
+	}
+	
+	/**
+	 * Handles and retrieves the main page
+	 * 
+	 * @return the name of the page
+	 */
+	@RequestMapping(value = "/postB",method = RequestMethod.GET)
+	public String afterQuiz2(Model model) {
+		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
+		try {
+			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return "postB";
 		} catch (Exception e){
 			logger.info("Returning to loginpage due previous errors");
 			logger.error(e.toString());
