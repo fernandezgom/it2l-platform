@@ -91,21 +91,11 @@
 					else if (body.localeCompare("Make a fraction and right click it. Select 'Find equivalent' and partition the fraction into 2, 3, 4 and 5.")==0){
 						arrowButtonEnable(false);
 						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task22.tip"+"&idtask=task2.2"+userName);
-						if (chTIS==true){
-							sendEventEnabledTIStoTDS(true);
-						} else {
-							sendEventEnabledTIStoTDS(false);
-						}
 						sendLanguageEvent();
 					}
 					else if (body.localeCompare("Machen Sie eine Fraktion und klicken Sie rechts. Wählen Sie Suche gleichwertig und partitioniert die Fraktion in 2, 3, 4 und 5.")==0){
 						arrowButtonEnable(false);
 						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task22.tip"+"&idtask=task2.2"+userName);
-						if (chTIS==true){
-							sendEventEnabledTIStoTDS(true);
-						} else {
-							sendEventEnabledTIStoTDS(false);
-						}
 						sendLanguageEvent();
 					}
 					else if (body.localeCompare("Make a fraction that is equivalent to 1/2, using liquid measures. Check they are equivalent.")==0){
@@ -179,7 +169,6 @@
 				
 				
 				function saveEvent(event){
-					//alert(event);
 					var evt = {
 					       	 "event": event 
 					        };
@@ -245,9 +234,11 @@
 				function sendDoneButtonPressedToTIS(value){
 					if (value==true || value=="true" || value=="True"){
 						isPopupOpened=false;
+						managePopup(false);
 					}
 					else {
 						isPopupOpened=true;
+						managePopup(true);
 					}
 					var evt = {
 					       	 "donePressed": value.toLowerCase()
@@ -316,6 +307,7 @@
 				function SendHighMessage(message)
 				{
 					isPopupOpened=true;
+					managePopup(true);
 					var json = "{\"method\": \"HighFeedback\", \"parameters\": {\"message\": \"" + message +"\"}}";
 					u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
 				}

@@ -384,6 +384,18 @@
 		        },
 		    });
 		}
+		
+		function managePopup(enable){
+			$.ajax({
+				type: 'GET',
+		        url: "tis/managePopup?enable="+enable,
+		        success: function(data){
+		        },
+		        error : function(jqXHR, status, error) {
+		        	//window.location.href = "/italk2learn/login";
+		        },
+		    });
+		}
 
 		function submitExercise(){
 			$('#exercisePrompt').html("");
@@ -641,6 +653,7 @@
         function CustomAlert(){
             this.render = function(dialog){
             	isPopupOpened=true;
+            	managePopup(true);
                 var winW = window.innerWidth;
                 var winH = window.innerHeight;
                 var dialogoverlay = document.getElementById('dialogoverlay');
@@ -657,6 +670,7 @@
                 document.getElementById('dialogbox').style.display = "none";
                 document.getElementById('dialogoverlay').style.display = "none";
                 isPopupOpened=false;
+                managePopup(false);
                 var json = "{\"method\": \"PlatformEvent\", \"parameters\": {\"eventName\": \"*closeFeedbackPopup*\"}}";
                 u.getUnity().SendMessage("ExternalInterface", "SendEvent", json);
             }

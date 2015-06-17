@@ -198,6 +198,27 @@ public class TaskIndependentSupportController {
 	}
 	
 	/**
+	 * Initialise TISWrapper component
+	 *
+	 */
+	@RequestMapping(value = "/managePopup",method = RequestMethod.GET)
+	@ResponseBody
+	public void managePopupTISWrapper(@RequestParam(value = "enable") String enable) {
+		user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		logger.info("JLF --- TaskIndependentSupportController initialiseTISWrapper --- Initialise TIS Wrapper "+"User: "+user.getUsername());
+        try {
+        	if (Boolean.valueOf(enable)==true){
+        		getTISWrapperService().popUpOpen();
+        	} else {
+        		getTISWrapperService().popUpClosed();
+        	}
+        	
+        } catch (Exception ex) {
+        	logger.error(ex.toString());
+        }
+	}
+	
+	/**
 	 * Checking TIS Wrapper to see if something has changed
 	 *
 	 */
