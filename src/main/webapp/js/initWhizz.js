@@ -1,4 +1,6 @@
 // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+		var maincontainer = document.getElementById('mainContainer');
+		maincontainer.style.width = "815px";
 		var flid;
 		if ($('#idTask')){
 			$('#idTask').hide();

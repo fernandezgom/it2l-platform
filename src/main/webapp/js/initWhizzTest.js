@@ -1,4 +1,6 @@
 // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+		var maincontainer = document.getElementById('mainContainer');
+		maincontainer.style.width = "815px";
 		var flid;
 		if ($('#idTask')){
 			$('#idTask').hide();
@@ -20,7 +22,7 @@
         var xiSwfUrlStr = "playerProductInstall.swf";
         var flashvars = {
         		flashvarID: flid,
-				flashvarDomain: 'http://localhost:8080/italk2learn/',
+				flashvarDomain: 'http://it2l.dcs.bbk.ac.uk/italk2learn/',
         		flashvarPath: '/sequence/tests/',
         		flashvarAssessment: 0,
         		flashvarViewAll: 0

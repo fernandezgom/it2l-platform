@@ -1,4 +1,6 @@
 // For version detection, set to min. required Flash Player version, or 0 (or 0.0.0), for no version detection. 
+			var maincontainer = document.getElementById('mainContainer');
+            maincontainer.style.width = "1015px";
 			var idExercise=$("#flashContent").data("title");
 			var brd=$("#flashContent").data("brd");
 			var swfVersionStr = "11.1.0";
@@ -35,7 +37,7 @@
             attributes.align = "middle";
             swfobject.embedSWF(
             	"sequence/"+idExercise+".swf", "flashContent", 
-                "800", "600", 
+                "1000", "600", 
                 swfVersionStr, xiSwfUrlStr, 
                 flashvars, params, attributes);
             // JavaScript enabled so display the flashContent div in case it is not replaced with a swf object.

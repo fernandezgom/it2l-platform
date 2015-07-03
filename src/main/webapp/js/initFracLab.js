@@ -1,3 +1,5 @@
+				var maincontainer = document.getElementById('mainContainer');
+				maincontainer.style.width = "815px";
 				var idTask;
 				var lowMessage="";
 				var isEnabledLightBulb=true;
@@ -70,6 +72,11 @@
 					if (idTask!=null && idTask.length>0){
 						arrowButtonEnable(false);
 						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/"+idTask+".tip"+"&idtask="+idTask+userName);
+						sendLanguageEvent();
+					}
+					else if (body.localeCompare("Show how you could make this fraction by adding two fractions. Show 3/5 using the rectangles.")==0){
+						arrowButtonEnable(false);
+						u.initPlugin(jQuery("#unityPlayer")[0], "/italk2learn/sequence/FractionsLab.unity3d?showStartPage=false&language="+nLocale+"&username="+userName+"&tip=/italk2learn/tip/task3aPlus1setAarea.tip"+"&idtask=task3aPlus.1.setA.area"+userName);
 						sendLanguageEvent();
 					}
 					else if (body.localeCompare("Make a fraction that equals 3/4 and has 12 as denominator.")==0){

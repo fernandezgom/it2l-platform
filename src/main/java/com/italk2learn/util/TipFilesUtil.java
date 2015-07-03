@@ -11,16 +11,39 @@ import org.slf4j.LoggerFactory;
 
 public class TipFilesUtil {
 	
+	
+	
 	private static final Logger logger = LoggerFactory.getLogger(TipFilesUtil.class);
+	
+	private static final String LIQUIDS= "liqu";
+	private static final String AREA= "area";
+	private static final String NUMBERS= "numb";
+	private static final String SETS= "sets";
 	
 	/**
 	 * JLF: Creates a TIP file and saves into the system 
 	 */
-    public static void createTIPFile(String name, String description, boolean[] values){
+    public static void createTIPFile(String name, String description){
 		logger.info("JLF --- createTIPFile --- Creates a TIP file and saves into the system ");
-		logger.info("id_exercise="+name+" ,values="+values.toString());
+		boolean[] values = {true,true,true,true};
 		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
 		String _TIPPATH=rb.getString("tippath");
+		if (name.contains(LIQUIDS)){
+			final boolean[] newRepresentationsFL = {false,false,false,true};
+			values= newRepresentationsFL;
+		} else if (name.contains(AREA)) {
+			final boolean[] newRepresentationsFL = {false,true,false,false};
+			values= newRepresentationsFL;
+		} else if (name.contains(NUMBERS)){
+			final boolean[] newRepresentationsFL = {true,false,false,false};
+			values= newRepresentationsFL;
+		} else if (name.contains(SETS)) {
+			final boolean[] newRepresentationsFL = {false,false,true,false};
+			values= newRepresentationsFL;
+		} else {
+			final boolean[] newRepresentationsFL = {true,true,true,true};
+			values= newRepresentationsFL;
+		}
         try {
         	JSONObject result = new JSONObject();
             JSONObject objDesc = new JSONObject();

@@ -26,8 +26,10 @@
 
 .textImg
 {
-    font-size: x-small;
-    display: block;
+    display: inline;
+    font-size: 12px;
+    vertical-align: center;
+    font-weight: initial !important;
 }
 
 div.item {
@@ -35,13 +37,15 @@ div.item {
     display: inline-block;
     text-align: center;
     width: 120px;
+    padding-bottom: 10px;
+    text-align: left;
 }
 
 .dialogoverlay{
-	background: #C8C8C8;
-	border-radius:7px; 
-	width:550px;
-	z-index: 10;
+	background: #C8C8C8 none repeat scroll 0% 0%;
+    width: 550px;
+    z-index: 10;
+    border-radius: 15px;
 }
 
 #dialogboxhead1{ 
@@ -51,6 +55,7 @@ div.item {
        padding:5px; 
        color:#F00;
        font-family: Verdana,Geneva,sans-serif; font-weight:bold;
+       border-radius: 15px;
 }
 
 #dialogboxbody1{ 
@@ -60,7 +65,7 @@ div.item {
        font-family: Verdana,Geneva,sans-serif;
        font-weight:bold;
        height: 400px;
-       
+       border-radius: 15px;
 }
 
 .flags {

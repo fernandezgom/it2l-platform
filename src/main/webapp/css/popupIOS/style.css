@@ -88,6 +88,8 @@ button.button-error:hover {
   border-radius: 5px;
   z-index: 10;
   box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  left: 45%;
 }
 .modal.active {
   display: block;

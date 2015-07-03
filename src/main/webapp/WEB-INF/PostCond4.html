@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link rel="stylesheet" type="text/css" media="screen, projection"
+	href="/italk2learn/styles/it2lmainstyles.css" />
+<link rel="stylesheet" href="../css/popupIOS/index.css" />
+<script src="../js/popupIOS/generalFunctions.js"></script>
+<script src="../js/alpacaFiles/js/alpacaGeneralFunctions.js"></script>
+
+
+<!-- dependencies (jquery, handlebars and bootstrap) -->
+<script type="text/javascript" src="../js/alpacaFiles/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../js/alpacaFiles/js/handlebars.min.js"></script>
+<link type="text/css" href="../css/bootstrap.min.css" rel="stylesheet" />
+<script type="text/javascript" src="../js/alpacaFiles/js/bootstrap.min.js"></script>
+
+<!-- alpaca -->
+<link type="text/css" href="/italk2learn/css/alpaca.min.css"
+	rel="stylesheet" />
+<script type="text/javascript" src="../js/alpaca.min.js"></script>
+
+</head>
+<body class="back"
+	style="margin-top: 0px; margin-bottom: 0px; height: auto;">
+	<div class="background"
+		style="height: auto; margin-left: auto; margin-right: auto; margin-top: 0px; margin-bottom: 0px; max-width: 915px;">
+<!-- 		<div id="flags"> -->
+<!-- 			<a href="?lang=en" style="text-decoration: none"> <img alt="en" -->
+<!-- 				title="English" src="../../images/UK.png" -->
+<!-- 				th:src="@{/resources/images/UK.png}" /> -->
+<!-- 			</a> <a href="?lang=de" style="text-decoration: none"> <img alt="de" -->
+<!-- 				title="German" src="../../images/GE.png" -->
+<!-- 				th:src="@{/resources/images/GE.png}" /> -->
+<!-- 			</a> <a href="?lang=es" style="text-decoration: none"> <img alt="fr" -->
+<!-- 				title="Spanish" src="../../images/ES.png" -->
+<!-- 				th:src="@{/resources/images/ES.png}" /> -->
+<!-- 			</a> -->
+<!-- 		</div> -->
+		<table align="center">
+			<tbody>
+				<tr>
+					<td>
+						<div>
+							<a href="#"> <img
+								src="../../images/iLearnFraction_banner_05.jpg"
+								th:src="@{/resources/images/iLearnFraction_banner_05.jpg}"
+								alt="italk2learn" /></a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<table align="center">
+			<tbody>
+				<tr align="center">
+					<td align="center">
+						<div id="wrapper_dark_gray"
+							style="height: auto; width: 890px; padding-top: 20px;">
+							<div style="display: inline; width: 890px">
+								<span id="intro" style="display: inline; font-size: 18px;" th:text="#{welcometo}">Welcome to iLearnFractions</span>
+							</div>
+							<div id="wrapper_light_gray"
+								style="height: auto; width: 815px; margin-top: 30px;">
+								<div id="form1" class="center" style="width: 800px;"></div>
+								<div id="subBton" class="center" style="width: 400px;">
+									<input type="button" id="form1-button" value="Continue"
+										class="it2lbutton" />
+								</div>
+								<br />
+							</div>
+							<br /> <br />
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<br />
+	</div>
+	<script type="text/javascript">
+	<!--
+	
+	var ladata = null;
+	var schema = null;
+	var options = null;
+	var titles = [];
+	var typeQ=42;
+	
+	var lang = getLocale();
+	
+	function prepareOptions(){
+		if (lang.indexOf("es") > -1){
+			$("#intro").html("Welcome to iLearnFractions Quizz");
+			$("#form1-button").val("Enviar");
+			lang="es";
+		}
+		else if (lang.indexOf("de") > -1){
+			$("#intro").html("Herzlich willkommen iLearnFractions Quizz");
+			$("#form1-button").val("Senden");
+			lang="de";
+		} else {
+			lang="en";
+		}
+		var data = {
+    		"question1": 1,
+    		"question3": 1,
+    		"question4": 1,
+    		"question5": 1,
+    		"question6": 1
+		};
+		
+		if(lang == "es"){
+			$("#intro").html("Welcome to iLearnFractions Quizz");
+			$("#form1-button").val("Enviar");
+		}
+		else if(lang == "de"){
+			$("#intro").html("Herzlich willkommen iLearnFractions Quizz");
+			$("#form1-button").val("Senden");
+		}
+		
+		//loadScript2("alpacaFiles/data.js", ladata); //cargar script de idioma
+		loadScript2("../js/alpacaFiles/cond4testB/schema.js", schema); //cargar script de idioma
+		loadScript2("../js/alpacaFiles/cond4testB/"+lang+"/options.js", options); //cargar script de idioma
+		$("#form1").alpaca({
+        	"data": null,
+        	"schema": schema,
+        	"options": options,
+        	"postRender": postRenderCallback,
+        	"view": "web-edit"
+    	});
+	}
+	
+	prepareOptions();
+    	-->
+	</script>
+</body>
+</html>

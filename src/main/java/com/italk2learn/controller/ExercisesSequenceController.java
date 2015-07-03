@@ -111,6 +111,7 @@ public class ExercisesSequenceController implements Serializable{
 	public ModelAndView initSequence(Model model) {
 		logger.info("JLF --- ExerciseSequence Main Controller");
 		ModelAndView modelAndView = new ModelAndView();
+		ExercisesConverter ec=new ExercisesConverter();
 		try {
 			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			setUsername(user.getUsername());
@@ -125,8 +126,25 @@ public class ExercisesSequenceController implements Serializable{
 			switch (getLoginUserService().getCondition(request.getHeaderVO())) {
 				case ExperimentalCondition.FULL_SYSTEM:	return getStudentNeedsAnalysisExercise(request, true);
 				case ExperimentalCondition.NO_SPEECH: return getStudentNeedsAnalysisExercise(request, true);
-				case ExperimentalCondition.NO_ELE:	modelAndView.addObject("taskName", currentExerciseName);
-													modelAndView.setViewName(currentView+"/GenericSNA");
+				case ExperimentalCondition.NO_ELE:	if (currentView.equals(ExerciseVO.WHIZZ) || currentView.equals(ExerciseVO.WHIZZ_TEST)){
+														modelAndView.addObject("taskName", currentExerciseName);
+														modelAndView.setViewName(currentView+"/GenericSNA");
+													} else{
+														modelAndView.setViewName(currentView+"/"+currentExerciseName);
+													}
+													break;
+				case ExperimentalCondition.FL_ELE:	if (currentView.equals(ExerciseVO.FRACTIONS_LAB)) {
+														TipFilesUtil.createTIPFile(currentExerciseName, ec.getExercise().get(currentExerciseName));
+														modelAndView.addObject("taskName", ec.getExercise().get(currentExerciseName));
+														modelAndView.addObject("idTask", currentExerciseName);
+														modelAndView.setViewName(currentView+"/GenericSNA");
+													}
+													else if (currentView.equals(ExerciseVO.WHIZZ) || currentView.equals(ExerciseVO.WHIZZ_TEST)){
+														modelAndView.addObject("taskName", currentExerciseName);
+														modelAndView.setViewName(currentView+"/GenericSNA");
+													} else{
+														modelAndView.setViewName(currentView+"/"+currentExerciseName);
+													}
 													break;
 				default: modelAndView.setViewName(response.getExercise().getView()+"/"+ response.getExercise().getExercise());
 						 break;
@@ -215,6 +233,7 @@ public class ExercisesSequenceController implements Serializable{
 					case ExperimentalCondition.FULL_SYSTEM:	return getStudentNeedsAnalysisExercise(request, false);
 					case ExperimentalCondition.NO_SPEECH:	return getStudentNeedsAnalysisExercise(request, false);//JLF: No speech
 					case ExperimentalCondition.NO_ELE:	return getStateMachineSequencerExercise2ndVersion(request);
+					case ExperimentalCondition.FL_ELE:	return getStateMachineSequencerExercise2ndVersionCombined(request);
 					default: return getStateMachineSequencerExercise(request);
 				}
 			}
@@ -310,8 +329,9 @@ public class ExercisesSequenceController implements Serializable{
 			ExerciseVO response=getExerciseSequenceService().getNextExercise(request).getExercise();
 			request.setIdExercise(response.getIdExercise());
 			getExerciseSequenceService().insertCurrentExercise(request);
-			modelAndView.addObject("taskName", response.getExercise());
-			modelAndView.setViewName(response.getView()+"/GenericSNA");
+			setCurrentView(response.getView());
+			setCurrentExerciseName(response.getExercise());
+			modelAndView.setViewName(response.getView()+"/"+response.getExercise());
 			return modelAndView;
 		}
 		catch (Exception e){
@@ -324,7 +344,6 @@ public class ExercisesSequenceController implements Serializable{
 	
 	
 	private ModelAndView getVygotskyPolicySequencerExercise(ExerciseSequenceRequestVO request){
-		//JLF: Needs to be fixed getting the proper locale from the webbrowser
 		if (getLanguageBrowser().contains(HeaderVO.GERMAN))
 			return getVygotskyPolicySequencerExerciseCTAT(request);
 		else
@@ -333,11 +352,43 @@ public class ExercisesSequenceController implements Serializable{
 	
 	
 	private ModelAndView getStateMachineSequencerExercise2ndVersion(ExerciseSequenceRequestVO request){
-		//JLF: Needs to be fixed getting the proper locale from the webbrowser
 		if (getLanguageBrowser().contains(HeaderVO.GERMAN))
 			return getStateMachineSequencerExercise2ndVersionCTAT(request);
 		else
 			return getStateMachineSequencerExercise2ndVersionWhizz(request);
+	}
+	
+	private ModelAndView getStateMachineSequencerExercise2ndVersionCombined(ExerciseSequenceRequestVO request){
+		logger.info("JLF --- getStateMachineSequencerExerciseCombined() --- Get the exercise from the state machine "+"User= "+this.getUsername());
+		ModelAndView modelAndView = new ModelAndView();
+		ExercisesConverter ec= new ExercisesConverter();
+		try{
+			request.setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
+			ExerciseVO response=getExerciseSequenceService().getNextExercise(request).getExercise();
+			request.setIdExercise(response.getIdExercise());
+			getExerciseSequenceService().insertCurrentExercise(request);
+			setCurrentView(response.getView());
+			setCurrentExerciseName(response.getExercise());
+			if (response.getView().equals(ExerciseVO.FRACTIONS_LAB)) {
+				TipFilesUtil.createTIPFile(response.getExercise(), ec.getExercise().get(response.getExercise()));
+				modelAndView.addObject("taskName", ec.getExercise().get(response.getExercise()));
+				modelAndView.addObject("idTask", response.getExercise());
+				modelAndView.setViewName(response.getView()+"/GenericSNA");
+			}
+			else if (response.getView().equals(ExerciseVO.WHIZZ) || response.getView().equals(ExerciseVO.WHIZZ_TEST)){
+				modelAndView.addObject("taskName", response.getExercise());
+				modelAndView.setViewName(response.getView()+"/GenericSNA");
+			} else{
+				modelAndView.setViewName(response.getView()+"/"+response.getExercise());
+			}
+			return modelAndView;
+		}
+		catch (Exception e){
+			logger.info("Returning to login due previous errors");
+			logger.error(e.toString());
+			modelAndView.setViewName("redirect:/login");
+			return new ModelAndView();
+		}
 	}
 	
 	/**
@@ -443,7 +494,6 @@ public class ExercisesSequenceController implements Serializable{
 		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
 		String TRIAL = rb.getString("vps.trial");
 		ModelAndView modelAndView = new ModelAndView();
-		ExercisesConverter ec= new ExercisesConverter();
 		AudioRequestVO reqad=new AudioRequestVO();
 		CTATRequestVO rqctat=new CTATRequestVO();
 		try {
@@ -529,7 +579,7 @@ public class ExercisesSequenceController implements Serializable{
 			setCurrentView(viewName);
 			setCurrentExerciseName(response);
 			if (viewName.equals(ExerciseVO.FRACTIONS_LAB)){
-				TipFilesUtil.createTIPFile(response, getSnaService().getTaskDescription(), getSnaService().getAvailableRepresentationsInFL());
+				TipFilesUtil.createTIPFile(response, getSnaService().getTaskDescription());
 				modelAndView.addObject("idTask", response);
 				modelAndView.addObject("taskName", getSnaService().getTaskDescription());
 			} else if (viewName.equals(ExerciseVO.FRACTIONS_TUTOR)) {

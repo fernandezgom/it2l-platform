@@ -4,33 +4,101 @@
 				url: "/italk2learn/sequence/getUser",
 				success: function (data) {
 					$('#user').html(data);
-					generateRamdomQuiz(data);
-					changeLabels(getURLParameter("lang"));
+					getCondition(data);
+					//changeLabels(getURLParameter("lang"));
 				},
 				error: function (jqXHR, status, error) {
 					$(document).trigger('error');
 				}
 			});
 		});
+		
+		function getCondition(user){
+			$.ajax({
+		        type: 'GET',
+		        url: "/italk2learn/sequence/getCondition",
+		        success: function(data, textStatus, jqXHR){
+		        	$('#condition').html(" "+data);
+		        	if (data==4){
+		        		generateRamdomQuizCondition4(user);
+		        	} else {
+		        		generateRamdomQuiz(user);
+		        	}
+		        },
+		        error : function(jqXHR, status, error) {
+		           alert('Sorry!, no condition retrieved, reloading webpage');
+		           window.location.href = "/italk2learn/exercise/main";
+		        },
+		        complete : function(jqXHR, status) {
+		        }
+		    });
+			
+		}
+		
+		function generateRamdomQuizCondition4(user) {
+			var str = user; 
+		    var res = str.slice(7, str.length);
+		    document.getElementById("pre").innerHTML = '';
+		    document.getElementById("post").innerHTML = '';
+		    var ques="Getting Started";
+		    var ques2="My evaluation";
+		    if (getLocale().indexOf("es")>-1) {
+		    	ques = "Empezar";
+		    	ques2 = "Mi evaluacion";
+			} else if (getLocale().indexOf("de")>-1) {
+				$("#q3").html("Los geht’s!");
+				ques = "Aufwärmübungen";
+				ques2 = "Übungen";
+			}
+		    if (isEven(res)){
+		    	$('#pre').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q1' href='/italk2learn/exercise/preCond4'>"+ques+"</a>");
+		    	$('#post').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q2' href='/italk2learn/exercise/postCond4'>"+ques2+"</a>");	
+			} else if (isOdd(res)){
+				$('#post').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q1' href='/italk2learn/exercise/preCond4'>"+ques2+"</a>");
+		    	$('#pre').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q2' href='/italk2learn/exercise/postCond4'>"+ques+"</a>");
+			} else{
+				var hs= hashCode(user);
+				if (isEven(hs)){
+					$('#pre').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q1' href='/italk2learn/exercise/preCond4'>"+ques+"</a>");
+			    	$('#post').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q2' href='/italk2learn/exercise/postCond4'>"+ques2+"</a>");		
+				} else if (isOdd(hs)){
+					$('#post').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q1' href='/italk2learn/exercise/preCond4'>"+ques2+"</a>");
+			    	$('#pre').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q2' href='/italk2learn/exercise/postCond4'>"+ques+"</a>");
+				}
+			}
+		}
 
 		function generateRamdomQuiz(user) {
 			var str = user; 
 		    var res = str.slice(7, str.length);
-		    document.getElementById("wrapper_light_gray").innerHTML = '';
-		    var text="<a id='q1' href='/italk2learn/exercise/";
+		    document.getElementById("pre").innerHTML = '';
+		    document.getElementById("post").innerHTML = '';
+		    var ques="Getting Started";
+		    var ques2="My evaluation";
+		    if (getLocale().indexOf("es")>-1) {
+		    	ques = "Empezar";
+		    	ques2 = "Mi evaluacion";
+			} else if (getLocale().indexOf("de")>-1) {
+				$("#q3").html("Los geht’s!");
+				ques = "Aufwärmübungen";
+				ques2 = "Übungen";
+			}
 		    if (isEven(res)){
-		    	text=text.concat("preB'>Cuestionario1</a><br/><a id='q3' href='/italk2learn/exercise'>iTalk2Learn</a><br/><a id='q2' href='/italk2learn/exercise/postA'>Cuestionario2</a><br/>");
+		    	$('#pre').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q1' href='/italk2learn/exercise/preB'>"+ques+"</a>");
+		    	$('#post').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q2' href='/italk2learn/exercise/postA'>"+ques2+"</a>");		
 			} else if (isOdd(res)){
-				text=text.concat("preA'>Cuestionario1</a><br/><a id='q3' href='/italk2learn/exercise'>iTalk2Learn</a><br/><a id='q2' href='/italk2learn/exercise/postB'>Cuestionario2</a><br/>");
+				$('#pre').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q1' href='/italk2learn/exercise/preA'>"+ques+"</a>");
+		    	$('#post').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q2' href='/italk2learn/exercise/postB'>"+ques2+"</a>");
 			} else{
 				var hs= hashCode(user);
 				if (isEven(hs)){
-			    	text=text.concat("preB'>Cuestionario1</a><br/><a id='q3' href='/italk2learn/exercise'>iTalk2Learn</a><br/><a id='q2' href='/italk2learn/exercise/postA'>Cuestionario2</a><br/>");
+					$('#pre').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q1' href='/italk2learn/exercise/preB'>"+ques+"</a>");
+			    	$('#post').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q2' href='/italk2learn/exercise/postA'>"+ques2+"</a>");	
 				} else if (isOdd(hs)){
-					text=text.concat("preA'>Cuestionario1</a><br/><a id='q3' href='/italk2learn/exercise'>iTalk2Learn</a><br/><a id='q2' href='/italk2learn/exercise/postB'>Cuestionario2</a><br/>");
+					$('#pre').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q1' href='/italk2learn/exercise/preA'>"+ques+"</a>");
+			    	$('#post').append("<a style='color: rgb(2, 117, 164); font-size: 15px;' id='q2' href='/italk2learn/exercise/postB'>"+ques2+"</a>");	
 				}
 			}
-		    $('#wrapper_light_gray').append(text);
 		}
 
 		function isEven(n) {

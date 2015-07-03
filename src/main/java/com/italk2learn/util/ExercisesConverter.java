@@ -28,6 +28,21 @@ public class ExercisesConverter {
 		exercise.put("task2.7.setB","Make a fraction that equals 3/4 and has 12 as denominator. Check it is equivalent to 3/4, by using the Compare box.");
 		exercise.put("task2.7.setC","Make a fraction that equals 7/3 and has 12 as denominator. Check it is equivalent to 7/3, by using the Compare box.");
 		
+		exercise.put("task3aPlus.1.setA.area","Task 3. Show how you could make 3/5 by adding two fractions. Show by using rectangles.");
+		exercise.put("task3aPlus.1.setA.liqu","Task 3. Show how you could make 3/5 by adding two fractions. Show by using liquids.");
+		exercise.put("task1cond4.area","Task 1. Please select your own next task.");
+		exercise.put("task2cond4.all","Task 2. Please select your own next task.");
+		exercise.put("task4cond4.numb","Task 4. Please select your own next task.");
+		exercise.put("task5cond4.liqu","Task 5. Please select your own next task.");
+		
+		exercise.put("task6cond4.area","Task 6. Please select your own next task.");
+		exercise.put("task7cond4.liqu","Task 7. Please select your own next task.");
+		exercise.put("task8cond4.all","Task 8. Please select your own next task.");
+		exercise.put("task9cond4.liqu","Task 9. Please select your own next task.");
+		exercise.put("task10cond4.numb","Task 10. Please select your own next task.");
+		exercise.put("task11cond4.all","Task 11. Please select your own next task.");
+
+		
 		exercise.put("task2.1_de","Think of a fraction and show it on the screen as a number line, a rectangle, a set and a jug.");
 		exercise.put("task2.2_de","Machen Sie eine Fraktion und klicken Sie rechts. Wählen Sie Suche gleichwertig und partitioniert die Fraktion in 2, 3, 4 und 5.");
 		exercise.put("task2.4.setA.area_de","Make a fraction that is equivalent to 1/2, using rectangles. Check it is equivalent to 1/2, by using the Compare box.");
@@ -48,7 +63,8 @@ public class ExercisesConverter {
 		exercise.put("task2.7.setA_de","Make a fraction that equals 1/6 and has 18 as denominator. Check it is equivalent to 1/6, by using the Compare box.");
 		exercise.put("task2.7.setB_de","Make a fraction that equals 3/4 and has 12 as denominator. Check it is equivalent to 3/4, by using the Compare box.");
 		exercise.put("task2.7.setC_de","Make a fraction that equals 7/3 and has 12 as denominator. Check it is equivalent to 7/3, by using the Compare box.");
-		
+	
+
 	}
 
 	public HashMap<String, String> getExercise() {

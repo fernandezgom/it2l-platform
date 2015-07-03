@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link rel="stylesheet" type="text/css" media="screen, projection" href="/italk2learn/styles/it2lmainstyles.css" />
 	<script src="../js/popupIOS/jquery-1.9.1.js"></script>
 	<link rel="stylesheet" href="../css/popupIOS/index.css"/>
 	<script src="../js/popupIOS/generalFunctions.js"></script>
-	<script type="text/javascript" src="/js/initMain.js" th:src="@{/resources/js/initMain.js}"></script>
+	<script type="text/javascript" src="/js/initMain.js" th:src="@{/resources/js/initMain.js}" charset="UTF-8"></script>
 	
 	
 </head>
@@ -35,22 +35,51 @@
 			</tbody>
 		</table>
 		<table align="center">
-			<tbody>
-				<tr align="center">
-					<td align="center">
-						<div id="wrapper_dark_gray" style="height: auto; width: 890px; padding-top: 20px;">
-							<div style="display: inline; width: 890px">
-								<span style="display:inline; font-weight: bold;" th:text="#{welcome}"> Welcome </span> <div id="user" style="font-weight: bold; display:inline;"> Name </div>
-							</div>
-							<div id="wrapper_light_gray" style="height: auto; width: 815px; margin-top: 30px;">
-							</div>
-							<br/>
-							<br/>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+            <tbody>
+            <tr align="center">
+                <td align="center">          
+                <div id="wrapper_dark_gray" style="height: 500px; width: 890px; padding-top: 20px;">
+
+                    <div style="display: inline; width: 890px">
+                        <span id="intro" style="display: inline; font-size: 18px;" th:text="#{welcometo}">Welcome to iLearnFractions</span>
+                    </div>
+                    <table style="width: 850px; margin-top: 50px;">
+                        <tbody>
+                        <tr>
+                        <td style="width: 200px;">
+                            <div id="wrapper_light_gray" style="margin: 30px 0px 0px ! important; height: 140px;">
+	                            <span style="padding-top: 10px; display: block; margin-right: auto; position: relative; margin-left: 75px; font-weight: bold; font-size: 13px; color: rgb(170, 170, 170);" th:text="#{step1}"> Step 1. </span>
+	                            <div id="pre" style="margin-top: 30px; margin-right: auto; display: block; margin-left: 35px;">
+	                                <a style="color: rgb(2, 117, 164); font-size: 15px;" id="q1" href="/italk2learn/exercise/beforeQuiz">Pre-Questionnaire</a>
+	                            </div>
+                            </div>
+                        </td>
+                        <td style="width: 411px;">
+                            <div id="wrapper_light_gray" style="height: 260px; margin: 30px 10px 0px ! important;">
+                            <span style="padding-top: 10px; display: block; margin-right: auto; position: relative; margin-left: 175px; color: rgb(170, 170, 170); font-size: 13px; font-weight: bold;" th:text="#{step2}"> Step 2. </span>
+                                <div style="margin-top: 83px; margin-right: auto; display: block; margin-left: 145px;">
+                                <a style="color: rgb(2, 117, 164); font-size: 22px;" id="q3" href="/italk2learn/exercise" th:text="#{experience}">Experience</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="width: 200px;">
+                            <div id="wrapper_light_gray" style="margin: 30px 0px 0px; height: 140px;">
+	                            <span style="padding-top: 10px; display: block; margin-right: auto; position: relative; margin-left: 75px; font-weight: bold; color: rgb(170, 170, 170); font-size: 12px;" th:text="#{step3}">Step 3.</span>
+	                            <div id="post" style="margin-top: 30px; margin-right: auto; display: block; margin-left: 32px;">
+	                                <a style="color: rgb(2, 117, 164); font-size: 15px;" id="q2" href="/italk2learn/exercise/afterQuiz">Post-Questionnaire</a>
+	                            </div>
+                            </div>
+                        </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <br/>
+                    </div>
+                </td>
+                </tr>
+            </tbody>
+        </table>
 		<br/>
 	</div>
 </body>

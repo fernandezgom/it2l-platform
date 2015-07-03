@@ -34,6 +34,8 @@
 	<definition name="preA" template="/PreA.html" templateType="thymeleaf"/>
 	<definition name="postB" template="/PostB.html" templateType="thymeleaf"/>
 	<definition name="preB" template="/PreB.html" templateType="thymeleaf"/>
+	<definition name="preCond4" template="/PreCond4.html" templateType="thymeleaf"/>
+	<definition name="postCond4" template="/PostCond4.html" templateType="thymeleaf"/>
 	
 	<definition name="logoutSuccess" extends="standardLayout2">
 		<put-attribute name="body" value="/logoutSuccess.html :: content" type="thymeleaf"/>

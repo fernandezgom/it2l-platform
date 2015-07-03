@@ -196,6 +196,10 @@ public class MonitorWOZController {
 					messageForm.setSequence(seq);
 					insertSequenceByUser(messageForm);
 				}
+			} else if (messageForm.getCondition()==4) {
+				String[] seq = new String[]{"122","117","123","116","118","124","125","119","126","127","128","120","129","130","131","121"};
+				messageForm.setSequence(seq);
+				insertSequenceByUser(messageForm);
 			} else {
 				String[] seq = new String[]{"101"};
 				messageForm.setSequence(seq);

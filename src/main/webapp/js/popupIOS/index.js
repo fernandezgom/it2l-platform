@@ -15,7 +15,7 @@ function IndexController() {
 	this.dataLang = null;
 	
 	this.loadPage =  function (){
-		scope.lang = getURLParameter("lang");//obtener el idioma de la url, si es 'en' es ingles, otro caso (sp o null) es español
+		scope.lang = getLocale();//obtener el idioma de la url, si es 'en' es ingles, otro caso (sp o null) es español
 		
 		
 		
@@ -26,9 +26,9 @@ function IndexController() {
 			
 		
 		var theLangScript = "js/popupIOS/labels_en.js";// etiquetas en español
-		if (scope.lang == "es") {
+		if (scope.lang.indexOf("es")>-1) {
 			theLangScript = "js/popupIOS/labels_sp.js";// etiquetas en ingles
-		} else if (scope.lang == "de") {
+		} else if (scope.lang.indexOf("de")>-1) {
 			theLangScript = "js/popupIOS/labels_de.js";// etiquetas en aleman,
 			// supongo
 		}
@@ -60,6 +60,10 @@ function IndexController() {
 			}
 		});
 		$("#closeBton").click(function() {
+			isPopupOpened=false;
+        	managePopup(false);
+        	var maincontainer = document.getElementById('mainContainer');
+            maincontainer.style.visibility = "visible";
 			scope.cleanForm();
 			$('.modal').removeClass('active');
 		});

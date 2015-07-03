@@ -5,7 +5,7 @@
 	  xmlns:sec="http://www.thymeleaf.org"
 	  lang="en">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8;"/>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title>iLearnFractions</title>
 	<script src="js/popupIOS/jquery-1.9.1.js"></script>
 	<link rel="stylesheet" href="css/popupIOS/style.css"/>
@@ -185,6 +185,7 @@
 		     	  user: us
 		         };
 		     var params = {};
+		     params.wmode = "opaque";
 		     params.quality = "high";
 		     params.bgcolor = "#ffffff";
 		     params.allowscriptaccess = "sameDomain";
@@ -204,15 +205,16 @@
     </script>
 	<noscript>
 		<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"
-			width="250" height="250" id="Italk2learnSpeechRecognizer">
+			width="350" height="150" id="Italk2learnSpeechRecognizer">
 			<param name="movie" value="sequence/It2lSpeechInterfaceMain.swf" />
+			<param name="wmode" value="opaque"/>
 			<param name="quality" value="high" />
 			<param name="bgcolor" value="#ffffff" />
 			<param name="allowScriptAccess" value="sameDomain" />
 			<param name="allowFullScreen" value="true" />
 			<!--[if !IE]>-->
 			<object type="application/x-shockwave-flash"
-				data="sequence/It2lSpeechInterfaceMain.swf" width="250" height="250">
+				data="sequence/It2lSpeechInterfaceMain.swf" width="350" height="150">
 				<param name="quality" value="high" />
 				<param name="bgcolor" value="#ffffff" />
 				<param name="allowScriptAccess" value="sameDomain" />
@@ -306,7 +308,7 @@
       				</section>
 				</div>
 				<br/>
-				<button id="sendJson" class="it2lbutton">Send</button>
+				<button id="sendJson" class="it2lbutton" th:text="#{send}">Send</button>
 			</div>
 		
 		</div>

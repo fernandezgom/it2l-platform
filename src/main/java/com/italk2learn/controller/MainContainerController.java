@@ -184,6 +184,42 @@ public class MainContainerController {
 		}
 	}
 	
+	/**
+	 * Handles and retrieves the main page
+	 * 
+	 * @return the name of the page
+	 */
+	@RequestMapping(value = "/preCond4",method = RequestMethod.GET)
+	public String beforeQuiz3(Model model) {
+		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
+		try {
+			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return "preCond4";
+		} catch (Exception e){
+			logger.info("Returning to loginpage due previous errors");
+			logger.error(e.toString());
+			return "redirect:/login";
+		}
+	}
+	
+	/**
+	 * Handles and retrieves the main page
+	 * 
+	 * @return the name of the page
+	 */
+	@RequestMapping(value = "/postCond4",method = RequestMethod.GET)
+	public String afterQuiz3(Model model) {
+		logger.info("JLF --- MainContainerController initMainContainer --- Initialising main container");
+		try {
+			user = (LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			return "postCond4";
+		} catch (Exception e){
+			logger.info("Returning to loginpage due previous errors");
+			logger.error(e.toString());
+			return "redirect:/login";
+		}
+	}
+	
 	@RequestMapping(value="/invalidate", method=RequestMethod.GET)
 	public void invalidate(HttpSession session, Model model) {
 		logger.info("JLF --- MainContainerController invalidate --- Invalidating session required by the user");

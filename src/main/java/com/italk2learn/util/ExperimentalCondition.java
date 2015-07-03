@@ -15,5 +15,9 @@ public class ExperimentalCondition {
      * No ELE, no SNA, no interaction-based TIS
      */
 	public static final int NO_ELE=3;
+	/*
+     * Fixed ELE + FL
+     */
+	public static final int FL_ELE=4;
 
 }

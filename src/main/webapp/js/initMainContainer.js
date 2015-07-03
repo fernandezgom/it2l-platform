@@ -150,6 +150,10 @@
 			//});
 			$("#next").click(function() {
 				if (aEnabled) {
+					isPopupOpened=true;
+	            	managePopup(true);
+	            	var maincontainer = document.getElementById('mainContainer');
+	                maincontainer.style.visibility = "hidden";
 					principalCtl.makePop();
 					$('.modal').toggleClass('active');
 				}
@@ -220,6 +224,10 @@
 		}
 
 		function nextExercise(){
+			isPopupOpened=false;
+        	managePopup(false);
+        	var maincontainer = document.getElementById('mainContainer');
+            maincontainer.style.visibility = "visible";
 			$('#exercisePrompt').html("");
 			//$("#done").hide();
 			$("#help").hide();
@@ -663,7 +671,7 @@
                 dialogbox.style.left = (winW/2) - (700 * .5)+"px";
                 dialogbox.style.top = "35%";
                 dialogbox.style.display = "block";
-              document.getElementById('dialogboxhead').innerHTML = '<div id="dialogboxbody"> <table id="tableAlign"><tr><td><span id="verticalSpanLeft"><img th:src="@{/resources/images/frobot.png}" src="/italk2learn/images/frobot.png"></img></span></td><td> <span id="verticalSpanRight">' + dialog + '</span></td></tr></table></div><div style="margin-top: 7px; margin-bottom:2px; display:flex; "> <button style="margin-left:auto; margin-right:auto; " class="it2lbutton" onclick="Alert.ok()">OK</button></div>';
+                document.getElementById('dialogboxhead').innerHTML = '<div id="dialogboxbody"> <table id="tableAlign"><tr><td><span id="verticalSpanLeft"><img th:src="@{/resources/images/frobot.png}" src="/italk2learn/images/frobot.png"></img></span></td><td> <span id="verticalSpanRight">' + dialog + '</span></td></tr></table></div><div style="margin-top: 7px; margin-bottom:2px; display:flex; "> <button style="margin-left:auto; margin-right:auto; " class="it2lbutton" onclick="Alert.ok()">OK</button></div>';
              
             }
             this.ok = function(){
@@ -680,11 +688,11 @@
                 var winH = window.innerHeight;
                 var dialogoverlay = document.getElementById('dialogoverlay');
                 var dialogbox = document.getElementById('dialogbox');
-                dialogoverlay.style.display = "block";
+                dialogoverlay.style.display = "none";
                 dialogoverlay.style.height = winH+"px";
                 dialogbox.style.left = (winW/2) - (550 * .5)+"px";
                 dialogbox.style.top = "35%";
-                dialogbox.style.display = "block";
+                dialogbox.style.display = "none";
 
             }
         }

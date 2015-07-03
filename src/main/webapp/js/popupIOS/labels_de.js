@@ -1,9 +1,9 @@
 
 var labels = {
-	title: "GERMAN Please answer these two questions",
-	responseDialog: "GERMAN Please answer both questions!",
+	title: "Bitte beantworte diese beiden Fragen.",
+	responseDialog: "Bitte beantworte beide Fragen!",
 	1: {
-		labelQues: "GermanI thought the last task was...",
+		labelQues: "Die letzte Aufgabe war...",
 		answers: {
 			1: {
 				label: "Einfach",
@@ -26,40 +26,40 @@ var labels = {
 	},
 	
 	2: {
-		labelQues: "GermanI found the last task...",
+		labelQues: "Ich fand die letzte Aufgabe ...",
 		answers: {
 			1: {
-				label: "GermanEnjoyable",
+				label: "angenehm",
 				srcIma: "images/popupQuiz/1.png",
 				random: true
 			},
 			
 			2: {
-				label: "GermanFrustrating",
+				label: "frustrierend",
 				srcIma: "images/popupQuiz/2.png",
 				random: true
 			},
 			
 			3: {
-				label: "GermanConfusing",
+				label: "verwirrend",
 				srcIma: "images/popupQuiz/3.png",
 				random: true
 			},
 			
 			4: {
-				label: "GermanInteresting",
+				label: "interessant",
 				srcIma: "images/popupQuiz/3.png",
 				random: true
 			},
 			
 			5: {
-				label: "GermanSomething else",
+				label: "Etwas anderes",
 				srcIma: "images/popupQuiz/3.png",
 				random: false
 			},
 			
 			6: {
-				label: "GermanDon't know",
+				label: "Weiss nicht",
 				srcIma: "images/popupQuiz/3.png",
 				random: false
 			}
