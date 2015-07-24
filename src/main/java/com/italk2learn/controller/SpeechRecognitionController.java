@@ -1,8 +1,5 @@
 package com.italk2learn.controller;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -19,16 +16,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.italk2learn.bo.inter.ILoginUserService;
 import com.italk2learn.bo.inter.IPerceiveDifficultyTaskBO;
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
-import com.italk2learn.exception.ITalk2LearnException;
 import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
 import com.italk2learn.tis.inter.ITISWrapper;
-import com.italk2learn.vo.AudioRequestVO;
 import com.italk2learn.vo.HeaderVO;
-import com.italk2learn.vo.PTDRequestVO;
-import com.italk2learn.vo.PTDResponseVO;
 import com.italk2learn.vo.SpeechRecognitionRequestVO;
 import com.italk2learn.vo.SpeechRecognitionResponseVO;
-import com.italk2learn.vo.TaskIndependentSupportRequestVO;
 
 /**
  * JLF: Handles requests for the application speech recognition.
@@ -49,7 +41,6 @@ public class SpeechRecognitionController{
 	
 	private String username;
 	
-	//private Timer timer = new Timer();
 	
 	/*Services*/
 	private ISpeechRecognitionBO speechRecognitionService;
@@ -75,16 +66,14 @@ public class SpeechRecognitionController{
 	public void sendData(@RequestBody byte[] body) {
 		logger.info("JLF --- SpeechRecognitionController sendData --- Sending data to the speech recogniser");
 		request= new SpeechRecognitionRequestVO();
-		AudioRequestVO reqad=new AudioRequestVO();
 		request.setHeaderVO(new HeaderVO());
-		reqad.setHeaderVO(new HeaderVO());
 		try {
 			request.getHeaderVO().setLoginUser(getUsername());
-			reqad.getHeaderVO().setLoginUser(getUsername());
 			request.setData(body);
-			reqad.setAudio(body);
-			getSpeechRecognitionService().concatenateAudioStream(reqad);
+			getSpeechRecognitionService().concatenateAudioStream(request);
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().sendNewAudioChunk(request));
+			request=null;
+			body=null;
 			getTISWrapperService().sendSpeechOutputToSupport(getUsername(), response.getLiveResponse());
 		} catch (Exception e){
 			logger.error(e.toString());
@@ -108,11 +97,6 @@ public class SpeechRecognitionController{
 			//JLF: Sending first chunk always, otherwise SAIL software crashes
 			if (response.isOpen()){
 				sendData(new byte[0]);
-				//Open a 10 minutes task to send data to sna
-				AudioRequestVO reqad=new AudioRequestVO();
-				reqad.setHeaderVO(new HeaderVO());
-				reqad.getHeaderVO().setLoginUser(user);
-				//timer.scheduleAtFixedRate(new AudioSNATask(reqad), NUM_SECONDS,NUM_SECONDS);
 			}
 			return response.isOpen();
 		} catch (Exception e){
@@ -129,22 +113,19 @@ public class SpeechRecognitionController{
 	public String closeASREngine(@RequestBody byte[] body) {
 		logger.info("JLF --- SpeechRecognitionController closeEngine --- Closing speech recognition engine");
 		request= new SpeechRecognitionRequestVO();
-		AudioRequestVO reqad=new AudioRequestVO();
 		if (body==null)
 			body=new byte[0];
 		try {
-			//timer.cancel();
 			request.setHeaderVO(new HeaderVO());
-			reqad.setHeaderVO(new HeaderVO());
 			request.getHeaderVO().setLoginUser(getUsername());
-			reqad.getHeaderVO().setLoginUser(getUsername());
 			request.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
 			request.setData(body);
-			reqad.setAudio(body);
-			getSpeechRecognitionService().concatenateAudioStream(reqad);
-			request.setFinalByteArray(getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio());
-			getSpeechRecognitionService().saveByteArray(request);
+			getSpeechRecognitionService().concatenateAudioStream(request);
+			//request.setFinalByteArray(getSpeechRecognitionService().getCurrentAudioFromPlatform(request).getAudio());
+			//getSpeechRecognitionService().saveByteArray(request);
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().closeASREngine(request));
+			request=null;
+			body=null;
 			return response.getResponse();
 		} catch (Exception e){
 			logger.error(e.toString());
@@ -152,31 +133,6 @@ public class SpeechRecognitionController{
 		return response.getResponse();
 	}
 	
-	/**
-	 * Method to get the perceive difficulty task at the end of each task
-	 */
-	@RequestMapping(value = "/callPTD",method = RequestMethod.POST)
-	@ResponseBody
-	public int callPTD(@RequestBody byte[] body) {
-		logger.info("JLF --- SpeechRecognitionController callPTD --- Get Perceive difficulty task from Audio based difficulty classifier");
-		PTDRequestVO req= new PTDRequestVO();
-		PTDResponseVO res= new PTDResponseVO();
-		AudioRequestVO reqad=new AudioRequestVO();
-		try {
-			req.setHeaderVO(new HeaderVO());
-			req.getHeaderVO().setLoginUser(getUsername());
-			reqad.setHeaderVO(new HeaderVO());
-			reqad.getHeaderVO().setLoginUser(getUsername());
-			req.getHeaderVO().setIdUser(getLoginUserService().getIdUserInfo(request.getHeaderVO()));
-			req.setAudioByteArray(getSpeechRecognitionService().getCurrentAudioFromPlatform(reqad).getAudio());
-			res=getPerceiveDifficultyTaskService().callPTD(req);
-			logger.info("Emotion: "+res.getPTD());
-			return res.getPTD();
-		} catch (Exception e){
-			logger.error(e.toString());
-		}
-		return res.getPTD();
-	}
 	
 	public ILoginUserService getLoginUserService() {
 		return loginUserService;
@@ -227,26 +183,4 @@ public class SpeechRecognitionController{
 		this.snaService = snaService;
 	}
 	
-	//JLF: This class check if there is 20 minutes of audio
-			class AudioSNATask extends TimerTask {
-			    
-				private AudioRequestVO request;
-				
-				public AudioSNATask(AudioRequestVO request) {
-					super();
-					this.request = request;
-				}
-
-				public void run() {
-			    	if (true) {
-			    		try {
-			    			getSnaService().setAudio(getSpeechRecognitionService().getCurrentAudioFromExercise(request).getAudio());
-						} catch (ITalk2LearnException e) {
-							// TODO Auto-generated catch block
-							logger.error(e.toString());
-						}
-				    }
-			    }
-			}
-
 }

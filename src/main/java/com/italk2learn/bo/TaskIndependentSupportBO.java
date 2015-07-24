@@ -112,7 +112,7 @@ public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 		logger.info("JLF TaskIndependentSupportBO callTISfromTID() --- Calling Task Independent Support from Task Dependent Support");
 		TaskIndependentSupportResponseVO response= new TaskIndependentSupportResponseVO();
 		LdapUserDetailsImpl user=(LdapUserDetailsImpl)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		AudioRequestVO reqad=new AudioRequestVO();
+		SpeechRecognitionRequestVO reqad=new SpeechRecognitionRequestVO();
 		try {
 			reqad.setHeaderVO(new HeaderVO());
 			reqad.getHeaderVO().setLoginUser(user.getUsername());

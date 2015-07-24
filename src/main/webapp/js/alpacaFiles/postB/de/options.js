@@ -184,7 +184,7 @@ var options = {
         	"label": "25. Welcher Bruch ist wertgleich mit 3/4 und hat 12 als Nenner?",
         	"type": "radio",
         	"helper": "",
-        	"optionLabels": ["../images/alpacaImages/questionary2/q6/1.png", "../images/alpacaImages/questionary2/q6/2.png", "../images/alpacaImages/questionary2/q6/3.png", "../images/alpacaImages/questionary2/q6/4.png", "../images/alpacaImages/questionary2/q6/5.png"],
+        	"optionLabels": ["../images/alpacaImages/imagesB/q6/1.png", "../images/alpacaImages/imagesB/q6/2.png", "../images/alpacaImages/imagesB/q6/3.png", "../images/alpacaImages/imagesB/q6/5.png"],
         	"vertical": false
     	}
     }

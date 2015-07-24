@@ -42,7 +42,6 @@ import com.italk2learn.util.ExercisesConverter;
 import com.italk2learn.util.ExperimentalCondition;
 import com.italk2learn.util.TipFilesUtil;
 import com.italk2learn.util.WhizzUtil;
-import com.italk2learn.vo.AudioRequestVO;
 import com.italk2learn.vo.CTATRequestVO;
 import com.italk2learn.vo.ExerciseQuizRequestVO;
 import com.italk2learn.vo.ExerciseSequenceRequestVO;
@@ -50,6 +49,7 @@ import com.italk2learn.vo.ExerciseSequenceResponseVO;
 import com.italk2learn.vo.ExerciseVO;
 import com.italk2learn.vo.FractionsLabRequestVO;
 import com.italk2learn.vo.HeaderVO;
+import com.italk2learn.vo.SpeechRecognitionRequestVO;
 import com.italk2learn.vo.WhizzExerciseVO;
 import com.italk2learn.vo.WhizzRequestVO;
 
@@ -494,7 +494,7 @@ public class ExercisesSequenceController implements Serializable{
 		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
 		String TRIAL = rb.getString("vps.trial");
 		ModelAndView modelAndView = new ModelAndView();
-		AudioRequestVO reqad=new AudioRequestVO();
+		SpeechRecognitionRequestVO reqad=new SpeechRecognitionRequestVO();
 		CTATRequestVO rqctat=new CTATRequestVO();
 		try {
 			reqad.setHeaderVO(new HeaderVO());
