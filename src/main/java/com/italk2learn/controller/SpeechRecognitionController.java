@@ -1,5 +1,7 @@
 package com.italk2learn.controller;
 
+import java.util.concurrent.Future;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -17,6 +19,7 @@ import com.italk2learn.bo.inter.ILoginUserService;
 import com.italk2learn.bo.inter.IPerceiveDifficultyTaskBO;
 import com.italk2learn.bo.inter.ISpeechRecognitionBO;
 import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
+import com.italk2learn.speech.util.EnginesMap;
 import com.italk2learn.tis.inter.ITISWrapper;
 import com.italk2learn.vo.HeaderVO;
 import com.italk2learn.vo.SpeechRecognitionRequestVO;
@@ -65,16 +68,22 @@ public class SpeechRecognitionController{
 	@ResponseBody
 	public void sendData(@RequestBody byte[] body) {
 		logger.info("JLF --- SpeechRecognitionController sendData --- Sending data to the speech recogniser");
+		Future<SpeechRecognitionResponseVO> respSR;
 		request= new SpeechRecognitionRequestVO();
 		request.setHeaderVO(new HeaderVO());
 		try {
 			request.getHeaderVO().setLoginUser(getUsername());
 			request.setData(body);
 			getSpeechRecognitionService().concatenateAudioStream(request);
-			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().sendNewAudioChunk(request));
+			respSR=getSpeechRecognitionService().sendNewAudioChunk(request);
 			request=null;
 			body=null;
-			getTISWrapperService().sendSpeechOutputToSupport(getUsername(), response.getLiveResponse());
+			while (!respSR.isDone()) {
+	            Thread.sleep(10); //10-millisecond pause between each check
+	        }
+			for (int i=0;i<respSR.get().getLiveResponse().size();i++)
+				logger.info("liveResponse word="+ respSR.get().getLiveResponse().get(i));
+			getTISWrapperService().sendSpeechOutputToSupport(getUsername(), respSR.get().getLiveResponse());
 		} catch (Exception e){
 			logger.error(e.toString());
 		}
@@ -131,6 +140,16 @@ public class SpeechRecognitionController{
 			logger.error(e.toString());
 		}
 		return response.getResponse();
+	}
+	
+	/**
+	 * Method that get 
+	 */
+	@RequestMapping(value = "/speechRecoMonitor",method = RequestMethod.GET)
+	@ResponseBody
+	public String speechRecoMonitor() {
+		logger.info("JLF --- Speech Recognition Monitor");
+		return EnginesMap.getInstance().getAllInfo();
 	}
 	
 	
