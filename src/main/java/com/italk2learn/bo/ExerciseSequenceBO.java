@@ -27,6 +27,11 @@ import com.italk2learn.vo.WhizzRequestVO;
 public class ExerciseSequenceBO implements IExerciseSequenceBO  {
 	
 
+	public ExerciseSequenceBO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(ExerciseSequenceBO.class);
 	
 	public IExerciseDAO exerciseDAO;

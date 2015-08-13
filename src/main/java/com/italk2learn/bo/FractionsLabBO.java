@@ -16,6 +16,11 @@ import com.italk2learn.vo.FractionsLabResponseVO;
 @Transactional(rollbackFor = { ITalk2LearnException.class, ITalk2LearnException.class })
 public class FractionsLabBO implements IFractionsLabBO{
 	
+	public FractionsLabBO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(FractionsLabBO.class);
 	
 	private IFractionsLabDAO fractionsLabDAO;

@@ -16,6 +16,8 @@ import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsImpl;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,6 @@ import com.italk2learn.bo.inter.ITaskIndependentSupportBO;
 import com.italk2learn.exception.ITalk2LearnException;
 import com.italk2learn.sna.inter.IStudentNeedsAnalysis;
 import com.italk2learn.tis.inter.ITISWrapper;
-import com.italk2learn.vo.AudioRequestVO;
 import com.italk2learn.vo.HeaderVO;
 import com.italk2learn.vo.SpeechRecognitionRequestVO;
 import com.italk2learn.vo.SpeechRecognitionResponseVO;
@@ -36,9 +37,15 @@ import com.italk2learn.vo.TaskIndependentSupportRequestVO;
 import com.italk2learn.vo.TaskIndependentSupportResponseVO;
 
 @Service("taskIndependentSupportBO")
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Transactional(rollbackFor = { ITalk2LearnException.class, ITalk2LearnException.class })
 public class TaskIndependentSupportBO implements ITaskIndependentSupportBO  {
 	
+	public TaskIndependentSupportBO() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	private static final Logger logger = LoggerFactory.getLogger(TaskIndependentSupportBO.class);
 	
 	

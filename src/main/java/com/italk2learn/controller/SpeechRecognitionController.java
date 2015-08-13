@@ -1,5 +1,11 @@
 package com.italk2learn.controller;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.ResourceBundle;
 import java.util.concurrent.Future;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,6 +81,7 @@ public class SpeechRecognitionController{
 			request.getHeaderVO().setLoginUser(getUsername());
 			request.setData(body);
 			getSpeechRecognitionService().concatenateAudioStream(request);
+			getSpeechRecognitionService().createAudioFile(request);
 			respSR=getSpeechRecognitionService().sendNewAudioChunk(request);
 			request=null;
 			body=null;
@@ -133,6 +140,7 @@ public class SpeechRecognitionController{
 			//request.setFinalByteArray(getSpeechRecognitionService().getCurrentAudioFromPlatform(request).getAudio());
 			//getSpeechRecognitionService().saveByteArray(request);
 			response=((SpeechRecognitionResponseVO) getSpeechRecognitionService().closeASREngine(request));
+			saveTranscription(response.getResponse(), getUsername());
 			request=null;
 			body=null;
 			return response.getResponse();
@@ -150,6 +158,25 @@ public class SpeechRecognitionController{
 	public String speechRecoMonitor() {
 		logger.info("JLF --- Speech Recognition Monitor");
 		return EnginesMap.getInstance().getAllInfo();
+	}
+	
+	
+	public void saveTranscription(String text, String user) {
+		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
+		String path=rb.getString("transcriptions");
+		try {
+			if (text!=null && !text.isEmpty() && text.length() > 1) {
+				DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+				Date date = new Date();
+				PrintWriter out = new PrintWriter(path+user+"-"+dateFormat.format(date)+".txt");
+				out.println(text);
+				out.close();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
