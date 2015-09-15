@@ -37,7 +37,24 @@
 	                	idTask=$('#idTask').html();
 	                	$('#idTask').remove();
 	                }
-	                $('#exercisePrompt').html($('#taskContainer').html());
+	                var nameTask = $('#taskContainer').html();
+	                nameTask=nameTask.replace("1/2", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 2 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("3/4", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 3 </mn><mn> 4 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("7/3", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 7 </mn><mn> 3 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("1/12", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 12 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("2/5", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 2 </mn><mn> 5 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("1/10", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 10 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("1/21", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 21 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("1/6", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 6 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("1/2", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 2 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("3/4", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 3 </mn><mn> 4 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("7/3", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 7 </mn><mn> 3 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("1/12", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 12 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("2/5", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 2 </mn><mn> 5 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("1/10", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 10 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("1/21", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 21 </mn></mfrac></math>");
+	                nameTask=nameTask.replace("1/6", "<math xmlns='http://www.w3.org/1998/Math/MathML'><mfrac><mn> 1 </mn><mn> 6 </mn></mfrac></math>");
+	                $('#exercisePrompt').html(nameTask);
 	                $('#taskContainer').remove();
 
 					u.observeProgress(function (progress) {

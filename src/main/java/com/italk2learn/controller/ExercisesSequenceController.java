@@ -92,7 +92,10 @@ public class ExercisesSequenceController implements Serializable{
 	private ICTATExerciseBO ctatExerciseBO;
 
 
-    @Autowired
+    /**
+	 * Constructor with parameters
+	 */
+	@Autowired
     public ExercisesSequenceController(IExerciseSequenceBO exerciseSequence, ILoginUserService loginUserService, IWhizzExerciseBO whizzExerciseBO, IFractionsLabBO fractionsLabBO, IStudentNeedsAnalysis snaService, ISpeechRecognitionBO speechRecognition, ICTATExerciseBO ctatExerciseBO, ITISWrapper tisWrapper) {
     	this.exerciseSequenceService = exerciseSequence;
     	this.loginUserService=loginUserService;
@@ -187,7 +190,7 @@ public class ExercisesSequenceController implements Serializable{
 	}
 	
 	/**
-	 * JLF: Get user connected
+	 * JLF: Get the condition that applies to the user from the database
 	 */
 	@RequestMapping(value = "/getCondition",method = RequestMethod.GET, produces="text/plain")
 	@ResponseBody
@@ -271,7 +274,8 @@ public class ExercisesSequenceController implements Serializable{
 	
 	
 	/**
-	 * Get the exercise from the state machine
+	 * Get the exercise from the state machine. This is the second version
+	 * It handles Whizz Exercises
 	 */
 	private ModelAndView getStateMachineSequencerExercise2ndVersionWhizz(ExerciseSequenceRequestVO request){
 		logger.info("JLF --- getStateMachineSequencerExercise() --- Get the exercise from the state machine "+"User= "+this.getUsername());
@@ -319,7 +323,8 @@ public class ExercisesSequenceController implements Serializable{
 	}
 	
 	/**
-	 * Get the exercise from the state machine
+	 * Get the exercise from the state machine. This is the second version
+	 * It handles CTAT Exercises
 	 */
 	private ModelAndView getStateMachineSequencerExercise2ndVersionCTAT(ExerciseSequenceRequestVO request){
 		logger.info("JLF --- getStateMachineSequencerExercise() --- Get the exercise from the state machine "+"User= "+this.getUsername());
@@ -342,7 +347,10 @@ public class ExercisesSequenceController implements Serializable{
 		}
 	}
 	
-	
+	/**
+	 * Method to call the Vygotsky Policy Sequence without using Student Needs Analysis
+	 */
+	@Deprecated
 	private ModelAndView getVygotskyPolicySequencerExercise(ExerciseSequenceRequestVO request){
 		if (getLanguageBrowser().contains(HeaderVO.GERMAN))
 			return getVygotskyPolicySequencerExerciseCTAT(request);
@@ -350,7 +358,9 @@ public class ExercisesSequenceController implements Serializable{
 			return getVygotskyPolicySequencerExerciseWhizz(request);
 	}
 	
-	
+	/**
+	 * Returns the state machine second version
+	 */
 	private ModelAndView getStateMachineSequencerExercise2ndVersion(ExerciseSequenceRequestVO request){
 		if (getLanguageBrowser().contains(HeaderVO.GERMAN))
 			return getStateMachineSequencerExercise2ndVersionCTAT(request);
@@ -358,6 +368,9 @@ public class ExercisesSequenceController implements Serializable{
 			return getStateMachineSequencerExercise2ndVersionWhizz(request);
 	}
 	
+	/**
+	 * Returns the state machine second version combined with the SNA
+	 */
 	private ModelAndView getStateMachineSequencerExercise2ndVersionCombined(ExerciseSequenceRequestVO request){
 		logger.info("JLF --- getStateMachineSequencerExerciseCombined() --- Get the exercise from the state machine "+"User= "+this.getUsername());
 		ModelAndView modelAndView = new ModelAndView();
@@ -392,7 +405,7 @@ public class ExercisesSequenceController implements Serializable{
 	}
 	
 	/**
-	 * Get the exercise from the Vygotsky Policy Sequencer 
+	 * Get the model and view from the Vygotsky Policy Sequencer for Whizz Exercises
 	 */
 	private ModelAndView getVygotskyPolicySequencerExerciseWhizz(ExerciseSequenceRequestVO request){
 		ResourceBundle rb= ResourceBundle.getBundle("italk2learn-config");
@@ -441,7 +454,7 @@ public class ExercisesSequenceController implements Serializable{
 	}
 	
 	/**
-	 * Get the exercise from the Vygotsky Policy Sequencer 
+	 * Get the model and view from the Vygotsky Policy Sequencer for CTAT exercises
 	 */
 	private ModelAndView getVygotskyPolicySequencerExerciseCTAT(ExerciseSequenceRequestVO request){
 		logger.info("JLF --- getVygotskyPolicySequencerExerciseCTAT() --- Get the exercise from the Vygotsky Policy Sequencer "+"User= "+this.getUsername());
@@ -487,7 +500,7 @@ public class ExercisesSequenceController implements Serializable{
 	}
 	
 	/**
-	 * Get the exercise from student needs analysis
+	 * Get the exercise from student needs analysis.
 	 */
 	private ModelAndView getStudentNeedsAnalysisExercise(ExerciseSequenceRequestVO request, boolean first){
 		logger.info("JLF --- getStudentNeedsAnalysisExercise() --- Get the exercise from student needs analysis "+"User= "+this.getUsername());
@@ -679,7 +692,7 @@ public class ExercisesSequenceController implements Serializable{
 	}
 	
 	/**
-	 * JLF: Controller to store Whizz Data
+	 * JLF: Controller to store the questionnaires
 	 */
 	@RequestMapping(value = "/storeExerciseQuiz", method = RequestMethod.POST)
     public @ResponseBody void storeExerciseQuiz(@RequestBody ExerciseQuizRequestVO exercise, HttpServletRequest req){
